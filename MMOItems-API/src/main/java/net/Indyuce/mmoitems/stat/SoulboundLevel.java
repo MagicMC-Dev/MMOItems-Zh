@@ -22,7 +22,7 @@ public class SoulboundLevel extends DoubleStat {
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
         int value = (int) data.getValue();
         item.addItemTag(new ItemTag("MMOITEMS_SOULBOUND_LEVEL", value));
-        item.getLore().insert("soulbound-level", formatNumericStat(value, "{value}", MMOUtils.intToRoman(value)));
+        item.getLore().insert("soulbound-level", getGeneralStatFormat().replace("{value}", MMOUtils.intToRoman(value)));
     }
 
     @Override

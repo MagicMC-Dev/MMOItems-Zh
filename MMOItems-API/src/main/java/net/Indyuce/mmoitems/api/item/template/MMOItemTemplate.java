@@ -10,6 +10,7 @@ import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -19,221 +20,273 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class MMOItemTemplate extends PostLoadObject implements ItemReference {
-	private final Type type;
-	private final String id;
-	private final int revId;
+    private final Type type;
+    private final String id;
+    private final int revId;
 
-	// base item data
-	private final Map<ItemStat, RandomStatData> base = new HashMap<>();
+    /**
+     * Base item data
+     */
+    private final Map<ItemStat, RandomStatData> base = new HashMap<>();
 
-	@NotNull private final Map<String, TemplateModifier> modifiers = new LinkedHashMap<>();
-	private final Set<TemplateOption> options = new HashSet<>();
+    @Nullable
+    private NumericStatFormula modifierCapacity;
 
-	/**
-	 * Public constructor which can be used to register extra item templates
-	 * using other addons or plugins
-	 *
-	 * @param type The item type of your template
-	 * @param id   The template identifier, it's ok if two templates with
-	 *             different item types share the same ID
-	 */
-	public MMOItemTemplate(Type type, String id) {
-		super(null);
+    @Nullable
+    private ModifierGroup modifierGroup;
+    private final Set<TemplateOption> options = new HashSet<>();
 
-		this.type = type;
-		this.id = id;
-		this.revId = 1;
-	}
+    /**
+     * Public constructor which can be used to register extra item templates
+     * using other addons or plugins
+     *
+     * @param type The item type of your template
+     * @param id   The template identifier, it's ok if two templates with
+     *             different item types share the same ID
+     */
+    public MMOItemTemplate(Type type, String id) {
+        super(null);
 
-	/**
-	 * Used to load mmoitem templates from config files
-	 *
-	 * @param type   The item type of your template
-	 * @param config The config file read to load the template
-	 */
-	public MMOItemTemplate(Type type, ConfigurationSection config) {
-		super(config);
-		Validate.notNull(config, "Could not load template config");
+        this.type = type;
+        this.id = id;
+        this.revId = 1;
+    }
 
-		this.type = type;
-		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
-		this.revId = config.getInt("base.revision-id", 1);
-	}
+    /**
+     * Used to load MMOItem templates from config files
+     *
+     * @param type   The item type of your template
+     * @param config The config file read to load the template
+     */
+    public MMOItemTemplate(Type type, ConfigurationSection config) {
+        super(config);
+        Validate.notNull(config, "Could not load template config");
 
-	@Override
-	protected void whenPostLoaded(ConfigurationSection config) {
+        this.type = type;
+        this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
+        this.revId = config.getInt("base.revision-id", 1);
+    }
 
-		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-		ffp.activatePrefix(true, getType().getId() + " " + getId());
+    @Override
+    protected void whenPostLoaded(ConfigurationSection config) {
 
-		if (config.contains("option"))
-			for (TemplateOption option : TemplateOption.values())
-				if (config.getBoolean("option." + option.name().toLowerCase().replace("_", "-")))
-					options.add(option);
+        FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+        ffp.activatePrefix(true, getType().getId() + " " + getId());
 
-		if (config.contains("modifiers"))
-			for (String key : config.getConfigurationSection("modifiers").getKeys(false))
-				try {
-					TemplateModifier modifier = new TemplateModifier(MMOItems.plugin.getTemplates(),
-							config.getConfigurationSection("modifiers." + key));
-					modifiers.put(modifier.getId(), modifier);
-				} catch (IllegalArgumentException exception) {
+        // Extra options
+        if (config.contains("option")) {
+            if (config.contains("option.capacity", true))
+                try {
+                    modifierCapacity = new NumericStatFormula(config.getConfigurationSection("option.capacity"));
+                } catch (RuntimeException exception) {
+                    ffp.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier capacity: {0}", exception.getMessage());
+                }
 
-					// Log
-					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load modifier '$f{0}$b': {1}", key, exception.getMessage());
-				}
+            for (TemplateOption option : TemplateOption.values())
+                if (config.getBoolean("option." + option.name().toLowerCase().replace("_", "-")))
+                    options.add(option);
+        }
 
-		Validate.notNull(config.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"Could not find base item data"));
-		for (String key : config.getConfigurationSection("base").getKeys(false))
-			try {
-				String id = key.toUpperCase().replace("-", "_");
-				Validate.isTrue(MMOItems.plugin.getStats().has(id), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"Could not find stat with ID '$i{0}$b'", id));
+        // Read modifiers
+        try {
+            modifierGroup = config.contains("modifiers") ? new ModifierGroup(id, config) : null;
+            if (modifierGroup != null) modifierGroup.getPostLoadAction().performAction();
+        } catch (Exception exception) {
+            ffp.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier group: {0}", exception.getMessage());
+        }
 
-				ItemStat stat = MMOItems.plugin.getStats().get(id);
-				RandomStatData data = stat.whenInitialized(config.get("base." + key));
-				if (data != null)
-					base.put(stat, data);
+        // Read base item data
+        Validate.notNull(config.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find base item data"));
+        for (String key : config.getConfigurationSection("base").getKeys(false))
+            try {
+                String id = key.toUpperCase().replace("-", "_");
+                Validate.isTrue(MMOItems.plugin.getStats().has(id), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find stat with ID '$i{0}$b'", id));
 
-			} catch (IllegalArgumentException exception) {
+                ItemStat stat = MMOItems.plugin.getStats().get(id);
+                RandomStatData data = stat.whenInitialized(config.get("base." + key));
+                if (data != null)
+                    base.put(stat, data);
 
-				if (!exception.getMessage().isEmpty()) {
+            } catch (IllegalArgumentException exception) {
 
-					// Log
-					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", key, exception.getMessage());
-				}
-			}
+                // Log
+                ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", key, exception.getMessage());
+            }
 
-		// Print all failures
-		ffp.sendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
-	}
+        // Print all failures
+        ffp.sendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
+    }
 
-	public Map<ItemStat, RandomStatData> getBaseItemData() {
-		return base;
-	}
+    @NotNull
+    public Map<ItemStat, RandomStatData> getBaseItemData() {
+        return base;
+    }
 
-	@NotNull public Map<String, TemplateModifier> getModifiers() {
-		return modifiers;
-	}
+    @Nullable
+    public ModifierGroup getModifierGroup() {
+        return modifierGroup;
+    }
 
-	public boolean hasModifier(String id) {
-		return modifiers.containsKey(id);
-	}
+    public boolean hasModifierGroup() {
+        return modifierGroup != null;
+    }
 
-	public TemplateModifier getModifier(String id) {
-		return modifiers.get(id);
-	}
+    @Nullable
+    public NumericStatFormula getModifierCapacity() {
+        return modifierCapacity;
+    }
 
-	@Override
-	public Type getType() {
-		return type;
-	}
+    public boolean hasModifierCapacity() {
+        return modifierCapacity != null;
+    }
 
-	@Override
-	public String getId() {
-		return id;
-	}
+    @NotNull
+    @Deprecated
+    public Map<String, TemplateModifier> getModifiers() {
+        Map<String, TemplateModifier> built = new HashMap<>();
+        exploreMap(built, modifierGroup);
+        return built;
+    }
 
-	public int getRevisionId() {
-		return revId;
-	}
+    private void exploreMap(Map<String, TemplateModifier> built, ModifierNode node) {
+        if (node instanceof ModifierGroup)
+            ((ModifierGroup) node).getChildren().forEach(child -> exploreMap(built, child));
+        else if (node instanceof TemplateModifier) built.put(node.getId(), (TemplateModifier) node);
+    }
 
-	public boolean hasOption(TemplateOption option) {
-		return options.contains(option);
-	}
+    @Deprecated
+    public boolean hasModifier(String id) {
+        return getModifiers().containsKey(id);
+    }
 
-	public MMOItemBuilder newBuilder(@Nullable Player player) {
-		if (player != null) { return newBuilder(PlayerData.get(player).getRPG()); }
-		return newBuilder((RPGPlayer) null);
-	}
+    @Nullable
+    @Deprecated
+    public TemplateModifier getModifier(String id) {
+        return getModifiers().get(id);
+    }
 
-	public MMOItemBuilder newBuilder() { return newBuilder((RPGPlayer) null); }
+    @Override
+    public Type getType() {
+        return type;
+    }
 
-	public MMOItemBuilder newBuilder(@Nullable PlayerData player) {
-		if (player != null) { return newBuilder(player.getRPG()); }
-		return newBuilder((RPGPlayer) null);
-	}
+    @Override
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * By default, item templates have item level 0 and no random tier. If the
-	 * template has the 'tiered' recipe option, a random tier will be picked. If
-	 * the template has the 'level-item' option, a random level will be picked
-	 *
-	 * @param player The player for whom you are generating the item. Seems to only
-	 *               matter when rolling for the 'item level'
-	 * @return Item builder with random level and tier?
-	 */
-	public MMOItemBuilder newBuilder(@Nullable RPGPlayer player) {
-		return newBuilder(player, false);
-	}
+    public int getRevisionId() {
+        return revId;
+    }
 
-	/**
-	 * By default, item templates have item level 0 and no random tier. If the
-	 * template has the 'tiered' recipe option, a random tier will be picked. If
-	 * the template has the 'level-item' option, a random level will be picked
-	 *
-	 * @param player     The player for whom you are generating the item. Seems to only
-	 *                   matter when rolling for the 'item level'
-	 * @param forDisplay Should it take modifiers into account
-	 * @return Item builder with random level and tier?
-	 */
-	public MMOItemBuilder newBuilder(@Nullable RPGPlayer player, boolean forDisplay) {
+    public boolean hasOption(TemplateOption option) {
+        return options.contains(option);
+    }
 
-		// No player ~ default settings
-		if (player == null) {
-			return newBuilder(0, null);
-		}
+    public MMOItemBuilder newBuilder(@Nullable Player player) {
+        if (player != null) {
+            return newBuilder(PlayerData.get(player).getRPG());
+        }
+        return newBuilder((RPGPlayer) null);
+    }
 
-		// Read from player
-		int itemLevel = hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(player.getLevel()) : 0;
-		ItemTier itemTier = hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
-		return new MMOItemBuilder(this, itemLevel, itemTier, forDisplay);
-	}
+    public MMOItemBuilder newBuilder() {
+        return newBuilder((RPGPlayer) null);
+    }
 
-	/**
-	 * @param  itemLevel The desired item level
-	 * @param  itemTier  The desired item tier, can be null
-	 * @return           Item builder with specific item level and tier
-	 */
-	public MMOItemBuilder newBuilder(int itemLevel, @Nullable ItemTier itemTier) {
-		return new MMOItemBuilder(this, itemLevel, itemTier);
-	}
+    public MMOItemBuilder newBuilder(@Nullable PlayerData player) {
+        if (player != null) {
+            return newBuilder(player.getRPG());
+        }
+        return newBuilder((RPGPlayer) null);
+    }
 
-	public enum TemplateOption {
+    /**
+     * By default, item templates have item level 0 and no random tier. If the
+     * template has the 'tiered' recipe option, a random tier will be picked. If
+     * the template has the 'level-item' option, a random level will be picked
+     *
+     * @param player The player for whom you are generating the item. Seems to only
+     *               matter when rolling for the 'item level'
+     * @return Item builder with random level and tier?
+     */
+    public MMOItemBuilder newBuilder(@Nullable RPGPlayer player) {
+        return newBuilder(player, false);
+    }
 
-		/**
-		 * When the item is being generated, modifiers are rolled in a random
-		 * order so you never the same modifiers again and again.
-		 */
-		ROLL_MODIFIER_CHECK_ORDER,
+    /**
+     * By default, item templates have item level 0 and no random tier. If the
+     * template has the 'tiered' recipe option, a random tier will be picked. If
+     * the template has the 'level-item' option, a random level will be picked
+     *
+     * @param player     The player for whom you are generating the item. Seems to only
+     *                   matter when rolling for the 'item level'
+     * @param forDisplay Should it take modifiers into account
+     * @return Item builder with random level and tier?
+     */
+    public MMOItemBuilder newBuilder(@Nullable RPGPlayer player, boolean forDisplay) {
 
-		/**
-		 * When building an item based on this template, if no tier is
-		 * specified, a random tier will be chosen for the item. By default, the
-		 * item has no tier OR has the tier given in the config file.
-		 */
-		TIERED,
+        // No player ~ default settings
+        if (player == null) {
+            return newBuilder(0, null);
+        }
 
-		/**
-		 * When building an item based on this template, if no level is
-		 * specified, a random level will be rolled based on the player's level
-		 * or 0 if no player is specified. By default, items are generated with
-		 * level 0
-		 */
-		LEVEL_ITEM
-	}
+        // Read from player
+        int itemLevel = hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(player.getLevel()) : 0;
+        ItemTier itemTier = hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
+        return new MMOItemBuilder(this, itemLevel, itemTier, forDisplay);
+    }
 
-	/**
-	 * @return Attempts to get the crafted amount registered in the Stat.
-	 * 		   <p></p>
-	 * 		   Default is <b>1</b> obviously.
-	 *
-	 * @deprecated Don't use this method, the Crafted Amount Stat will be deleted in the near future.
-	 */
-	@Deprecated
-	public int getCraftedAmount() {
+    /**
+     * @param itemLevel The desired item level
+     * @param itemTier  The desired item tier, can be null
+     * @return Item builder with specific item level and tier
+     */
+    public MMOItemBuilder newBuilder(int itemLevel, @Nullable ItemTier itemTier) {
+        return new MMOItemBuilder(this, itemLevel, itemTier);
+    }
+
+    /**
+     * Used for simple boolean template options
+     */
+    public enum TemplateOption {
+
+        /**
+         * When the item is being generated, modifiers are rolled in a random
+         * order so you never the same modifiers again and again.
+         */
+        ROLL_MODIFIER_CHECK_ORDER,
+
+        /**
+         * When building an item based on this template, if no tier is
+         * specified, a random tier will be chosen for the item. By default, the
+         * item has no tier OR has the tier given in the config file.
+         */
+        TIERED,
+
+        /**
+         * When building an item based on this template, if no level is
+         * specified, a random level will be rolled based on the player's level
+         * or 0 if no player is specified. By default, items are generated with
+         * level 0
+         */
+        LEVEL_ITEM
+    }
+
+    /**
+     * @return Attempts to get the crafted amount registered in the Stat.
+     *         <p></p>
+     *         Default is <b>1</b> obviously.
+     * @deprecated Don't use this method, the Crafted Amount Stat will be deleted in the near future.
+     */
+    @Deprecated
+    public int getCraftedAmount() {
 
 		/* Attempt to find	|
 		NumericStatFormula ofAmount = (NumericStatFormula) base.get(ItemStats.CRAFT_AMOUNT);
@@ -246,7 +299,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 		}
 		 */
 
-		// No
-		return 1;
-	}
+        // No
+        return 1;
+    }
 }

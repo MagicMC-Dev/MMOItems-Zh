@@ -16,21 +16,27 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
+import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class MMOItemBuilder {
+    private final MMOItemTemplate template;
     private final MMOItem mmoitem;
     private final int level;
     private final ItemTier tier;
+
+    private double capacity;
+
+    boolean built = false;
 
     /**
      * Name modifiers, prefixes or suffixes, with priorities. They are saved
      * because they must be applied after the modifier selection process
      */
-    private final HashMap<UUID, NameModifier> nameModifiers = new HashMap<>();
+    private final Map<UUID, NameModifier> nameModifiers = new HashMap<>();
 
     public MMOItemBuilder(MMOItemTemplate template, int level, @Nullable ItemTier tier) {
         this(template, level, tier, false);
@@ -47,15 +53,20 @@ public class MMOItemBuilder {
      *                   formula given in the main config file
      * @param forDisplay Should it take modifiers into account
      */
-    public MMOItemBuilder(MMOItemTemplate template, int level, @Nullable ItemTier tier, boolean forDisplay) {
+    public MMOItemBuilder(@NotNull MMOItemTemplate template, int level, @Nullable ItemTier tier, boolean forDisplay) {
+        this.template = template;
         this.level = level;
         this.tier = tier;
 
         // Either use provided tier or look into the template base data
-        tier = tier != null ? tier : template.getBaseItemData().containsKey(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(template.getBaseItemData().get(ItemStats.TIER).toString()) : null;
+        tier = tier != null ? tier
+                : template.getBaseItemData().containsKey(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(template.getBaseItemData().get(ItemStats.TIER).toString())
+                : null;
 
         // Capacity is not final as it keeps lowering as modifiers are selected
-        double capacity = (tier != null && tier.hasCapacity() ? tier.getModifierCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
+        capacity = (template.hasModifierCapacity() ? template.getModifierCapacity() :
+                tier != null && tier.hasCapacity() ? tier.getModifierCapacity() :
+                        MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
         mmoitem = new MMOItem(template.getType(), template.getId());
 
         // Apply base item data
@@ -66,68 +77,67 @@ public class MMOItemBuilder {
         if (level > 0)
             mmoitem.setData(ItemStats.ITEM_LEVEL, new DoubleData(level));
 
-        // Roll item generation modifiers
-        if (!forDisplay)
-            for (TemplateModifier modifier : rollModifiers(template)) {
-                // Roll modifier chance; only apply if the rolled item has enough capacity
-                if (!modifier.rollChance() || modifier.getWeight() > capacity)
-                    continue;
+        // Apply modifiers from the parent node
+        if (!forDisplay && template.hasModifierGroup()) template.getModifierGroup().collect(this);
+    }
 
-                // Modifier UUID
-                UUID modUUID = UUID.randomUUID();
-
-                capacity -= modifier.getWeight();
-                if (modifier.hasNameModifier()) {
-                    addModifier(modifier.getNameModifier(), modUUID);
-                }
-
-                for (ItemStat stat : modifier.getItemData().keySet())
-                    addModifierData(stat, modifier.getItemData().get(stat).randomize(this), modUUID);
-            }
+    @NotNull
+    public MMOItemTemplate getTemplate() {
+        return template;
     }
 
     public int getLevel() {
         return level;
     }
 
+    @Nullable
     public ItemTier getTier() {
         return tier;
+    }
+
+    public double getCapacity() {
+        return capacity;
+    }
+
+    public void reduceCapacity(double weight) {
+        capacity -= weight;
     }
 
     /**
      * Calculates the item display name after applying name modifiers. If name
      * modifiers are specified but the item has no display name, MMOItems uses
-     * "Item"
+     * "Item".
+     * <p>
+     * MMOItemBuilder can only be used to build the MMOItem once, it will throw
+     * an IllegalArgumentException when trying to call this method twice from
+     * the same object.
      *
      * @return Built MMOItem instance
      */
+    @NotNull
     public MMOItem build() {
+        Validate.isTrue(!built, "MMOItem already built");
+        built = true;
 
         if (!nameModifiers.isEmpty()) {
 
             // Get name data
             StatHistory hist = StatHistory.from(mmoitem, ItemStats.NAME);
-            if (!mmoitem.hasData(ItemStats.NAME)) {
+            if (!mmoitem.hasData(ItemStats.NAME))
                 mmoitem.setData(ItemStats.NAME, new NameData("Item"));
-            }
 
-            for (UUID obs : nameModifiers.keySet()) {
+            nameModifiers.forEach((obs, mod) -> {
 
                 // Create new Name Data
-                NameModifier mod = nameModifiers.get(obs);
                 NameData modName = new NameData("");
 
                 // Include modifier information
-                if (mod.getType() == ModifierType.PREFIX) {
-                    modName.addPrefix(mod.getFormat());
-                }
-                if (mod.getType() == ModifierType.SUFFIX) {
-                    modName.addSuffix(mod.getFormat());
-                }
+                if (mod.getType() == ModifierType.PREFIX) modName.addPrefix(mod.getFormat());
+                if (mod.getType() == ModifierType.SUFFIX) modName.addSuffix(mod.getFormat());
 
                 // Register onto SH
                 hist.registerModifierBonus(obs, modName);
-            }
+            });
 
             // Recalculate name
             mmoitem.setData(ItemStats.NAME, hist.recalculate(mmoitem.getUpgradeLevel()));
@@ -199,6 +209,7 @@ public class MMOItemBuilder {
      *         modifiers that can be later rolled and applied to the builder
      */
     @NotNull
+    @Deprecated
     public static Collection<TemplateModifier> rollModifiers(@NotNull MMOItemTemplate template) {
         if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER))
             return template.getModifiers().values();

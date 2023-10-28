@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -18,6 +17,7 @@ import net.Indyuce.mmoitems.stat.type.Upgradable;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,75 +26,81 @@ import org.jetbrains.annotations.NotNull;
  * @author indyuce
  */
 public class MaximumDurability extends DoubleStat implements ItemRestriction, GemStoneStat, Upgradable {
-	public MaximumDurability() {
-		super("MAX_DURABILITY", Material.SHEARS, "最大耐久", new String[]{"您的物品变得无法使用/损坏", "之前的使用次数"}, new String[]{"!block", "all"});
-	}
+    public MaximumDurability() {
+        super("MAX_DURABILITY", Material.SHEARS, "最大耐久", new String[]{"您的物品变得无法使用/损坏", "之前的使用次数"}, new String[]{"!block", "all"});
+    }
 
-	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
-		whenApplied(item, currentData);
-	}
+    @Override
+    public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
+        whenApplied(item, currentData);
+    }
 
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
+    @Override
+    public void loadConfiguration(@NotNull ConfigurationSection legacyLanguageFile, @NotNull Object configObject) {
+        generalStatFormat = legacyLanguageFile.getString("item-damage");
+        if (generalStatFormat == null) generalStatFormat = legacyLanguageFile.getString("durability");
+    }
 
-		int max = (int) data.getValue();
-		int current = item.getMMOItem().hasData(ItemStats.CUSTOM_DURABILITY) ? (int) ((DoubleData) item.getMMOItem().getData(ItemStats.CUSTOM_DURABILITY)).getValue() : max;
+    @Override
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 
-		item.addItemTag(new ItemTag(getNBTPath(), max));
+        int max = (int) data.getValue();
+        int current = item.getMMOItem().hasData(ItemStats.CUSTOM_DURABILITY) ? (int) ((DoubleData) item.getMMOItem().getData(ItemStats.CUSTOM_DURABILITY)).getValue() : max;
 
-		// Display durability in lore here.
-		String format = MMOItems.plugin.getLanguage().getStatFormat("durability").replace("{max}", String.valueOf(max)).replace("{current}", String.valueOf(current));
-		item.getLore().insert("durability", format);
-	}
+        item.addItemTag(new ItemTag(getNBTPath(), max));
 
-	@Override
-	public void preprocess(@NotNull MMOItem item) {
+        // Display durability in lore here.
+        String format = getGeneralStatFormat().replace("{max}", String.valueOf(max)).replace("{current}", String.valueOf(current));
+        item.getLore().insert("durability", format);
+    }
 
-		// If this has no Max Upgrade Data
-		if (!item.hasData(ItemStats.MAX_DURABILITY)) {
+    @Override
+    public void preprocess(@NotNull MMOItem item) {
 
-			// What durability will it have?
-			int base = 400;
+        // If this has no Max Upgrade Data
+        if (!item.hasData(ItemStats.MAX_DURABILITY)) {
 
-			// I mean bruh
-			if (item.hasData(ItemStats.MATERIAL)) {
+            // What durability will it have?
+            int base = 400;
 
-				// Use vanilla max durability
-				MaterialData data = (MaterialData) item.getData(ItemStats.MATERIAL);
+            // I mean bruh
+            if (item.hasData(ItemStats.MATERIAL)) {
 
-				// Get mat
-				Material mat = data.getMaterial();
-				base = mat.getMaxDurability();
-			}
+                // Use vanilla max durability
+                MaterialData data = (MaterialData) item.getData(ItemStats.MATERIAL);
 
-			// Yea no
-			if (base < 8)
-				base = 400;
+                // Get mat
+                Material mat = data.getMaterial();
+                base = mat.getMaxDurability();
+            }
 
-			// Set max dura
-			item.setData(ItemStats.MAX_DURABILITY, new DoubleData(base));
-			/*item.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(base));*/
-		}
-	}
+            // Yea no
+            if (base < 8)
+                base = 400;
 
-	@Override
-	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+            // Set max dura
+            item.setData(ItemStats.MAX_DURABILITY, new DoubleData(base));
+            /*item.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(base));*/
+        }
+    }
 
-		/*
-		 * Items with no MMOITEMS_DURABILITY tag yet means that they still
-		 * have full durability
-		 */
-		if (!item.hasTag("MMOITEMS_DURABILITY"))
-			return true;
+    @Override
+    public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
 
-		if (item.getDouble(ItemStats.CUSTOM_DURABILITY.getNBTPath()) <= 0) {
-			if (message) {
-				Message.ZERO_DURABILITY.format(ChatColor.RED).send(player.getPlayer());
-				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-			}
-			return false;
-		}
-		return true;
-	}
+        /*
+         * Items with no MMOITEMS_DURABILITY tag yet means that they still
+         * have full durability
+         */
+        if (!item.hasTag("MMOITEMS_DURABILITY"))
+            return true;
+
+        if (item.getDouble(ItemStats.CUSTOM_DURABILITY.getNBTPath()) <= 0) {
+            if (message) {
+                Message.ZERO_DURABILITY.format(ChatColor.RED).send(player.getPlayer());
+                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+            }
+            return false;
+        }
+        return true;
+    }
 }

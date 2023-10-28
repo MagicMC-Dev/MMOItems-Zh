@@ -58,13 +58,24 @@ public class StatManager {
     public void reload(boolean cleanFirst) {
 
         // Clean fictive numeric stats before
-        if (cleanFirst) numeric.removeIf(stat -> stat instanceof FictiveNumericStat);
+        if (cleanFirst) {
+            numeric.removeIf(stat -> stat instanceof FictiveNumericStat);
+            loadCustom(); // Already loaded on plugin startup
+        }
 
         // Register elemental stats
         loadElements();
 
-        // Register custom stats
-        loadCustom();
+        // Load stat translation objects
+        final ConfigurationSection statOptions = new ConfigFile("/language", "stats").getConfig();
+        for (ItemStat stat : getAll())
+            try {
+                @Nullable Object object = statOptions.get(stat.getPath());
+                if (object == null) object = statOptions.get(stat.getLegacyTranslationPath());
+                stat.loadConfiguration(statOptions, object != null ? object : "<TranslationNotFound:" + stat.getPath() + ">");
+            } catch (RuntimeException exception) {
+                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load options for stat '" + stat.getId() + "': " + exception.getMessage());
+            }
     }
 
     /**
@@ -100,9 +111,9 @@ public class StatManager {
 
     /**
      * @return Collection of all numeric stats like atk damage, crit strike
-     *         chance, max mana... which can be applied on a gem stone. This is
-     *         used when applying gem stones to quickly access all the stats
-     *         which needs to be applied
+     * chance, max mana... which can be applied on a gem stone. This is
+     * used when applying gem stones to quickly access all the stats
+     * which needs to be applied
      */
     @NotNull
     public List<DoubleStat> getNumericStats() {
@@ -111,7 +122,7 @@ public class StatManager {
 
     /**
      * @return Collection of all stats which constitute an item restriction:
-     *         required level, required class, soulbound..
+     * required level, required class, soulbound..
      */
     @NotNull
     public List<ItemRestriction> getItemRestrictionStats() {
@@ -120,7 +131,7 @@ public class StatManager {
 
     /**
      * @return Collection of all stats implementing a consumable action like
-     *         deconstructing, identifying...
+     * deconstructing, identifying...
      */
     @NotNull
     public List<ConsumableItemInteraction> getConsumableActions() {
@@ -129,7 +140,7 @@ public class StatManager {
 
     /**
      * @return Collection of all stats implementing self consumable like
-     *         restore health, mana, hunger...
+     * restore health, mana, hunger...
      */
     @NotNull
     public List<PlayerConsumable> getPlayerConsumables() {
@@ -151,7 +162,7 @@ public class StatManager {
 
     /**
      * @deprecated Stat IDs are now stored in the stat instance directly.
-     *         Please use StatManager#register(ItemStat) instead
+     * Please use StatManager#register(ItemStat) instead
      */
     @Deprecated
     @SuppressWarnings("unused")

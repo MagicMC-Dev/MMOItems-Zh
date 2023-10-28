@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -41,7 +40,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
         // Lore Management
         int lvl = (int) data.getValue();
-        item.getLore().insert("required-level", formatNumericStat(lvl, "{value}", String.valueOf(lvl)));
+        item.getLore().insert(getPath(), DoubleStat.formatPath(getPath(), getGeneralStatFormat(), false, false, lvl));
 
         // Insert NBT
         item.addItemTag(getAppliedNBT(data));
@@ -51,38 +50,18 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
     public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
 
         // Get Value
-        double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);
-        double techMaximum = ((NumericStatFormula) templateData).calculate(0, 2.5);
-
-        // Cancel if it its NEGATIVE and this doesn't support negative stats.
-        if (techMaximum < 0 && !handleNegativeStats()) {
-            return;
-        }
-        if (techMinimum < 0 && !handleNegativeStats()) {
-            techMinimum = 0;
-        }
-        if (techMinimum < ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread()) {
-            techMinimum = ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread();
-        }
-        if (techMaximum > ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread()) {
-            techMaximum = ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread();
-        }
+        double techMinimum = templateData.calculate(0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
+        double techMaximum = templateData.calculate(0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
 
         // Add NBT Path
         item.addItemTag(getAppliedNBT(currentData));
 
         // Display if not ZERO
         if (techMinimum != 0 || techMaximum != 0) {
-
-            String builtRange;
-            if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) {
-                builtRange = SilentNumbers.readableRounding(techMinimum, 0);
-            } else {
-                builtRange = SilentNumbers.removeDecimalZeros(String.valueOf(techMinimum)) + "-" + SilentNumbers.removeDecimalZeros(String.valueOf(techMaximum));
-            }
+            final String builtRange = DoubleStat.formatPath(getPath(), getGeneralStatFormat(), false, false, Math.floor(techMinimum), Math.floor(techMaximum));
 
             // Just display normally
-            item.getLore().insert("required-level", formatNumericStat(techMinimum, "{value}", builtRange));
+            item.getLore().insert(getPath(), builtRange);
         }
     }
 
@@ -92,7 +71,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
         // Make and bake
         ArrayList<ItemTag> ret = new ArrayList<>();
-        ret.add(new ItemTag(getNBTPath(), ((DoubleData) data).getValue()));
+        ret.add(new ItemTag(getNBTPath(), data.getValue()));
         return ret;
     }
 

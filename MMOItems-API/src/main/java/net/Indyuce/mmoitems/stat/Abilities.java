@@ -33,189 +33,260 @@ import java.util.List;
 import java.util.Optional;
 
 public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> {
-	public Abilities() {
-		super("ABILITY", Material.BLAZE_POWDER, "物品技能",
-				new String[] { "让你的物品施展惊人的技能", "杀死怪物或增强自己" }, new String[] { "!block", "all" });
-	}
+    public Abilities() {
+        super("ABILITY", Material.BLAZE_POWDER, "物品技能",
+                new String[]{"让你的物品施展惊人的技能", "杀死怪物或增强自己"}, new String[]{"!block", "all"});
+    }
 
-	@Override
-	public RandomAbilityListData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "必须指定有效的配置部分");
-		ConfigurationSection config = (ConfigurationSection) object;
-		RandomAbilityListData list = new RandomAbilityListData();
+    @Override
+    public RandomAbilityListData whenInitialized(Object object) {
+        Validate.isTrue(object instanceof ConfigurationSection, "必须指定有效的配置部分");
+        ConfigurationSection config = (ConfigurationSection) object;
+        RandomAbilityListData list = new RandomAbilityListData();
 
-		for (String key : config.getKeys(false))
-			list.add(new RandomAbilityData(config.getConfigurationSection(key)));
+        for (String key : config.getKeys(false))
+            list.add(new RandomAbilityData(config.getConfigurationSection(key)));
 
-		return list;
-	}
+        return list;
+    }
 
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull AbilityListData data) {
+    private String generalFormat, modifierForEach, modifierSplitter, abilitySplitter;
+    private boolean legacyFormat, useAbilitySplitter;
+    private int modifiersPerLine;
 
-		//Modify Lore
-		List<String> abilityLore = new ArrayList<>();
-		boolean splitter = !MMOItems.plugin.getLanguage().abilitySplitter.equals("");
+    @Deprecated
+    @Override
+    public void loadConfiguration(@NotNull ConfigurationSection legacyLanguageFile, @NotNull Object configObject) {
 
-		String modifierFormat = ItemStat.translate("ability-modifier"), abilityFormat = ItemStat.translate("ability-format");
+        // MI <7 config
+        if (configObject instanceof ConfigurationSection) {
+            legacyFormat = false;
+            final ConfigurationSection config = (ConfigurationSection) configObject;
+            generalFormat = config.getString("general-format");
+            modifierForEach = config.getString("modifier-foreach");
+            modifierSplitter = config.getString("modifier-splitter");
+            abilitySplitter = config.getString("ability-splitter.format");
+            useAbilitySplitter = config.getBoolean("ability-splitter.enabled");
+            modifiersPerLine = config.getInt("modifiers-per-line");
 
-		data.getAbilities().forEach(ability -> {
-			abilityLore.add(abilityFormat.replace("{trigger}", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger())).replace("{ability}", ability.getAbility().getName()));
+        } else {
+            legacyFormat = true;
+            generalFormat = legacyLanguageFile.getString("ability-format");
+            modifierForEach = legacyLanguageFile.getString("ability-modifier");
+            abilitySplitter = legacyLanguageFile.getString("ability-splitter");
+            useAbilitySplitter = abilitySplitter != null && !abilitySplitter.isEmpty();
+        }
+    }
 
-			for (String modifier : ability.getModifiers()) {
-				item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier,
-						MythicLib.plugin.getMMOConfig().decimals.format(ability.getParameter(modifier)));
-				abilityLore.add(modifierFormat.replace("{modifier}", ability.getAbility().getParameterName(modifier)).replace("{value}",
-						MythicLib.plugin.getMMOConfig().decimals.format(ability.getParameter(modifier))));
-			}
+    @Override
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull AbilityListData data) {
 
-			if (splitter)
-				abilityLore.add(MMOItems.plugin.getLanguage().abilitySplitter);
-		});
+        // Modify Lore
+        List<String> abilityLore = new ArrayList<>();
 
-		if (splitter && abilityLore.size() > 0)
-			abilityLore.remove(abilityLore.size() - 1);
+        // DEPRECATED CODE which supports old versions of the stats.yml config
+        if (legacyFormat) {
+            data.getAbilities().forEach(ability -> {
+                abilityLore.add(generalFormat
+                        .replace("{trigger}", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger()))
+                        .replace("{ability}", ability.getAbility().getName()));
 
-		// Modify tags
-		item.getLore().insert("abilities", abilityLore);
-		item.addItemTag(getAppliedNBT(data));
-	}
+                for (String modifier : ability.getModifiers()) {
+                    item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier,
+                            MythicLib.plugin.getMMOConfig().decimals.format(ability.getParameter(modifier)));
+                    abilityLore.add(modifierForEach.replace("{modifier}", ability.getAbility().getParameterName(modifier)).replace("{value}",
+                            MythicLib.plugin.getMMOConfig().decimals.format(ability.getParameter(modifier))));
+                }
 
-	@NotNull
-	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull AbilityListData data) {
+                if (useAbilitySplitter)
+                    abilityLore.add(abilitySplitter);
+            });
+        }
 
-		// Make Array
-		ArrayList<ItemTag> ret = new ArrayList<>();
+        // Up to date code
+        else {
+            data.getAbilities().forEach(ability -> {
+                final StringBuilder builder = new StringBuilder(generalFormat
+                        .replace("{trigger}", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger()))
+                        .replace("{ability}", ability.getAbility().getName()));
 
-		// Convert to JSON
-		JsonArray jsonArray = new JsonArray();
-		for (AbilityData ab : data.getAbilities()) { jsonArray.add(ab.toJson()); }
+                boolean modifierAppened = false;
+                int lineCounter = 0;
+                for (String modifier : ability.getModifiers()) {
+                    final String formattedValue = MythicLib.plugin.getMMOConfig().decimals.format(ability.getParameter(modifier));
+                    item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier, formattedValue);
+                    if (modifierAppened) builder.append(modifierSplitter);
+                    builder.append(modifierForEach
+                            .replace("{modifier}", ability.getAbility().getParameterName(modifier))
+                            .replace("{value}", formattedValue));
+                    modifierAppened = true;
+                    lineCounter++;
 
-		// Put
-		ret.add(new ItemTag(getNBTPath(), jsonArray.toString()));
+                    if (modifiersPerLine > 0 && lineCounter >= modifiersPerLine) {
+                        lineCounter = 0;
+                        modifierAppened = false;
+                        abilityLore.add(builder.toString());
+                        builder.setLength(0);
+                    }
+                }
 
-		return ret;
-	}
+                if (modifierAppened) abilityLore.add(builder.toString());
 
-	@Override
-	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		new AbilityListEdition(inv.getPlayer(), inv.getEdited()).open(inv);
-	}
+                if (useAbilitySplitter)
+                    abilityLore.add(abilitySplitter);
+            });
+        }
 
-	@Override
-	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		String configKey = (String) info[0];
-		String edited = (String) info[1];
+        if (useAbilitySplitter && abilityLore.size() > 0)
+            abilityLore.remove(abilityLore.size() - 1);
 
-		String format = message.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z0-9_]", "");
+        // Modify tags
+        item.getLore().insert("abilities", abilityLore);
+        item.addItemTag(getAppliedNBT(data));
+    }
 
-		if (edited.equals("ability")) {
-			Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(format),
-					"不是有效的技能！您可以使用 /mi list ability 检查技能列表");
-			RegisteredSkill ability = MMOItems.plugin.getSkills().getSkill(format);
+    @Override
+    public String getLegacyTranslationPath() {
+        return "ability-format";
+    }
 
-			inv.getEditedSection().set("ability." + configKey, null);
-			inv.getEditedSection().set("ability." + configKey + ".type", format);
-			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(
-					MMOItems.plugin.getPrefix() + "成功设置技能为 " + ChatColor.GOLD + ability.getName() + ChatColor.GRAY );
-			return;
-		}
+    @NotNull
+    @Override
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull AbilityListData data) {
 
-		if (edited.equals("mode")) {
+        // Make Array
+        ArrayList<ItemTag> ret = new ArrayList<>();
 
-			TriggerType castMode = TriggerType.valueOf(format);
+        // Convert to JSON
+        JsonArray jsonArray = new JsonArray();
+        for (AbilityData ab : data.getAbilities()) {
+            jsonArray.add(ab.toJson());
+        }
 
-			inv.getEditedSection().set("ability." + configKey + ".mode", castMode.name());
-			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功将触发器设置为 " + ChatColor.GOLD + castMode.getName()
-					+ ChatColor.GRAY );
-			return;
-		}
+        // Put
+        ret.add(new ItemTag(getNBTPath(), jsonArray.toString()));
 
-		new NumericStatFormula(message).fillConfigurationSection(inv.getEditedSection(), "ability." + configKey + "." + edited,
-				FormulaSaveOption.NONE);
-		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
-				+ "已成功添加");
-	}
+        return ret;
+    }
 
-	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomAbilityListData> statData) {
-		lore.add(ChatColor.GRAY + "当前技能: " + ChatColor.GOLD
-				+ (statData.isPresent() ? ((RandomAbilityListData) statData.get()).getAbilities().size() : 0));
-		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以编辑物品技能");
-	}
+    @Override
+    public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
+        new AbilityListEdition(inv.getPlayer(), inv.getEdited()).open(inv);
+    }
 
-	@NotNull
-	@Override
-	public AbilityListData getClearStatData() {
-		return new AbilityListData();
-	}
+    @Override
+    public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
+        String configKey = (String) info[0];
+        String edited = (String) info[1];
 
-	@Override
-	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+        String format = message.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z0-9_]", "");
 
-		// Get tags
-		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+        if (edited.equals("ability")) {
+            Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(format),
+                    "格式不是有效的技能！您可以使用 /mi listability 检查技能列表。");
+            RegisteredSkill ability = MMOItems.plugin.getSkills().getSkill(format);
 
-		if (mmoitem.getNBT().hasTag(getNBTPath()))
-			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+            inv.getEditedSection().set("ability." + configKey, null);
+            inv.getEditedSection().set("ability." + configKey + ".type", format);
+            inv.registerTemplateEdition();
+            inv.getPlayer().sendMessage(
+                    MMOItems.plugin.getPrefix() + "成功设置技能为 " + ChatColor.GOLD + ability.getName() + ChatColor.GRAY + ".");
+            return;
+        }
 
-		AbilityListData data = (AbilityListData) getLoadedNBT(relevantTags);
+        if (edited.equals("mode")) {
 
-		// Valid?
-		if (data != null) {
+            TriggerType castMode = TriggerType.valueOf(format);
 
-			// Set
-			mmoitem.setData(this, data);
-		}
-	}
+            inv.getEditedSection().set("ability." + configKey + ".mode", castMode.name());
+            inv.registerTemplateEdition();
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功设置触发器为 " + ChatColor.GOLD + castMode.getName()
+                    + ChatColor.GRAY + ".");
+            return;
+        }
 
-	@Nullable
-	@Override
-	public AbilityListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+        new NumericStatFormula(message).fillConfigurationSection(inv.getEditedSection(), "ability." + configKey + "." + edited,
+                FormulaSaveOption.NONE);
+        inv.registerTemplateEdition();
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
+                + " 添加成功");
+    }
 
-		// Get Json Array thing
-		ItemTag jsonCompact = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+    @Override
+    public void whenDisplayed(List<String> lore, Optional<RandomAbilityListData> statData) {
+        lore.add(ChatColor.GRAY + "当前技能: " + ChatColor.GOLD
+                + (statData.isPresent() ? statData.get().getAbilities().size() : 0));
+        lore.add("");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以编辑物品技能");
+    }
 
-		// Found?
-		if (jsonCompact != null) {
+    @NotNull
+    @Override
+    public AbilityListData getClearStatData() {
+        return new AbilityListData();
+    }
 
-			// Attempt to parse
-			try {
+    @Override
+    public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 
-				// New ablity list data
-				AbilityListData list = new AbilityListData();
-				JsonArray ar = new JsonParser().parse((String) jsonCompact.getValue()).getAsJsonArray();
+        // Get tags
+        ArrayList<ItemTag> relevantTags = new ArrayList<>();
 
-				// Convert every object into an ability
-				for (JsonElement e : ar) {
+        if (mmoitem.getNBT().hasTag(getNBTPath()))
+            relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
 
-					// For every object
-					if (e.isJsonObject()) {
+        AbilityListData data = getLoadedNBT(relevantTags);
 
-						// Get as object
-						JsonObject obj = e.getAsJsonObject();
+        // Valid?
+        if (data != null) {
 
-						// Add to abilit list
-						list.add(new AbilityData(obj));
-					}
-				}
+            // Set
+            mmoitem.setData(this, data);
+        }
+    }
 
-				// Well that mus thave worked aye?
-				return list;
+    @Nullable
+    @Override
+    public AbilityListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
-			} catch (JsonSyntaxException|IllegalStateException exception) {
-				/*
-				 * OLD ITEM WHICH MUST BE UPDATED.
-				 */
-			}
-		}
+        // Get Json Array thing
+        ItemTag jsonCompact = ItemTag.getTagAtPath(getNBTPath(), storedTags);
 
-		// Did not work out
-		return null;
-	}
+        // Found?
+        if (jsonCompact != null) {
+
+            // Attempt to parse
+            try {
+
+                // New ablity list data
+                AbilityListData list = new AbilityListData();
+                JsonArray ar = new JsonParser().parse((String) jsonCompact.getValue()).getAsJsonArray();
+
+                // Convert every object into an ability
+                for (JsonElement e : ar) {
+
+                    // For every object
+                    if (e.isJsonObject()) {
+
+                        // Get as object
+                        JsonObject obj = e.getAsJsonObject();
+
+                        // Add to abilit list
+                        list.add(new AbilityData(obj));
+                    }
+                }
+
+                // Well that mus thave worked aye?
+                return list;
+
+            } catch (JsonSyntaxException | IllegalStateException exception) {
+                /*
+                 * OLD ITEM WHICH MUST BE UPDATED.
+                 */
+            }
+        }
+
+        // Did not work out
+        return null;
+    }
 }

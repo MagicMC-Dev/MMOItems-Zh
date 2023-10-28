@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -148,6 +149,26 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
      */
     public abstract void whenDisplayed(List<String> lore, Optional<R> statData);
 
+    protected String generalStatFormat;
+
+    @Deprecated
+    public void loadConfiguration(@NotNull ConfigurationSection legacyLanguageFile, @NotNull Object configObject) {
+        loadConfiguration(configObject);
+    }
+
+    public void loadConfiguration(@NotNull Object configObject) {
+        generalStatFormat = configObject.toString();
+    }
+
+    @Deprecated
+    public String getLegacyTranslationPath() {
+        return getPath();
+    }
+
+    public String getGeneralStatFormat() {
+        return generalStatFormat;
+    }
+
     @NotNull
     public String getName() {
         return name;
@@ -227,11 +248,14 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
         enabled = false;
     }
 
+    /**
+     * @deprecated See {@link DoubleStat#formatPath(String, String, boolean, boolean, double, double)}
+     */
+    @Deprecated
     public String formatNumericStat(double value, String... replace) {
-        String format = MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("<plus>", value > 0 ? "+" : "");
-        for (int j = 0; j < replace.length; j += 2) {
+        String format = getGeneralStatFormat().replace("<plus>", value > 0 ? "+" : "");
+        for (int j = 0; j < replace.length; j += 2)
             format = format.replace(replace[j], replace[j + 1]);
-        }
         return format;
     }
 
@@ -248,9 +272,9 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
         return Objects.hash(id);
     }
 
+    @Deprecated
     public static String translate(String path) {
-        String str = MMOItems.plugin.getLanguage().getStatFormat(path);
-        return str == null ? "<TranslationNotFound:" + path + ">" : str;
+        return MMOItems.plugin.getLanguage().getStatFormat(path);
     }
 
     /**

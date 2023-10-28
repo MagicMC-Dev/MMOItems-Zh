@@ -19,7 +19,7 @@ public class MaxConsume extends DoubleStat {
 
         item.addItemTag(new ItemTag(getNBTPath(), left));
 
-        String format = MMOItems.plugin.getLanguage().getStatFormat("max-consume").replace("{value}", String.valueOf(left));
-        item.getLore().insert("max-consume", format);
+        String format = getGeneralStatFormat().replace("{value}", String.valueOf(left));
+        item.getLore().insert(getPath(), format);
     }
 }

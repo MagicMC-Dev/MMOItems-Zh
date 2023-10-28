@@ -1,11 +1,11 @@
-package net.Indyuce.mmoitems.util;
+package net.Indyuce.mmoitems.api.item.build;
 
-import net.Indyuce.mmoitems.api.ConfigFile;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class TooltipTexture {
 
@@ -13,21 +13,18 @@ public class TooltipTexture {
     private final String top, middle, bottom;
 
     @Nullable
-    private final String bar;
+    private final String bar, suffix;
 
-    @Deprecated
-    public static TooltipTexture TEST;
-
-    static {
-        FileConfiguration configuration = new ConfigFile("tooltips").getConfig();
-        TEST = new TooltipTexture(configuration.getConfigurationSection("test"));
-    }
+    private final List<String> loreHeader;
 
     public TooltipTexture(@NotNull ConfigurationSection config) {
-        top = config.getString("top");
-        bar = notEmptyOrNull(config.getString("bar"));
-        middle = config.getString("middle");
-        bottom = config.getString("bottom");
+        final String prefix = config.getString("prefix", "");
+        top = prefix + config.getString("top");
+        bar = config.contains("bar") && config.get("bar") != null ? prefix + config.getString("bar") : null;
+        middle = prefix + config.getString("middle");
+        bottom = prefix + config.getString("bottom");
+        suffix = config.getString("suffix", "");
+        loreHeader = config.getStringList("lore_header");
 
         Validate.notNull(top, "Tooltip top portion cannot be null");
         Validate.notNull(middle, "Tooltip middle portion cannot be null");
@@ -54,8 +51,13 @@ public class TooltipTexture {
         return bar == null ? middle : bar;
     }
 
+    @NotNull
+    public String getSuffix() {
+        return suffix;
+    }
+
     @Nullable
-    private String notEmptyOrNull(@Nullable String str) {
-        return str == null || str.isEmpty() ? null : str;
+    public List<String> getLoreHeader() {
+        return loreHeader;
     }
 }

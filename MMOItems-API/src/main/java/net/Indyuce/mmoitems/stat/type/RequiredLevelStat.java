@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * required skill levels.
  */
 public abstract class RequiredLevelStat extends DoubleStat implements ItemRestriction, GemStoneStat {
-    private final String idKey;
+    // private final String idKey;
 
     public RequiredLevelStat(String idKey, Material mat, String nameKey, String[] lore) {
         super("REQUIRED_" + idKey,
@@ -32,15 +32,15 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
                 lore,
                 new String[]{"!block", "all"});
 
-        this.idKey = idKey;
+        // this.idKey = idKey;
     }
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 
         // Lore Management
-        int lvl = (int) ((DoubleData) data).getValue();
-        String format = MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("{value}", String.valueOf(lvl));
+        int lvl = (int) data.getValue();
+        String format = getGeneralStatFormat().replace("{value}", String.valueOf(lvl));
         item.getLore().insert(getPath(), format);
 
         // Insert NBT
@@ -51,8 +51,8 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
     public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
 
         // Get Value
-        double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);
-        double techMaximum = ((NumericStatFormula) templateData).calculate(0, 2.5);
+        double techMinimum = templateData.calculate(0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
+        double techMaximum = templateData.calculate(0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
 
         // Cancel if it its NEGATIVE and this doesn't support negative stats.
         if (techMaximum < 0 && !handleNegativeStats()) {
@@ -73,16 +73,8 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
 
         // Display if not ZERO
         if (techMinimum != 0 || techMaximum != 0) {
-
-            String builtRange;
-            if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) {
-                builtRange = SilentNumbers.readableRounding(techMinimum, 0);
-            } else {
-                builtRange = SilentNumbers.removeDecimalZeros(String.valueOf(techMinimum)) + "-" + SilentNumbers.removeDecimalZeros(String.valueOf(techMaximum));
-            }
-
-            // Just display normally
-            item.getLore().insert(getPath(), formatNumericStat(techMinimum, "{value}", builtRange));
+            final String builtRange = DoubleStat.formatPath(getPath(), getGeneralStatFormat(), false, false, Math.floor(techMinimum), Math.floor(techMaximum));
+            item.getLore().insert(getPath(), builtRange);
         }
     }
 

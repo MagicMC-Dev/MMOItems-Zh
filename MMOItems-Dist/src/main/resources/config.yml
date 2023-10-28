@@ -79,7 +79,7 @@ item-upgrading:
 
     # 是否在物品名称或描述中显示
     # 如果允许玩家重命名物品，可以禁用此选项。
-    # 如果设置为'false'，请确保在物品描述中包含 %upgrade_level% 。
+    # 如果设置为'false'，请确保在物品描述中包含 {upgrade_level} 。
     display-in-name: true
 
     # 是否在描述中显示更改的属性。

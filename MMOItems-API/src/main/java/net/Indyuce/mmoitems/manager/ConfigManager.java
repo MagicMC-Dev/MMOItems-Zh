@@ -35,7 +35,7 @@ import java.util.logging.Level;
 public class ConfigManager implements Reloadable {
 
     // cached config files
-    private ConfigFile loreFormat, stats, dynLore;
+    private ConfigFile loreFormat, dynLore;
 
     // Language
     private final Map<TriggerType, String> triggerTypeNames = new HashMap<>();
@@ -43,11 +43,11 @@ public class ConfigManager implements Reloadable {
 
     // Cached config options
     public boolean replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate, opStatsEnabled, disableRemovedItems;
-    public String abilitySplitter;
     public double soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
     public NumericStatFormula defaultItemCapacity;
     public ReforgeOptions revisionOptions, gemRevisionOptions, phatLootsOptions;
     public final List<String> opStats = new ArrayList<>();
+    public String itemTypeLoreTag, gemStoneLoreTag;
 
     public ConfigManager() {
         mkdir("layouts");
@@ -124,6 +124,11 @@ public class ConfigManager implements Reloadable {
         }
         messages.save();
 
+        // Special lore tags that do not fit any stat.
+        final ConfigurationSection statsConfig = new ConfigFile("/language", "stats").getConfig();
+        itemTypeLoreTag = statsConfig.getString("item-type", "");
+        gemStoneLoreTag = statsConfig.getString("gem-stone-lore", "");
+
         // Potion effects
         final LanguageFile potionEffects = new LanguageFile("potion-effects");
         for (PotionEffectType effect : PotionEffectType.values())
@@ -154,7 +159,7 @@ public class ConfigManager implements Reloadable {
         MMOItems.plugin.reloadConfig();
 
         loreFormat = new ConfigFile("/language", "lore-format");
-        stats = new ConfigFile("/language", "stats");
+
         dynLore = new ConfigFile("/language", "dynamic-lore");
 
         loadTranslations();
@@ -166,7 +171,6 @@ public class ConfigManager implements Reloadable {
         replaceMushroomDrops = MMOItems.plugin.getConfig().getBoolean("custom-blocks.replace-mushroom-drops");
         worldGenEnabled = MMOItems.plugin.getConfig().getBoolean("custom-blocks.enable-world-gen");
 
-        abilitySplitter = getStatFormat("ability-splitter");
         soulboundBaseDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.base");
         soulboundPerLvlDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.per-lvl");
         upgradeRequirementsCheck = MMOItems.plugin.getConfig().getBoolean("item-upgrade-requirements-check");
@@ -175,6 +179,8 @@ public class ConfigManager implements Reloadable {
         rerollOnItemUpdate = MMOItems.plugin.getConfig().getBoolean("item-revision.reroll-when-updated");
         levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
         disableRemovedItems = MMOItems.plugin.getConfig().getBoolean("disable-removed-items");
+
+        NumericStatFormula.RELATIVE_SPREAD = !MMOItems.plugin.getConfig().getBoolean("additive-spread-formula", false);
 
         opStatsEnabled = MMOItems.plugin.getConfig().getBoolean("op-item-stats.enabled");
         opStats.clear();
@@ -211,13 +217,18 @@ public class ConfigManager implements Reloadable {
      * @return Can this block material be broken by tool mechanics
      *         like 'Bouncing Crack'
      */
-    public boolean isBlacklisted(Material material) {
+    public boolean isBlacklisted(@NotNull Material material) {
         return MMOItems.plugin.getConfig().getStringList("block-blacklist").contains(material.name());
     }
 
+    /**
+     * @deprecated Will be removed in the future.
+     */
     @NotNull
+    @Deprecated
     public String getStatFormat(String path) {
-        String found = stats.getConfig().getString(path);
+        final ConfigurationSection config = new ConfigFile("/language", "stats").getConfig();
+        final String found = config.getString(path);
         return found == null ? "<TranslationNotFound:" + path + ">" : found;
     }
 

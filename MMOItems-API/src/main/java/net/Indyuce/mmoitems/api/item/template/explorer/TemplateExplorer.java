@@ -19,7 +19,7 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
  * @author cympe
  */
 public class TemplateExplorer {
-	private final Random random = new Random();
+	private static final Random RANDOM = new Random();
 
 	/*
 	 * Not defined at the beginning to save extra performance,
@@ -43,7 +43,7 @@ public class TemplateExplorer {
 		case 1:
 			return all.stream().findFirst();
 		default:
-			return all.stream().skip(random.nextInt(count())).findFirst();
+			return all.stream().skip(RANDOM.nextInt(count())).findFirst();
 		}
 	}
 

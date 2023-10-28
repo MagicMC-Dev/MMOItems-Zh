@@ -52,7 +52,7 @@ public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 			item.addItemTag(getAppliedNBT(data));
 
 			// Show in lore
-			item.getLore().insert(getPath(), MMOItems.plugin.getLanguage().getStatFormat(getPath()));
+			item.getLore().insert(getPath(), getGeneralStatFormat());
 		}
 	}
 

@@ -55,10 +55,10 @@ public abstract class EditionInventory extends PluginInventory {
      * base item data
      *
      * @deprecated Not being used atm, the item editor only lets the user
-     *         edit the base item data
+     *         edit the base item data.
      */
     @Deprecated
-    private TemplateModifier editedModifier;
+    private TemplateModifier editedModifier = null;
 
     private ItemStack cachedItem;
     private int previousPage;
@@ -178,18 +178,11 @@ public abstract class EditionInventory extends PluginInventory {
          * pretty much useless since the heaviest step is to regenerate the item
          */
         template = MMOItems.plugin.getTemplates().getTemplate(template.getType(), template.getId());
-        editedModifier = editedModifier != null ? template.getModifier(editedModifier.getId()) : null;
+        //editedModifier = editedModifier != null ? template.getModifier(editedModifier.getId()) : null;
 
-        /*
-         * The instant task brings the Bukkit event call from the
-         * updateCachedItem() method back to SYNC since registerTemplateEdition()
-         * is called ASYNC inside of an AsyncChatEvent
-         */
-        Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
-            updateCachedItem();
-            refreshInventory();
-            //open();
-        });
+        updateCachedItem();
+        refreshInventory();
+        //open();
     }
 
     /**

@@ -17,15 +17,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BrowserDisplayIDX extends DoubleStat {
-
-    public BrowserDisplayIDX() { super("BROWSER_IDX", Material.GHAST_TEAR, "浏览索引", new String[] {"用于在GUI界面,", "mmoitems 浏览器中整齐地 §a/ 将类似的物品显示在一起", "", "将具有相同索引的物品分组"}, new String[]{"all"}); }
+    public BrowserDisplayIDX() {
+        super("BROWSER_IDX", Material.GHAST_TEAR, "浏览索引", new String[] {"用于在GUI界面,", "mmoitems 浏览器中整齐地 §a/ 将类似的物品显示在一起", "", "将具有相同索引的物品分组"}, new String[]{"all"});
+    }
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
         // Does not participate in actual items
     }
 
-    @Override public void whenLoaded(@NotNull ReadMMOItem mmoitem) { }
+    @Override
+    public void whenLoaded(@NotNull ReadMMOItem mmoitem) { }
 
     /**
      * They will be ordered.
@@ -33,7 +35,8 @@ public class BrowserDisplayIDX extends DoubleStat {
      * @return The MMOItem Templates separated by Index. Those with no index
      *         will be linked to the null index.
      */
-    @NotNull public static HashMap<Double, ArrayList<MMOItemTemplate>> select(@NotNull Collection<MMOItemTemplate> templates) {
+    @NotNull
+    public static HashMap<Double, ArrayList<MMOItemTemplate>> select(@NotNull Collection<MMOItemTemplate> templates) {
         HashMap<Double, ArrayList<MMOItemTemplate>> ret = new HashMap<>();
 
         // Go through them all

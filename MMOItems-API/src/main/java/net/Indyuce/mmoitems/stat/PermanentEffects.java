@@ -43,170 +43,177 @@ import org.jetbrains.annotations.Nullable;
  * amplifier and duration are not numeric formulas but flat values.... TODO
  */
 public class PermanentEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
-	public PermanentEffects() {
-		super("PERM_EFFECTS", Material.POTION, "药水效果", new String[] { "药水会影响你的物品授予持有者的效果" },
-				new String[] { "!miscellaneous", "!block", "all" });
-	}
+    public PermanentEffects() {
+        super("PERM_EFFECTS", Material.POTION, "药水效果", new String[]{"药水会影响你的物品授予持有者的效果"},
+                new String[]{"!miscellaneous", "!block", "all"});
+    }
 
-	@Override
-	public RandomPotionEffectListData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
-		ConfigurationSection config = (ConfigurationSection) object;
+    @Override
+    public RandomPotionEffectListData whenInitialized(Object object) {
+        Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
+        ConfigurationSection config = (ConfigurationSection) object;
 
-		RandomPotionEffectListData effects = new RandomPotionEffectListData();
+        RandomPotionEffectListData effects = new RandomPotionEffectListData();
 
-		for (String effect : config.getKeys(false)) {
-			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
-			Validate.notNull(type, "找不到名为的药水效果类型 '" + effect + "'");
-			effects.add(new RandomPotionEffectData(type, new NumericStatFormula(config.get(effect))));
-		}
+        for (String effect : config.getKeys(false)) {
+            PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
+            Validate.notNull(type, "找不到名为 '" + effect + "' 的药水效果类型");
+            effects.add(new RandomPotionEffectData(type, new NumericStatFormula(config.get(effect))));
+        }
 
-		return effects;
-	}
+        return effects;
+    }
 
-	@Override
-	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.PERM_EFFECTS).enable("在聊天中输入你想要添加的永久药水效果",
-					ChatColor.AQUA + "格式: {效果名称} {放大器数值公式}");
+    @Override
+    public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
+        if (event.getAction() == InventoryAction.PICKUP_ALL)
+            new StatEdition(inv, ItemStats.PERM_EFFECTS).enable("在聊天中输入你想要添加的永久药水效果",
+                    ChatColor.AQUA + "格式: {效果名称} {放大器数值公式}");
 
-		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (inv.getEditedSection().contains("perm-effects")) {
-				Set<String> set = inv.getEditedSection().getConfigurationSection("perm-effects").getKeys(false);
-				String last = new ArrayList<>(set).get(set.size() - 1);
-				inv.getEditedSection().set("perm-effects." + last, null);
-				if (set.size() <= 1)
-					inv.getEditedSection().set("perm-effects", null);
-				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + last.substring(0, 1).toUpperCase()
-						+ last.substring(1).toLowerCase() + ".");
-			}
-		}
-	}
+        if (event.getAction() == InventoryAction.PICKUP_HALF) {
+            if (inv.getEditedSection().contains("perm-effects")) {
+                Set<String> set = inv.getEditedSection().getConfigurationSection("perm-effects").getKeys(false);
+                String last = new ArrayList<>(set).get(set.size() - 1);
+                inv.getEditedSection().set("perm-effects." + last, null);
+                if (set.size() <= 1)
+                    inv.getEditedSection().set("perm-effects", null);
+                inv.registerTemplateEdition();
+                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除 " + last.substring(0, 1).toUpperCase()
+                        + last.substring(1).toLowerCase() + ".");
+            }
+        }
+    }
 
-	@Override
-	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		String[] split = message.split(" ");
-		Validate.isTrue(split.length >= 2, "使用这种格式: {效果名称} {效果放大器数值公式}. 例子: 'speed 1 0.3' "
-				+ "代表 Speed 1,每个物品级别加上 0.3 级别 (向上舍入到较低的整数) ");
+    @Override
+    public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
+        String[] split = message.split(" ");
+        Validate.isTrue(split.length >= 2, "使用这种格式: {效果名称} {效果放大器数值公式}. 例子: 'speed 1 0.3'"
+                + "代表 Speed 1,每个物品级别加上 0.3 级别 (向上舍入到较低的整数)");
 
-		PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_"));
-		Validate.notNull(effect, split[0] + " 不是有效的药水效果所有药水效果都可以在这里找到: "
-				+ "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
+        PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_"));
+        Validate.notNull(effect, split[0] + " 不是有效的药水效果所有药水效果都可以在这里找到: "
+                + "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 
-		NumericStatFormula formula = new NumericStatFormula(message.substring(message.indexOf(" ") + 1));
-		formula.fillConfigurationSection(inv.getEditedSection(), "perm-effects." + effect.getName());
-		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(
-				MMOItems.plugin.getPrefix() + ChatColor.GOLD + effect.getName() + " " + formula + ChatColor.GRAY + " successfully added.");
-	}
+        NumericStatFormula formula = new NumericStatFormula(message.substring(message.indexOf(" ") + 1));
+        formula.fillConfigurationSection(inv.getEditedSection(), "perm-effects." + effect.getName());
+        inv.registerTemplateEdition();
+        inv.getPlayer().sendMessage(
+                MMOItems.plugin.getPrefix() + ChatColor.GOLD + effect.getName() + " " + formula + ChatColor.GRAY + " successfully added.");
+    }
 
-	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomPotionEffectListData> statData) {
-		if (statData.isPresent()) {
-			lore.add(ChatColor.GRAY + "当前值:");
-			RandomPotionEffectListData data = statData.get();
-			for (RandomPotionEffectData effect : data.getEffects())
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
-						+ " " + effect.getAmplifier().toString());
+    @Override
+    public void whenDisplayed(List<String> lore, Optional<RandomPotionEffectListData> statData) {
+        if (statData.isPresent()) {
+            lore.add(ChatColor.GRAY + "当前值: ");
+            RandomPotionEffectListData data = statData.get();
+            for (RandomPotionEffectData effect : data.getEffects())
+                lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
+                        + " " + effect.getAmplifier().toString());
 
-		} else
-			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
+        } else
+            lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
-		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以添加效果");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个效果");
-	}
+        lore.add("");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以添加效果.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个效果");
+    }
 
-	@NotNull
-	@Override
-	public PotionEffectListData getClearStatData() {
-		return new PotionEffectListData();
-	}
+    @NotNull
+    @Override
+    public PotionEffectListData getClearStatData() {
+        return new PotionEffectListData();
+    }
 
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull PotionEffectListData data) {
-		List<String> lore = new ArrayList<>();
+    @Override
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull PotionEffectListData data) {
+        List<String> lore = new ArrayList<>();
 
-		String permEffectFormat = ItemStat.translate("perm-effect");
-		((PotionEffectListData) data).getEffects().forEach(effect -> {
-			lore.add(permEffectFormat.replace("{effect}", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + " " + MMOUtils.intToRoman(effect.getLevel())));
-		});
+        String permEffectFormat = getGeneralStatFormat();
+        data.getEffects().forEach(effect -> lore.add(permEffectFormat
+                .replace("{effect}", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
+                        + " " + MMOUtils.intToRoman(effect.getLevel()))));
 
-		item.getLore().insert("perm-effects", lore);
+        item.getLore().insert("perm-effects", lore);
 
-		// Yes
-		item.addItemTag(getAppliedNBT(data));
-	}
+        // Yes
+        item.addItemTag(getAppliedNBT(data));
+    }
 
-	@NotNull
-	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull PotionEffectListData data) {
+    @Override
+    public String getLegacyTranslationPath() {
+        return "perm-effect";
+    }
 
-		// Them tags
-		ArrayList<ItemTag> ret = new ArrayList<>();
-		JsonObject object = new JsonObject();
+    @NotNull
+    @Override
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull PotionEffectListData data) {
 
-		// For every registered effect
-		for (PotionEffectData effect : data.getEffects()) {
+        // Them tags
+        ArrayList<ItemTag> ret = new ArrayList<>();
+        JsonObject object = new JsonObject();
 
-			// Add Properies
-			object.addProperty(effect.getType().getName(), effect.getLevel());
-		}
+        // For every registered effect
+        for (PotionEffectData effect : data.getEffects()) {
 
-		// Add onto the list
-		ret.add(new ItemTag(getNBTPath(), object.toString()));
+            // Add Properies
+            object.addProperty(effect.getType().getName(), effect.getLevel());
+        }
 
-		return ret;
-	}
+        // Add onto the list
+        ret.add(new ItemTag(getNBTPath(), object.toString()));
 
-	@Override
-	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+        return ret;
+    }
 
-		// Find tags
-		ArrayList<ItemTag> rTag = new ArrayList<>();
-		if (mmoitem.getNBT().hasTag(getNBTPath()))
-			rTag.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+    @Override
+    public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 
-		// Build Data
-		StatData data = getLoadedNBT(rTag);
+        // Find tags
+        ArrayList<ItemTag> rTag = new ArrayList<>();
+        if (mmoitem.getNBT().hasTag(getNBTPath()))
+            rTag.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
 
-		// Add data, if valid
-		if (data != null) { mmoitem.setData(this, data); }
-	}
+        // Build Data
+        StatData data = getLoadedNBT(rTag);
 
-	@Nullable
-	@Override
-	public PotionEffectListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+        // Add data, if valid
+        if (data != null) {
+            mmoitem.setData(this, data);
+        }
+    }
 
-		// Find tag
-		ItemTag oTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+    @Nullable
+    @Override
+    public PotionEffectListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
-		// Well
-		if (oTag != null) {
+        // Find tag
+        ItemTag oTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
 
-			// Parse as Json
-			try {
+        // Well
+        if (oTag != null) {
 
-				// A new effect
-				PotionEffectListData effects = new PotionEffectListData();
+            // Parse as Json
+            try {
 
-				JsonElement element = new JsonParser().parse((String) oTag.getValue());
+                // A new effect
+                PotionEffectListData effects = new PotionEffectListData();
 
-				element.getAsJsonObject().entrySet().forEach(entry ->
-						effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
+                JsonElement element = new JsonParser().parse((String) oTag.getValue());
 
-				// Thats it
-				return effects;
+                element.getAsJsonObject().entrySet().forEach(entry ->
+                        effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
 
-			} catch (JsonSyntaxException |IllegalStateException exception) {
-				/*
-				 * OLD ITEM WHICH MUST BE UPDATED.
-				 */
-			}
-		}
+                // Thats it
+                return effects;
 
-		// Noep
-		return null;
-	}
+            } catch (JsonSyntaxException | IllegalStateException exception) {
+                /*
+                 * OLD ITEM WHICH MUST BE UPDATED.
+                 */
+            }
+        }
+
+        // Noep
+        return null;
+    }
 }

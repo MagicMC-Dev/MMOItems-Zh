@@ -454,7 +454,7 @@ public class MMOItem implements ItemReference {
 	}
 
 	/**
-	 * Deletes this UUID from all Stat Histories.
+	 * Deletes this UUID from all stat histories.
 	 *
 	 * @param gemUUID UUID of gem to remove
 	 * @param color Color of the gem socket to restore. {@code null} to not restore socket.

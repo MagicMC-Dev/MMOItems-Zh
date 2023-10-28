@@ -23,8 +23,9 @@ import java.util.*;
 /**
  * The primordial problem is removing Gem Stones.
  * <p></p>
- * To achieve this, we must know which stat is from the item originally, vs which stats were given to it from each gem stone.
- * We must also account for weapon upgrades and such.
+ * To achieve this, we must know which stat is from the item originally,
+ * vs which stats were given to it from each gem stone. We must also
+ * account for weapon upgrades and such.
  * <p></p>
  * This class will store the different sources of each stat UPON being modified.
  */
@@ -71,7 +72,7 @@ public class StatHistory {
         }
 
         // Is it clear?
-        if (((Mergeable) getOriginalData()).isClear() && (!isUpgradeable() || getMMOItem().getUpgradeLevel() == 0)) {
+        if (getOriginalData().isEmpty() && (!isUpgradeable() || getMMOItem().getUpgradeLevel() == 0)) {
             //CLR//MMOItems.log("\u00a7a -+- \u00a77Original data is clear & unupgraded, \u00a7aclear. \u00A73(\u00a78Upgradeable? \u00a7b" + isUpgradeable() + "\u00a78, Upgrade Level:\u00a7b " + getMMOItem().getUpgradeLevel() + "\u00a73) \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}");
             return true;
         }
@@ -169,10 +170,13 @@ public class StatHistory {
     public ArrayList<UUID> getAllModifiers() {
         return new ArrayList<>(perModifierBonus.keySet());
     }
+
     /**
      * Clears modifier data. No way to undo so be wary of using.
      */
-    public void clearModifiersBonus() { perModifierBonus.clear(); }
+    public void clearModifiersBonus() {
+        perModifierBonus.clear();
+    }
 
     /*
      * The final modifier being provided by each gemstone.
@@ -180,6 +184,7 @@ public class StatHistory {
      */
     @NotNull
     public HashMap<UUID, StatData> perGemstoneData = new HashMap<>();
+
     /**
      * The final modifier being provided by each gemstone.
      * GemStones may have scaled with upgrades, that will be accounted for.
@@ -192,17 +197,24 @@ public class StatHistory {
         }
         return perGemstoneData.get(of);
     }
+
     /**
      * Removes the gem of such UUID from those registered.
      *
      * @param of UUID of the gem to remove.
      */
-    public void removeGemData(@NotNull UUID of) { perGemstoneData.remove(of); }
+    public void removeGemData(@NotNull UUID of) {
+        perGemstoneData.remove(of);
+    }
+
     /**
      * All the Stat Datas provided by GemStones
      */
     @NotNull
-    public ArrayList<UUID> getAllGemstones() { return new ArrayList<>(perGemstoneData.keySet()); }
+    public ArrayList<UUID> getAllGemstones() {
+        return new ArrayList<>(perGemstoneData.keySet());
+    }
+
     /**
      * The final modifier being provided by each gemstone.
      * GemStones may have scaled with upgrades, that will be accounted for.
@@ -211,11 +223,16 @@ public class StatHistory {
      * <p>originally <code>+5</code>, now at level 2, with <code>+0.25</code> per level</p>
      * The value of this stat data will be <b><code>+5.5</code></b>
      */
-    public void registerGemstoneData(@NotNull UUID of, @NotNull StatData data) { perGemstoneData.put(of, data); }
+    public void registerGemstoneData(@NotNull UUID of, @NotNull StatData data) {
+        perGemstoneData.put(of, data);
+    }
+
     /**
      * Clears gemstone data. No way to undo so be wary of using.
      */
-    public void clearGemstones() { perGemstoneData.clear(); }
+    public void clearGemstones() {
+        perGemstoneData.clear();
+    }
 
     /*
      * Modifiers of unknown origin.
@@ -235,7 +252,10 @@ public class StatHistory {
      * Well, I guess whatever plugin is putting them here may remove them by editing the list directly with <code>StatHistory.getExternalData()</code>
      */
     @NotNull
-    public ArrayList<StatData> getExternalData() { return perExternalData; }
+    public ArrayList<StatData> getExternalData() {
+        return perExternalData;
+    }
+
     /**
      * Collapses all ExSH stat data into one.
      */
@@ -256,6 +276,7 @@ public class StatHistory {
         getExternalData().clear();
         registerExternalData(theEXSH);
     }
+
     /**
      * Modifiers of unknown origin.
      * Presumably put here by external plugins I guess.
@@ -264,11 +285,16 @@ public class StatHistory {
      * <p>They act as gem stones, adding together to produce the total of the item, but cannot be removed, since there is no way to tell them from each other.</p>
      * Well, I guess whatever plugin is putting them here may remove them by editing the list directly with <code>StatHistory.getExternalData()</code>
      */
-    public void registerExternalData(@NotNull StatData data) { perExternalData.add(data); }
+    public void registerExternalData(@NotNull StatData data) {
+        perExternalData.add(data);
+    }
+
     /**
      * Clears exsh data. No way to undo so be wary of using.
      */
-    public void clearExternalData() { perExternalData.clear(); }
+    public void clearExternalData() {
+        perExternalData.clear();
+    }
 
     /**
      * Gets the stat history of this item. <b>The stat must be <code>Mergeable</code></b>
@@ -281,7 +307,11 @@ public class StatHistory {
      * @param ofItem MMOItem to extract stat history from
      * @param ofStat Stat of which to make history
      */
-    @NotNull public static StatHistory from(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat) { return from(ofItem, ofStat, false); }
+    @NotNull
+    public static StatHistory from(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat) {
+        return from(ofItem, ofStat, false);
+    }
+
     /**
      * Gets the stat history of this item. <b>The stat must be <code>Mergeable</code></b>
      * <p></p>
@@ -290,8 +320,8 @@ public class StatHistory {
      * <p></p>
      * <b>Make sure the item has the stat present</b>
      *
-     * @param ofItem MMOItem to extract stat history from
-     * @param ofStat Stat of which to make history
+     * @param ofItem   MMOItem to extract stat history from
+     * @param ofStat   Stat of which to make history
      * @param forceNew <b>Only if you know what you are doing</b>, set to true to not check if the item already has stat history of this stat.
      */
     @NotNull
@@ -306,7 +336,9 @@ public class StatHistory {
             if (hist != null) {
                 //UPGRD//MMOItems.log("Found Stat History of \u00a76" + ofStat.getNBTPath() + "\u00a77 in this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
                 //UPGRD//hist.log();
-                return hist; } }
+                return hist;
+            }
+        }
 
         // That is Mergeable right...
         //UPGRD//MMOItems.log("\u00a7aCreated Hisotry of \u00a76" + ofStat.getNBTPath() + "\u00a7a of this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
@@ -325,7 +357,7 @@ public class StatHistory {
             //UPGRD//MMOItems.log("\u00a7a   +\u00a77 Found original data\u00a7f " + original);
         }
         //LVL//MMOItems.log(" \u00a7d*\u00a77-\u00a7a-\u00a763? \u00a77Lvl: \u00a7b" + ofItem.getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
-        
+
         // Create new
         hist = new StatHistory(ofItem, ofStat, original);
 
@@ -345,19 +377,24 @@ public class StatHistory {
      * <p></p>
      * Use <code>StatHistory.From()</code> to get the stat history associated to an item.
      */
-    public StatHistory(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat, @NotNull StatData ogData) { itemStat = ofStat; originalData = ogData; parent = ofItem; }
+    public StatHistory(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat, @NotNull StatData ogData) {
+        itemStat = ofStat;
+        originalData = ogData;
+        parent = ofItem;
+    }
 
     /**
-     * Checks the item and makes sure that the UUIDs
-     * attributed to gemstones link to existing gem
-     * stones. Removes them if no such gemstone exists.
+     * Checks the item and makes sure that the UUIDs attributed to gemstones
+     * link to existing gem stones. Removes them if no such gemstone exists.
      */
     public void purgeGemstones() {
 
         // Which will get purged...
         ArrayList<UUID> extraneous = new ArrayList<>();
         GemSocketsData data = (GemSocketsData) getMMOItem().getData(ItemStats.GEM_SOCKETS);
-        if (data == null) { data = new GemSocketsData(new ArrayList<>()); }
+        if (data == null) {
+            data = new GemSocketsData(new ArrayList<>());
+        }
 
         // For each UUID
         for (UUID gem : perGemstoneData.keySet()) {
@@ -401,7 +438,9 @@ public class StatHistory {
     public boolean isUpgradeable() {
 
         // No upgrades no possible
-        if (!getMMOItem().hasUpgradeTemplate()) { return false; }
+        if (!getMMOItem().hasUpgradeTemplate()) {
+            return false;
+        }
 
         // Get Upgrade Info?
         UpgradeInfo inf = getMMOItem().getUpgradeTemplate().getUpgradeInfo(getItemStat());
@@ -416,34 +455,42 @@ public class StatHistory {
      * This will not apply the changes, it will just give you the final
      * <code>StatData</code> that shall be applied (used when upgrading).
      */
-    @NotNull public StatData recalculate(int level) { return recalculate(true, level); }
+    @NotNull
+    public StatData recalculate(int level) {
+        return recalculate(true, level);
+    }
+
     /**
      * This recalculates final value of the stats of the item.
      * <p></p>
      * This will not apply the changes, it will just give you the final
      * <code>StatData</code> that shall be applied (used when upgrading).
+     *
      * @param withPurge Check if the gemstones UUIDs are valid.
      *                  Leave <code>true</code> unless you know
      *                  what you're doing.
      */
-    @NotNull public StatData recalculate(boolean withPurge, int level) {
+    @NotNull
+    public StatData recalculate(boolean withPurge, int level) {
         //RECALCULATE//MMOItems.log("\u00a7d|||\u00a77 Recalculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77, Purge? \u00a7e" + withPurge);
 
-        if (withPurge) { purgeGemstones(); }
+        if (withPurge) {
+            purgeGemstones();
+        }
 
         // If its upgradeable and not level ZERO, it must apply upgrades
         //UPGRD//MMOItems.log("\u00a7d|\u00a79|\u00a76|\u00a77 Upgradeable Requirements: ");
         //UPGRD//MMOItems.log("    \u00a76|\u00a77 Upgrade Level: \u00a7e" + level);
         //UPGRD//MMOItems.log("    \u00a76|\u00a77 Upgradeable Stat: \u00a7e" + (getItemStat() instanceof Upgradable));
         //UPGRD//MMOItems.log("    \u00a76|\u00a77 Template Exists: \u00a7e" + (getMMOItem().hasUpgradeTemplate()));
-        if ((level != 0)  &&
-            (getItemStat() instanceof Upgradable) &&
-            (getMMOItem().hasUpgradeTemplate())) { 
-            
+        if ((level != 0) &&
+                (getItemStat() instanceof Upgradable) &&
+                (getMMOItem().hasUpgradeTemplate())) {
+
             // Recalculate upgrading
             return recalculateUpgradeable(level);
-        } 
-        
+        }
+
         // Merge Normally
         return recalculateMergeable();
     }
@@ -454,19 +501,26 @@ public class StatHistory {
      * In case someone was wondered the contribution of upgrading the item, just
      * substract it from {@link #recalculate(int)}
      */
-    @NotNull public StatData recalculateUnupgraded() { return recalculateUnupgraded(true); }
+    @NotNull
+    public StatData recalculateUnupgraded() {
+        return recalculateUnupgraded(true);
+    }
 
     /**
      * This recalculates values accounting only for gemstones and external data.
      * <p></p>
      * In case someone was wondered the contribution of upgrading the item, just
      * substract it from {@link #recalculate(int)}
+     *
      * @param withPurge Check if the gemstones UUIDs are valid.
      *                  Leave <code>true</code> unless you know
      *                  what you're doing.
      */
-    @NotNull public StatData recalculateUnupgraded(boolean withPurge) {
-        if (withPurge) { purgeGemstones(); }
+    @NotNull
+    public StatData recalculateUnupgraded(boolean withPurge) {
+        if (withPurge) {
+            purgeGemstones();
+        }
 
         // Merge Normally
         return recalculateMergeable();
@@ -489,7 +543,9 @@ public class StatHistory {
         UpgradeInfo inf = getMMOItem().getUpgradeTemplate().getUpgradeInfo(getItemStat());
 
         // No Upgrade Information? Looks like you're calculating as a normal merge stat
-        if (inf == null) { return recalculateMergeable(); }
+        if (inf == null) {
+            return recalculateMergeable();
+        }
 
         // Clone original
         StatData ogCloned = ((Mergeable) originalData).cloneData();
@@ -516,7 +572,9 @@ public class StatHistory {
 
             // Whats this gemstone's upgrade level?
             for (GemstoneData gData : getMMOItem().getGemStones()) {
-                if (gData == null) { continue; }
+                if (gData == null) {
+                    continue;
+                }
                 //RECALCULATE//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a77 Gemstone " + gData.getName() + "\u00a77 " + gData.getHistoricUUID().toString());
 
                 // Find that one of matching UUID
@@ -577,10 +635,10 @@ public class StatHistory {
         //RECALCULATE//MMOItems.log("\u00a73|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Mergeable");
 
         // Just clone bro
-        StatData ret =  ((Mergeable) getOriginalData()).cloneData();
+        StatData ret = ((Mergeable) getOriginalData()).cloneData();
 
         //DBL//if (ret instanceof DoubleData) MMOItems.log("\u00a73  > \u00a77 Original Base: \u00a7e" + ((DoubleData) ret).getValue());
-        
+
         // Add Modifiers
         for (StatData d : perModifierBonus.values()) {
             //DBL//if (getModifiersBonus() instanceof DoubleData) MMOItems.log("\u00a73  >\u00a7c> \u00a77 Modifier Base: \u00a7e" + ((DoubleData) getModifiersBonus()).getValue());
@@ -597,7 +655,8 @@ public class StatHistory {
         // Add up externals
         for (StatData d : getExternalData()) {
             //DBL//if (d instanceof DoubleData) MMOItems.log("\u00a73  >\u00a7c> \u00a77 Extraneous Base: \u00a7e" + ((DoubleData) d).getValue());
-            ((Mergeable) ret).merge(((Mergeable) d).cloneData()); }
+            ((Mergeable) ret).merge(((Mergeable) d).cloneData());
+        }
 
         // Return result
         //DBL//if (ret instanceof DoubleData) MMOItems.log("\u00a73:::\u00a77 Result: \u00a7b" + ((DoubleData) ret).getValue());
@@ -612,7 +671,8 @@ public class StatHistory {
      * <p></p>
      * Still don't abuse calls to this. Try to do so only when necessary
      */
-    @NotNull public JsonObject toJson() {
+    @NotNull
+    public JsonObject toJson() {
         JsonObject object = new JsonObject();
 
         // To know the stat it was
@@ -629,7 +689,9 @@ public class StatHistory {
          * And allows net.Indyuce.mmoitems.stat.Enchants.whenLoaded() to correctly initialize the
          * StatHistory of these items.
          */
-        if (!((Mergeable) getOriginalData()).isClear() || getItemStat() == ItemStats.ENCHANTS) { object.add(enc_OGS, ItemTag.compressTags(getItemStat().getAppliedNBT(getOriginalData()))); }
+        if (!((Mergeable) getOriginalData()).isClear() || getItemStat() == ItemStats.ENCHANTS) {
+            object.add(enc_OGS, ItemTag.compressTags(getItemStat().getAppliedNBT(getOriginalData())));
+        }
 
         // Kompress Arrays
         JsonArray gemz = new JsonArray();
@@ -652,7 +714,9 @@ public class StatHistory {
         }
 
         // Include
-        if (gemz.size() > 0) { object.add(enc_GSS, gemz); }
+        if (gemz.size() > 0) {
+            object.add(enc_GSS, gemz);
+        }
 
 
         // Kompress Arrays
@@ -662,14 +726,18 @@ public class StatHistory {
         for (StatData ex : getExternalData()) {
 
             // Skip clear
-            if (((Mergeable) ex).isClear()) { continue; }
+            if (((Mergeable) ex).isClear()) {
+                continue;
+            }
 
             // Put
             externals.add(ItemTag.compressTags(getItemStat().getAppliedNBT(ex)));
         }
 
         // Include
-        if (externals.size() > 0) { object.add(enc_EXS, externals); }
+        if (externals.size() > 0) {
+            object.add(enc_EXS, externals);
+        }
 
         // Kompress Arrays
         JsonArray modz = new JsonArray();
@@ -692,7 +760,9 @@ public class StatHistory {
         }
 
         // Include
-        if (modz.size() > 0) { object.add(enc_MOD, modz); }
+        if (modz.size() > 0) {
+            object.add(enc_MOD, modz);
+        }
 
 
         return object;
@@ -706,7 +776,8 @@ public class StatHistory {
      * <p></p>
      * Still don't abuse calls to this. Try to do so only when necessary
      */
-    @NotNull public String toNBTString() {
+    @NotNull
+    public String toNBTString() {
 
         // Just convert to string :thinking:
         return toJson().toString();
@@ -715,30 +786,54 @@ public class StatHistory {
     /**
      * To read from NBT data. This undoes {@link #toJson()} basically.
      * <p></p>
+     *
      * @param iSource The MMOItem you are trying to read the NBT of
      */
-    @Nullable public static StatHistory fromJson(@NotNull MMOItem iSource, @NotNull JsonObject json) {
+    @Nullable
+    public static StatHistory fromJson(@NotNull MMOItem iSource, @NotNull JsonObject json) {
 
         // Get the stat we're searching for
         JsonElement statEncode;
-        JsonElement ogStatsEncode= null;
+        JsonElement ogStatsEncode = null;
         JsonElement gemsEncode = null;
         JsonElement extEncode = null;
         JsonElement modEncode = null;
 
         // It has stat information right?
-        if (json.has(enc_Stat)) { statEncode = json.get(enc_Stat); } else { return null; }
-        if (json.has(enc_OGS)) { ogStatsEncode = json.get(enc_OGS); }
-        if (json.has(enc_GSS)) { gemsEncode = json.get(enc_GSS); }
-        if (json.has(enc_EXS)) { extEncode = json.get(enc_EXS); }
-        if (json.has(enc_MOD)) { modEncode = json.get(enc_MOD); }
+        if (json.has(enc_Stat)) {
+            statEncode = json.get(enc_Stat);
+        } else {
+            return null;
+        }
+        if (json.has(enc_OGS)) {
+            ogStatsEncode = json.get(enc_OGS);
+        }
+        if (json.has(enc_GSS)) {
+            gemsEncode = json.get(enc_GSS);
+        }
+        if (json.has(enc_EXS)) {
+            extEncode = json.get(enc_EXS);
+        }
+        if (json.has(enc_MOD)) {
+            modEncode = json.get(enc_MOD);
+        }
 
         // It is a primitive right
-        if (!statEncode.isJsonPrimitive()) { return null; }
-        if (ogStatsEncode != null && !ogStatsEncode.isJsonArray()) { return null; }
-        if (gemsEncode != null && !gemsEncode.isJsonArray()) { return null; }
-        if (extEncode != null && !extEncode.isJsonArray()) { return null; }
-        if (modEncode != null && !modEncode.isJsonArray()) { return null; }
+        if (!statEncode.isJsonPrimitive()) {
+            return null;
+        }
+        if (ogStatsEncode != null && !ogStatsEncode.isJsonArray()) {
+            return null;
+        }
+        if (gemsEncode != null && !gemsEncode.isJsonArray()) {
+            return null;
+        }
+        if (extEncode != null && !extEncode.isJsonArray()) {
+            return null;
+        }
+        if (modEncode != null && !modEncode.isJsonArray()) {
+            return null;
+        }
 
         // Get string
         String statInternalName = statEncode.getAsJsonPrimitive().getAsString();
@@ -747,7 +842,9 @@ public class StatHistory {
         ItemStat stat = MMOItems.plugin.getStats().get(statInternalName);
 
         // Nope
-        if (stat == null) { return null; }
+        if (stat == null) {
+            return null;
+        }
 
         // To know the stat it was
         StatData sData;
@@ -757,7 +854,7 @@ public class StatHistory {
             ArrayList<ItemTag> ogDecoded = ItemTag.decompressTags(ogStatsEncode.getAsJsonArray());
             sData = stat.getLoadedNBT(ogDecoded);
 
-        // OG Not included (because its clear)
+            // OG Not included (because its clear)
         } else {
 
             // Just generate as clear
@@ -765,7 +862,9 @@ public class StatHistory {
         }
 
         // Validate non null
-        if (sData == null) { return null; }
+        if (sData == null) {
+            return null;
+        }
 
         // Can now generate stat history
         StatHistory sHistory = new StatHistory(iSource, stat, sData);
@@ -844,7 +943,7 @@ public class StatHistory {
             }
         }
         //endregion
-        
+
         //region Modifier History
         if (modEncode != null) {
 
@@ -902,7 +1001,8 @@ public class StatHistory {
      * <p></p>
      * Will be null if some error happens
      */
-    @Nullable public static StatHistory fromNBTString(@NotNull MMOItem iSource, @NotNull String codedJson) {
+    @Nullable
+    public static StatHistory fromNBTString(@NotNull MMOItem iSource, @NotNull String codedJson) {
 
         // Attempt
         try {
@@ -937,40 +1037,43 @@ public class StatHistory {
 
         // Stat must be the same
         if (other.getItemStat().getNBTPath().equals(getItemStat().getNBTPath())) {
-           //UPDT//MMOItems.log("    \u00a72>\u00a76> \u00a77History Stat Matches");
+            //UPDT//MMOItems.log("    \u00a72>\u00a76> \u00a77History Stat Matches");
 
-           //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Original Gemstones \u00a7f" + perGemstoneData.size());
-           //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Original Externals \u00a7f" + perExternalData.size());
+            //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Original Gemstones \u00a7f" + perGemstoneData.size());
+            //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Original Externals \u00a7f" + perExternalData.size());
 
             // Register gemstones
             for (UUID exUID : other.getAllGemstones()) {
                 //noinspection ConstantConditions
-                registerGemstoneData(exUID, other.getGemstoneData(exUID)); }
+                registerGemstoneData(exUID, other.getGemstoneData(exUID));
+            }
 
             // Register externals
-            for (StatData ex : other.getExternalData()) { registerExternalData((ex)); }
+            for (StatData ex : other.getExternalData()) {
+                registerExternalData((ex));
+            }
 
             // Register modifiers
             for (UUID exUID : other.getAllModifiers()) {
                 //noinspection ConstantConditions
-                registerModifierBonus(exUID, other.getModifiersBonus(exUID)); }
+                registerModifierBonus(exUID, other.getModifiersBonus(exUID));
+            }
 
-           //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Final Gemstones \u00a7f" + perGemstoneData.size());
-           //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Final Externals \u00a7f" + perExternalData.size());
-           //ASS//MMOItems.log("     \u00a76:\u00a72: \u00a77Assimiliaton Result \u00a7f");
-           //ASS//log();
+            //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Final Gemstones \u00a7f" + perGemstoneData.size());
+            //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Final Externals \u00a7f" + perExternalData.size());
+            //ASS//MMOItems.log("     \u00a76:\u00a72: \u00a77Assimiliaton Result \u00a7f");
+            //ASS//log();
         }
     }
 
     /**
      * Clones this history but linked to another MMOItem.
-     *
+     * <p>
      * It does not put it into the MMOItem, you must do that yourself.
-     *
-     * @see MMOItem#setStatHistory(ItemStat, StatHistory)
      *
      * @param clonedMMOItem Usually this is called when you are cloning the MMOItem itself,
      *                      this is a reference to the new one.
+     * @see MMOItem#setStatHistory(ItemStat, StatHistory)
      */
     public StatHistory clone(@NotNull MMOItem clonedMMOItem) {
 
@@ -979,10 +1082,14 @@ public class StatHistory {
 
         // Add all
         for (UUID uid : getAllGemstones()) {
-            if (uid == null) { continue; }
+            if (uid == null) {
+                continue;
+            }
 
             StatData gem = getGemstoneData(uid);
-            if (!(gem instanceof Mergeable)) { continue; }
+            if (!(gem instanceof Mergeable)) {
+                continue;
+            }
 
             // Clone
             res.registerGemstoneData(uid, ((Mergeable) gem).cloneData());
@@ -990,18 +1097,25 @@ public class StatHistory {
 
         // Add all
         for (StatData ex : getExternalData()) {
-            if (!(ex instanceof Mergeable)) { continue; }
+            if (!(ex instanceof Mergeable)) {
+                continue;
+            }
 
             // Clone
-            res.registerExternalData(((Mergeable) ex).cloneData()); }
+            res.registerExternalData(((Mergeable) ex).cloneData());
+        }
 
         // Clone
         for (UUID uid : getAllModifiers()) {
 
-            if (uid == null) { continue; }
+            if (uid == null) {
+                continue;
+            }
 
             StatData mod = getModifiersBonus(uid);
-            if (!(mod instanceof Mergeable)) { continue; }
+            if (!(mod instanceof Mergeable)) {
+                continue;
+            }
 
             // Clone
             res.registerModifierBonus(uid, ((Mergeable) mod).cloneData());
@@ -1028,29 +1142,71 @@ public class StatHistory {
         if (getOriginalData() instanceof StringListData) {
 
             MMOItems.print(null, "\u00a7a++ 初始", null);
-            for (String str : ((StringListData) getOriginalData()).getList()) { MMOItems.print(null, "\u00a7a ++\u00a77 " + str, null); }
+            for (String str : ((StringListData) getOriginalData()).getList()) {
+                MMOItems.print(null, "\u00a7a ++\u00a77 " + str, null);
+            }
 
             MMOItems.print(null, "\u00a7e++ 宝石", null);
-            for (UUID ui : getAllGemstones()) { StatData sd = getGemstoneData(ui); if (!(sd instanceof StringListData)) { continue; } for (String str : ((StringListData) sd).getList()) { MMOItems.print(null, "\u00a7e ++\u00a77 " + str, null); } }
+            for (UUID ui : getAllGemstones()) {
+                StatData sd = getGemstoneData(ui);
+                if (!(sd instanceof StringListData)) {
+                    continue;
+                }
+                for (String str : ((StringListData) sd).getList()) {
+                    MMOItems.print(null, "\u00a7e ++\u00a77 " + str, null);
+                }
+            }
 
             MMOItems.print(null, "\u00a7c++ ExSH", null);
-            for (StatData sd : getExternalData()) { if (!(sd instanceof StringListData)) { continue; } for (String str : ((StringListData) sd).getList()) { MMOItems.print(null, "\u00a7e ++\u00a77 " + str, null); } }
+            for (StatData sd : getExternalData()) {
+                if (!(sd instanceof StringListData)) {
+                    continue;
+                }
+                for (String str : ((StringListData) sd).getList()) {
+                    MMOItems.print(null, "\u00a7e ++\u00a77 " + str, null);
+                }
+            }
 
             MMOItems.print(null, "\u00a7d++ 修改器", null);
-            for (UUID ui : getAllModifiers()) { StatData sd = getModifiersBonus(ui); if (!(sd instanceof StringListData)) { continue; } for (String str : ((StringListData) sd).getList()) { MMOItems.print(null, "\u00a7d ++\u00a77 " + str, null); } }
+            for (UUID ui : getAllModifiers()) {
+                StatData sd = getModifiersBonus(ui);
+                if (!(sd instanceof StringListData)) {
+                    continue;
+                }
+                for (String str : ((StringListData) sd).getList()) {
+                    MMOItems.print(null, "\u00a7d ++\u00a77 " + str, null);
+                }
+            }
         } else {
 
             MMOItems.print(null, "\u00a7a-- 初始", null);
             MMOItems.print(null, "\u00a7a ++\u00a77 " + getOriginalData(), null);
 
             MMOItems.print(null, "\u00a7e-- 宝石", null);
-            for (UUID ui : getAllGemstones()) { StatData sd = getGemstoneData(ui); if (sd == null) { continue; } MMOItems.print(null, "\u00a7e ++\u00a77 " + sd, null);}
+            for (UUID ui : getAllGemstones()) {
+                StatData sd = getGemstoneData(ui);
+                if (sd == null) {
+                    continue;
+                }
+                MMOItems.print(null, "\u00a7e ++\u00a77 " + sd, null);
+            }
 
             MMOItems.print(null, "\u00a7c-- ExSH", null);
-            for (StatData sd : getExternalData()) { if (sd == null) { continue; } MMOItems.print(null, "\u00a7e ++\u00a77 " + sd, null); }
+            for (StatData sd : getExternalData()) {
+                if (sd == null) {
+                    continue;
+                }
+                MMOItems.print(null, "\u00a7e ++\u00a77 " + sd, null);
+            }
 
             MMOItems.print(null, "\u00a7d-- 修改器", null);
-            for (UUID ui : getAllModifiers()) { StatData sd = getModifiersBonus(ui); if (sd == null) { continue; } MMOItems.print(null, "\u00a7d ++\u00a77 " + sd, null);}
+            for (UUID ui : getAllModifiers()) {
+                StatData sd = getModifiersBonus(ui);
+                if (sd == null) {
+                    continue;
+                }
+                MMOItems.print(null, "\u00a7d ++\u00a77 " + sd, null);
+            }
         }
     }
 }

@@ -2,8 +2,11 @@ package net.Indyuce.mmoitems.manager;
 
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.item.build.TooltipTexture;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,9 +19,12 @@ import java.util.logging.Level;
 
 public class LoreFormatManager implements Reloadable {
     private final Map<String, List<String>> formats = new HashMap<>();
+    private final Map<String, TooltipTexture> tooltips = new HashMap<>();
 
     public void reload() {
         formats.clear();
+        tooltips.clear();
+
         File dir = new File(MMOItems.plugin.getDataFolder() + "/language/lore-formats");
         for (File file : dir.listFiles())
             try {
@@ -27,6 +33,14 @@ public class LoreFormatManager implements Reloadable {
                 formats.put(file.getName().substring(0, file.getName().length() - 4), config.getStringList("lore-format"));
             } catch (IllegalArgumentException exception) {
                 MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load layout '" + file.getName() + "': " + exception.getMessage());
+            }
+
+        final ConfigurationSection tooltipsConfig = new ConfigFile("tooltips").getConfig();
+        for (String key : tooltipsConfig.getKeys(false))
+            try {
+                tooltips.put(key, new TooltipTexture(tooltipsConfig.getConfigurationSection(key)));
+            } catch (Exception exception) {
+                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load tooltip '" + key + "': " + exception.getMessage());
             }
     }
 

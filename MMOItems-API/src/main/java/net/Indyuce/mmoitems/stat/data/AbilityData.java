@@ -108,13 +108,13 @@ public class AbilityData extends Skill {
             return false;
 
         // Check for mana cost
-        if (hasModifier("mana") && rpgPlayer.getMana() < getParameter("mana")) {
+        if (hasModifier("mana") && rpgPlayer.getMana() < meta.getParameter("mana")) {
             Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(player);
             return false;
         }
 
         // Check for stamina cost
-        if (hasModifier("stamina") && rpgPlayer.getStamina() < getParameter("stamina")) {
+        if (hasModifier("stamina") && rpgPlayer.getStamina() < meta.getParameter("stamina")) {
             Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(player);
             return false;
         }

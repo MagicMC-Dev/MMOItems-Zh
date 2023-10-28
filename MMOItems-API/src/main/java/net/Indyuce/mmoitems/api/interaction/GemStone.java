@@ -37,8 +37,8 @@ public class GemStone extends UseItem {
     public ApplyResult applyOntoItem(@NotNull NBTItem target, @NotNull Type targetType) {
 
         /*
-         * Entirely loads the MMOItem and checks if it has the required empty
-         * socket for the gem
+         * Entirely loads the MMOItem and checks if
+         * it has the required empty socket for the gem
          */
         MMOItem targetMMO = new LiveMMOItem(target);
         return applyOntoItem(targetMMO, targetType, MMOUtils.getDisplayName(target.getItem()), true, false);
@@ -57,10 +57,7 @@ public class GemStone extends UseItem {
         if (foundSocketColor == null)
             return new ApplyResult(ResultType.NONE);
 
-        /*
-         * Checks if the gem supports the item type, or the item set, or a
-         * weapon
-         */
+        // Checks if the gem supports the item type, or the item set, or a weapon
         String appliableTypes = getNBTItem().getString(ItemStats.ITEM_TYPE_RESTRICTION.getNBTPath());
         if (!appliableTypes.equals("") && (!targetType.isWeapon() || !appliableTypes.contains("WEAPON"))
                 && !appliableTypes.contains(targetType.getItemSet().name()) && !appliableTypes.contains(targetType.getId()))
@@ -68,16 +65,12 @@ public class GemStone extends UseItem {
 
         // Check for success rate
         double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
-
-        if (successRate == 0.0)
-            successRate = 100;
+        if (successRate == 0.0) successRate = 100;
 
         // Call the Bukkit event
         ApplyGemStoneEvent called = new ApplyGemStoneEvent(playerData, mmoitem, targetMMO,
                 RANDOM.nextDouble() > successRate / 100 ? ResultType.FAILURE : ResultType.SUCCESS);
         Bukkit.getPluginManager().callEvent(called);
-
-        // Just return if cancelled or wrong result type
         if (called.isCancelled() || called.getResult() == ResultType.NONE)
             return new ApplyResult(ResultType.NONE);
 
@@ -98,8 +91,7 @@ public class GemStone extends UseItem {
 
         /*
          * Gem stone can be successfully applied. apply stats then abilities and
-         * permanent effects. also REGISTER gem stone in the item gem stone
-         * list.
+         * permanent effects. also REGISTER gem stone in the item gem stone list.
          */
         LiveMMOItem gemMMOItem = new LiveMMOItem(getNBTItem());
         GemstoneData gemData = new GemstoneData(gemMMOItem, foundSocketColor);

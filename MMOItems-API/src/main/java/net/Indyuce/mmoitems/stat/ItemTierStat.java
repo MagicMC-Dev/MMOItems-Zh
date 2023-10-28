@@ -26,7 +26,7 @@ public class ItemTierStat extends StringStat implements GemStoneStat {
 
 		ItemTier tier = MMOItems.plugin.getTiers().get(path);
 		item.addItemTag(new ItemTag("MMOITEMS_TIER", path));
-		item.getLore().insert("tier", MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("{value}", tier.getName()));
+		item.getLore().insert(getPath(), getGeneralStatFormat().replace("{value}", tier.getName()));
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class ItemTierStat extends StringStat implements GemStoneStat {
 		String format = message.toUpperCase().replace(" ", "_").replace("-", "_");
 		Validate.isTrue(MMOItems.plugin.getTiers().has(format), "找不到名为 '" + format + "' 的稀有程度");
 
-		inv.getEditedSection().set("tier", format);
+		inv.getEditedSection().set(getPath(), format);
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "等级已成功更改为 " + format + "");
 	}

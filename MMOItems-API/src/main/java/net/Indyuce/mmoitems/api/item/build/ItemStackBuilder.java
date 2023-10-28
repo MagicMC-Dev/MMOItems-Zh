@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.api.event.GenerateLoreEvent;
 import net.Indyuce.mmoitems.api.event.ItemBuildEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -201,12 +202,12 @@ public class ItemStackBuilder {
                         "ItemStackBuilder", builtMMOItem.getId(), stat.getId(), exception.getMessage());
             }
 
-        // Display gem stone lore hint thing
+        // Display gem stone lore tag
         if (builtMMOItem.getType() == Type.GEM_STONE)
-            lore.insert("gem-stone-lore", ItemStat.translate("gem-stone-lore"));
+            lore.insert("gem-stone-lore", MMOItems.plugin.getLanguage().gemStoneLoreTag);
 
-        // Display item type
-        lore.insert("item-type", ItemStat.translate("item-type").replace("{type}",
+        // Display item type tag
+        lore.insert("item-type", MMOItems.plugin.getLanguage().itemTypeLoreTag.replace("{type}",
                 builtMMOItem.getStats().contains(ItemStats.DISPLAYED_TYPE) ? builtMMOItem.getData(ItemStats.DISPLAYED_TYPE)
                         .toString() : builtMMOItem.getType().getName()));
 

@@ -130,7 +130,7 @@ public class MMOItems extends JavaPlugin {
 
         statManager.load();
         typeManager.reload();
-        templateManager.preloadTemplates();
+        templateManager.preloadObjects();
 
         PluginUtils.isDependencyPresent("MMOCore", u -> new MMOCoreMMOLoader());
         PluginUtils.isDependencyPresent("mcMMO", u -> statManager.register(McMMOHook.disableMcMMORepair));
@@ -146,9 +146,10 @@ public class MMOItems extends JavaPlugin {
     public void onEnable() {
         new SpigotPlugin(39267, this).checkForUpdate();
         new MMOItemsMetrics();
-        MMOItemUIFilter.register();
 
+        MMOItemUIFilter.register();
         RecipeTypeListGUI.registerNativeRecipes();
+
         skillManager.initialize(false);
 
         final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
@@ -177,7 +178,7 @@ public class MMOItems extends JavaPlugin {
         tierManager = new TierManager();
         setManager = new SetManager();
         upgradeManager = new UpgradeManager();
-        templateManager.postloadTemplates();
+        templateManager.postloadObjects();
 
         dropTableManager = new DropTableManager();
         worldGenManager = new WorldGenManager();
@@ -191,7 +192,6 @@ public class MMOItems extends JavaPlugin {
         stationRecipeManager.reload();
 
         // This ones are not implementing Reloadable
-        NumericStatFormula.reload();
         MMOItemReforger.reload();
 
         Bukkit.getPluginManager().registerEvents(entityManager, this);

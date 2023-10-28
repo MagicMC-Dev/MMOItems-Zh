@@ -12,10 +12,14 @@ import java.util.ArrayList;
 /**
  * Stats are marked externals when refering to item templates options:
  * - {@link net.Indyuce.mmoitems.stat.BrowserDisplayIDX}
- * - {@link}
  * <p>
  * These stats do not save any information in the item NBT
+ * TODO Add a small API for template options distinct from item stat options.
+ * TODO Have it backwards compatible.
+ *
+ * @deprecated Not being used yet
  */
+@Deprecated
 public interface TemplateOption {
 
     /**

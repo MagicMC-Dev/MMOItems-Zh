@@ -12,7 +12,10 @@ import org.jetbrains.annotations.NotNull;
  * <p></p>
  * <b>Strongly encouraged to override the <code>equals</code> method
  * to something fitting here as Mergeable stats should support comparisons.</b>
+ *
+ * @deprecated All stat datas should be mergeable. Refactor planned for MI7
  */
+@Deprecated
 public interface Mergeable<S extends StatData> extends StatData {
 
     /**

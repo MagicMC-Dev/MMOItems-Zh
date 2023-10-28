@@ -61,4 +61,9 @@ public class ItemDamage extends DoubleStat implements GemStoneStat {
 	@Nullable
 	@Override
 	public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+
+	@Override
+	public String getLegacyTranslationPath() {
+		return "durability";
+	}
 }

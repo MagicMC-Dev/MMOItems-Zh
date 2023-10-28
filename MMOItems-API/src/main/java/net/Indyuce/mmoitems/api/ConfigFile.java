@@ -79,18 +79,16 @@ public class ConfigFile {
 
     public void registerTemplateEdition(ItemReference ref) {
 
-        /*
-         * saves the changes before asking for a template update
-         */
+        // Saves the changes before asking for a template update
         save();
 
         /*
-         * goes for a template update once the change has been saved. this
+         * Goes for a template update once the change has been saved. this
          * simply unloads the currently saved template and reloads it
          */
         MMOItems.plugin.getTemplates().requestTemplateUpdate(ref.getType(), ref.getId());
 
-		/* update the database UUID for the dynamic item updater
+		/* Update the database UUID for the dynamic item updater
 		if (MMOItems.plugin.getUpdater().hasData(ref))
 			MMOItems.plugin.getUpdater().getData(ref).setUniqueId(UUID.randomUUID());*/
     }

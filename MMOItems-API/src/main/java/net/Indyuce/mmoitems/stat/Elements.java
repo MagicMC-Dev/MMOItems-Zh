@@ -21,6 +21,7 @@ import net.Indyuce.mmoitems.stat.type.Previewable;
 import net.Indyuce.mmoitems.util.ElementStatType;
 import net.Indyuce.mmoitems.util.Pair;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -29,9 +30,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Elements extends ItemStat<RandomElementListData, ElementListData> implements Previewable<RandomElementListData, ElementListData> {
     public Elements() {
@@ -77,7 +76,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
 
         inv.registerTemplateEdition();
         inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
-                + " successfully changed to " + ChatColor.GOLD + formula.toString() + ChatColor.GRAY + ".");
+                + "成功更改为 " + ChatColor.GOLD + formula + ChatColor.GRAY + ".");
     }
 
     @Override
@@ -102,6 +101,40 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
         return new ElementListData();
     }
 
+    private Map<ElementStatType, String> statFormat = new HashMap<>();
+
+    @Override
+    public void loadConfiguration(@NotNull ConfigurationSection legacyLanguageFile, @NotNull Object configObject) {
+
+        // LEGACY CODE
+        if (configObject instanceof String) {
+            for (ElementStatType statType : ElementStatType.values())
+                statFormat.put(statType, legacyLanguageFile.getString("elemental-" + statType.lowerCaseName(), "<TranslationNotFound:" + statType.name().toLowerCase() + ">"));
+        }
+
+        // Up-to-date code
+        else {
+            Validate.isTrue(configObject instanceof ConfigurationSection, "Must be a config section");
+            final ConfigurationSection config = (ConfigurationSection) configObject;
+            for (ElementStatType statType : ElementStatType.values())
+                statFormat.put(statType, config.getString(statType.lowerCaseName(), "<TranslationNotFound:" + statType.lowerCaseName() + ">"));
+        }
+    }
+
+    @Override
+    public String getLegacyTranslationPath() {
+        // Arbitrary
+        return "elemental-damage";
+    }
+
+    @NotNull
+    private String formatForLore(Element element, ElementStatType statType) {
+        return statFormat.get(statType)
+                .replace("{color}", element.getColor())
+                .replace("{icon}", element.getLoreIcon())
+                .replace("{element}", element.getName());
+    }
+
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull ElementListData data) {
 
@@ -109,10 +142,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
 
         // Write Lore
         for (Pair<Element, ElementStatType> pair : data.getKeys()) {
-            final String format = ItemStat.translate("elemental-" + pair.getValue().lowerCaseName())
-                    .replace("{color}", pair.getKey().getColor())
-                    .replace("{icon}", pair.getKey().getLoreIcon())
-                    .replace("{element}", pair.getKey().getName());
+            final String format = formatForLore(pair.getKey(), pair.getValue());
             final double value = data.getStat(pair.getKey(), pair.getValue());
             lore.add(DoubleStat.formatPath("ELEMENTAL_STAT", format, true, value));
         }
@@ -183,6 +213,8 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
         Validate.isTrue(currentData instanceof ElementListData, "当前数据不是 ElementListData");
         Validate.isTrue(templateData instanceof RandomElementListData, "模板数据不是 RandomElementListData");
 
+        List<String> elementLore = new ArrayList<>();
+
         // Examine every element stat possible
         for (Element element : Element.values())
             for (ElementStatType statType : ElementStatType.values()) {
@@ -190,26 +222,17 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
                 NumericStatFormula nsf = templateData.getStat(element, statType);
 
                 // Get Value
-                double techMinimum = nsf.calculate(0, -2.5);
-                double techMaximum = nsf.calculate(0, 2.5);
+                final double techMinimum = nsf.calculate(0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
+                final double techMaximum = nsf.calculate(0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
 
                 // Display if not ZERO
                 if (techMinimum != 0 || techMaximum != 0) {
-
-                    // Get path
-                    String path = element.getId().toLowerCase() + "-" + statType.name().toLowerCase().replace("_", "-");
-
-                    String builtRange;
-                    if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) {
-                        builtRange = DoubleStat.formatPath(statType.getConcatenatedTagPath(element), ItemStat.translate(path), true, techMinimum);
-                    } else {
-                        builtRange = DoubleStat.formatPath(statType.getConcatenatedTagPath(element), ItemStat.translate(path), true, techMinimum, techMaximum);
-                    }
-
-                    // Just display normally
-                    item.getLore().insert(path, builtRange);
+                    final String builtRange = DoubleStat.formatPath(statType.getConcatenatedTagPath(element), formatForLore(element, statType), true, techMinimum, techMaximum);
+                    elementLore.add(builtRange);
                 }
             }
+
+        if (!elementLore.isEmpty()) item.getLore().insert("elements", elementLore);
 
         // Add tags
         item.addItemTag(getAppliedNBT(currentData));

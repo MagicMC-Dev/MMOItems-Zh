@@ -26,7 +26,6 @@ public class PluginUpdateManager {
 	 */
 	private final Map<Integer, PluginUpdate> updates = new HashMap<>();
 
-
 	public PluginUpdateManager() {
 		register(new PluginUpdate(1,
 				new String[]{"Applies a fix for skull textures values in 4.7.1.", "Texture values data storage changed in 4.7.1 due to the UUID change."},

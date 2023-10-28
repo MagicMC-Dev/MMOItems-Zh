@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.api.item.build;
 import com.google.common.collect.Lists;
 import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.util.TooltipTexture;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
@@ -33,11 +33,14 @@ public class LoreBuilder {
     @Deprecated
     public LoreBuilder(@NotNull Collection<String> format) {
         lore.addAll(format);
-        // TODO load tooltip
     }
+/*
+    @Deprecated
+    public static final TooltipTexture TEST = new TooltipTexture(new ConfigFile("tooltips").getConfig().getConfigurationSection("test"));*/
 
     public LoreBuilder(@NotNull MMOItem mmoitem) {
         lore.addAll(MMOItems.plugin.getFormats().getFormat(mmoitem));
+
         // TODO load tooltip
     }
 
@@ -138,8 +141,10 @@ public class LoreBuilder {
         built = true;
 
         /*
-         * Loops backwards to remove all unused bars in one iteration only,
-         * otherwise the stats under a bar gets removed after the bar is checked.
+         * First, filtering iteration.
+         *
+         * Loops backwards to remove all unused bars in one iteration only.
+         * The backwards loop allows to condense into one full iteration.
          */
         for (int j = 0; j < lore.size(); ) {
             int n = lore.size() - j - 1;
@@ -158,29 +163,15 @@ public class LoreBuilder {
         }
 
         /*
-         * Allows math to be done within the stats.yml file
-         */
-        int index = -1;
-        for (String string : lore) {
-            index++;
-            String match = StringUtils.substringBetween(string, "MATH%", "%");
-            if (match == null) continue;
-
-            String result;
-            try {
-                result = MythicLib.plugin.getMMOConfig().decimals.format((double) MythicLib.plugin.getFormulaParser().eval(match));
-            } catch (Exception ignored) {
-                result = "<InvalidFormula>";
-            }
-            lore.set(index, string.replaceAll("MATH\\%[^%]*\\%", result));
-        }
-
-        /*
-         * Clear bar codes and parse chat colors only ONCE the bars have been
-         * successfully calculated. Also breaks lines containing \n (like breaks)
+         * Second and last, functional step.
          *
-         * Edit so that there is no need to create an additional array list
+         * Steps In-order:
+         * - Clear bad codes
+         * - Apply placeholders and math
+         * - Apply \n line breaks
+         * - Apply tooltip middle/bar and suffix
          */
+        final String effectiveSuffix = tooltip != null ? tooltip.getSuffix() : "";
         for (int j = 0; j < lore.size(); ) {
             String currentLine = lore.get(j);
 
@@ -193,11 +184,18 @@ public class LoreBuilder {
             if (tooltip != null)
                 currentLine = (bar || superbar ? tooltip.getBar() : tooltip.getMiddle()) + currentLine;
 
+            // Deprecated math. PAPI math expansion is now recommended
+            final String match = StringUtils.substringBetween(currentLine, "MATH%", "%");
+            if (match != null) currentLine = currentLine.replaceFirst("MATH\\%[^%]*\\%", evaluate(match));
+
+            // Apply PAPI placeholders
+            currentLine = MythicLib.plugin.getPlaceholderParser().parse(null, currentLine);
+
             // Need to break down the line into multiple
             if (currentLine.contains("\\n")) {
                 String[] split = currentLine.split("\\\\n");
                 for (int k = split.length - 1; k >= 0; k -= 1)
-                    lore.add(j, split[k]);
+                    lore.add(j, split[k] + effectiveSuffix);
 
                 // Remove the old element
                 lore.remove(j + split.length);
@@ -208,15 +206,28 @@ public class LoreBuilder {
             } else
 
                 // Simple line
-                lore.set(j++, currentLine);
+                lore.set(j++, currentLine + effectiveSuffix);
         }
 
         // Apply tooltip bottom
-        if (tooltip != null)
-            lore.add(tooltip.getBottom());
+        if (tooltip != null) {
+            lore.add(tooltip.getBottom() + effectiveSuffix);
+
+            // Apply tooltip lore header
+            if (tooltip.getLoreHeader() != null) lore.addAll(0, tooltip.getLoreHeader());
+        }
 
         lore.addAll(end);
         return lore;
+    }
+
+    @Deprecated
+    private String evaluate(String formula) {
+        try {
+            return MythicLib.plugin.getMMOConfig().decimals.format((double) MythicLib.plugin.getFormulaParser().eval(formula));
+        } catch (Throwable throwable) {
+            return "<ParsingError>";
+        }
     }
 
     private boolean isBar(String str) {

@@ -109,7 +109,7 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull PotionEffectListData data) {
         // Process Lore
         List<String> lore = new ArrayList<>();
-        String effectFormat = ItemStat.translate("effect");
+        String effectFormat = getGeneralStatFormat();
         data.getEffects().forEach(effect -> lore.add(effectFormat
                 .replace("{effect}",
                         MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
@@ -121,11 +121,16 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
         item.addItemTag(getAppliedNBT(data));
     }
 
+    @Override
+    public String getLegacyTranslationPath() {
+        return "effect";
+    }
+
     @NotNull
     @Override
     public ArrayList<ItemTag> getAppliedNBT(@NotNull PotionEffectListData data) {
 
-        // Create aJson Array
+        // Create a Json Array
         JsonArray array = new JsonArray();
 
         // For every effect

@@ -8,6 +8,21 @@ sharp:
         lore:
         - '&7更锋利辣!'
 
+group_example:
+    max: 3
+    modifiers:
+        sharp: 1
+        fiery: 1
+        lucky: 1
+
+rare_group:
+    min: 1
+    max: 1
+    modifiers:
+        arcane: 1
+        accuracy: 1
+        ancient: 1
+
 fiery:
     chance: 0.1
     prefix:

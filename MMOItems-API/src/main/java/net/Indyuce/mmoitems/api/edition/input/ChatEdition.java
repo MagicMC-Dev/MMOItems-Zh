@@ -32,7 +32,7 @@ public class ChatEdition extends PlayerInputHandler implements Listener {
 	public void a(AsyncPlayerChatEvent event) {
 		if (getPlayer() != null && event.getPlayer().equals(getPlayer())) {
 			event.setCancelled(true);
-			registerInput(event.getMessage());
+			Bukkit.getScheduler().runTask(MMOItems.plugin, () -> registerInput(event.getMessage()));
 		}
 	}
 

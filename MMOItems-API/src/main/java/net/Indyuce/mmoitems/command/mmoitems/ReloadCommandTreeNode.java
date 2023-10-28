@@ -77,7 +77,6 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
                 + MMOItems.plugin.getUpgrades().getAll().size() + ChatColor.GRAY + " Upgrade Templates");
 
         // This one is not implementing Reloadable
-        NumericStatFormula.reload();
         MMOItemReforger.reload();
     }
 

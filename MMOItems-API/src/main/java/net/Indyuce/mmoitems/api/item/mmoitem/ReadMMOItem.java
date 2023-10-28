@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ReadMMOItem extends MMOItem implements CooldownObject {
+public abstract class ReadMMOItem extends MMOItem {
     @NotNull
     private final NBTItem item;
 

@@ -18,7 +18,7 @@ Official repository for MMOItems Premium
 
 [banner]: https://socialify.git.ci/MagicMC-Dev/MMOItems-Zh/image?description=1&descriptionEditable=A%20Chinese%20version%20of%20MMOItems&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Auto
 
-[actions]: https://img.shields.io/github/actions/workflow/status/MagicMC-Dev/MMOItems-Zh/main.yml?style=for-the-badge
+[actions]: https://img.shields.io/github/actions/workflow/status/MagicMC-Dev/MMOItems-Zh/Release.yml?style=for-the-badge
 
 [actions-link]: https://github.com/MagicMC-Dev/MMOItems-Zh/actions/workflows/build-apk.yml
 

@@ -56,7 +56,7 @@ MMOItems 是一款强大的 Minecraft 插件，它允许服务器管理员创建
 
 如果您是服务器管理员或只是一个喜欢汉化工作的玩家，您可以按照以下步骤在您的服务器上使用 MMOItems 的汉化版本：
 
-1. **下载插件**：您可以在本仓库的 [Releases](https://github.com/your-username/MMOItems-Chinese/releases) 页面下载最新的 MMOItems 官方版汉化插件。
+1. **下载插件**：您可以在本仓库的 [Releases](https://github.com/MagicMC-Dev/MMOItems-Zh/releases) 页面下载最新的 MMOItems 官方版汉化插件。
 2. **安装插件**：将下载的插件文件（通常是一个 JAR 文件）放入您的服务器插件文件夹中，并确保您的服务器支持使用该插件。
 3. **配置插件**：按照 MMOItems 官方版的配置指南，在服务器配置文件中设置插件的参数和选项。您可以参考汉化版本的 README 或翻译后的插件说明来了解具体设置。
 4. **启动服务器**：启动您的 Minecraft 服务器，并确保 MMOItems 插件已成功加载。您现在应该能够在游戏中看到物品和装备的中文名称和描述了。
@@ -73,7 +73,7 @@ MMOItems 是一款强大的 Minecraft 插件，它允许服务器管理员创建
 
 ## 反馈和问题
 
-如果您在使用 MMOItems 汉化版插件时遇到任何问题或有任何建议，欢迎在本仓库的 [Issues](https://github.com/your-username/MMOItems-Chinese/issues) 页面提出。我们会尽快回复您的问题并解决存在的 bug。
+如果您在使用 MMOItems 汉化版插件时遇到任何问题或有任何建议，欢迎在本仓库的 [Issues](https://github.com/MagicMC-Dev/MMOItems-Zh/issues) 页面提出。我们会尽快回复您的问题并解决存在的 bug。
 ## 鸣谢
 
 我们要特别感谢 MMOItems 官方团队提供了这个出色的插件，并允许我们进行汉化工作。感谢所有参与这个汉化项目的贡献者，他们的努力使得中文玩家能够更好地享受 MMOItems 的乐趣。

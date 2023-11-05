@@ -1,5 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-name: MMOitem Builder
+name: MMOitem Builder [Release version]
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
@@ -12,10 +12,10 @@ on:
         default: 'warning'
       tags:
         description: 'Test scenario tags'
-  push:
-    branches: [ "Zh_cn" ]
-  pull_request:
-    branches: [ "Zh_cn" ]
+   # push:
+   #   branches: [ "Zh_cn" ]
+   # pull_request:
+   #   branches: [ "Zh_cn" ]
 
 jobs:
   build:

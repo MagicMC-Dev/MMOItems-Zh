@@ -19,6 +19,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        server-id: phoenixdevt-releases
     - name: Install depends
       run: mvn install
     - name: Build with Maven
@@ -38,3 +39,8 @@ jobs:
 #         title: "Release ${{ env.RELEASE_VERSION }}"
 #         files: |
 #           staging/*.jar
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: aseprite
+        path: staging/*.jar

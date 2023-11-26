@@ -40,9 +40,17 @@ Official repository for MMOItems Premium
 
 [contrib-link]: https://github.com/MagicMC-Dev/MMOItems-Zh/graphs/contributors
 
-# MMOItems 官方版汉化仓库
+# MMOItems 汉化仓库
 
-欢迎来到 MMOItems 官方版汉化仓库的 README 页面！本仓库是关于 MMOItems 插件的汉化工作，旨在为玩家提供中文界面和本地化支持。
+欢迎来到 MMOItems 汉化仓库的 README 页面！本仓库是关于 MMOItems 插件的汉化工作，旨在为玩家提供中文界面和本地化支持。
+
+## 此版本与市面上其他汉化版/原版的区别
+
+- 更多的示例物品
+- 更频繁的更新
+- 更准确的翻译汉化
+- 配置文件全部汉化
+  ··· ···
 
 ## 关于 MMOItems
 
@@ -50,7 +58,7 @@ MMOItems 是一款强大的 Minecraft 插件，它允许服务器管理员创建
 
 ## 汉化目的
 
-这个仓库的目的是将 MMOItems 官方版插件汉化为中文，以方便中国玩家使用和理解。我们致力于提供一个全面而准确的中文翻译，确保插件的功能和说明在汉化后依然清晰明了。
+这个仓库的目的是将 MMOItems 插件汉化为中文，以方便中国玩家使用和理解。我们致力于提供一个全面而准确的中文翻译，确保插件的功能和说明在汉化后依然清晰明了。
 
 ## 如何使用
 
@@ -77,6 +85,10 @@ MMOItems 是一款强大的 Minecraft 插件，它允许服务器管理员创建
 ## 鸣谢
 
 我们要特别感谢 MMOItems 官方团队提供了这个出色的插件，并允许我们进行汉化工作。感谢所有参与这个汉化项目的贡献者，他们的努力使得中文玩家能够更好地享受 MMOItems 的乐趣。
+
+## FOSSA Status
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FMagicMC-Dev%2FMMOItems-Zh.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FMagicMC-Dev%2FMMOItems-Zh?ref=badge_large&issueType=license)
 
 ## 贡献者
 

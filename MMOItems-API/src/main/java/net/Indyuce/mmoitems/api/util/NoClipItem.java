@@ -1,9 +1,9 @@
 package net.Indyuce.mmoitems.api.util;
 
-import java.lang.reflect.Field;
-import java.util.Random;
-import java.util.logging.Level;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
@@ -20,12 +20,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import com.mojang.authlib.GameProfile;
-
-import net.Indyuce.mmoitems.MMOItems;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import java.util.Random;
+import java.util.logging.Level;
 
 public class NoClipItem implements Listener {
 	private final Item item;
@@ -115,18 +111,11 @@ public class NoClipItem implements Listener {
 		}
 
 		// Copy Skull textures
-		if (oldItem.getItemMeta() instanceof SkullMeta) {
-			try {
-				final Field oldProfileField = oldItem.getItemMeta().getClass().getDeclaredField("profile");
-				oldProfileField.setAccessible(true);
-				final GameProfile oldProfile = (GameProfile) oldProfileField.get(oldItem.getItemMeta());
-
-				final Field profileField = newItemMeta.getClass().getDeclaredField("profile");
-				profileField.setAccessible(true);
-				profileField.set(newItemMeta, oldProfile);
-			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not set skull texture on stripItemData method in the NoClipItem class. Please report this issue!");
-			}
+		if (oldItem.getItemMeta() instanceof SkullMeta) try {
+			final Object oldProfile = MythicLib.plugin.getVersion().getWrapper().getProfile((SkullMeta) oldItem.getItemMeta());
+			MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta) newItemMeta, oldProfile);
+		} catch (RuntimeException exception) {
+			MMOItems.plugin.getLogger().log(Level.WARNING, "Could not set skull texture on stripItemData method in the NoClipItem class. Please report this issue!");
 		}
 
 		// Copy Leather colors

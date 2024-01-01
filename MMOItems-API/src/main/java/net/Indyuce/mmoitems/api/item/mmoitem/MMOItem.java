@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.tooltip.TooltipTexture;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.*;
@@ -216,15 +217,25 @@ public class MMOItem implements ItemReference {
 		mergeableStatHistory.put(stat, hist);
 	}
 
-	//region Other API
+    //region Other API
 
-	/**
-	 * @return The tier of this item, if it has one.
-	 */
-	@Nullable
-	public ItemTier getTier() {
-		return hasData(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(stats.get(ItemStats.TIER).toString()) : null;
-	}
+    /**
+     * @return The tier of this item, if it has any
+     */
+    @Nullable
+    public ItemTier getTier() {
+        final StatData found = stats.get(ItemStats.TIER);
+        return found != null ? MMOItems.plugin.getTiers().get(found.toString()) : null;
+    }
+
+    /**
+     * @return Tooltip texture of this item, if it has any
+     */
+    @Nullable
+    public TooltipTexture getTooltip() {
+        final StatData found = stats.get(ItemStats.TOOLTIP);
+        return found != null ? MMOItems.plugin.getLore().getTooltip(found.toString()) : null;
+    }
 
 	/**
 	 * A MMOItem from the template only has damage

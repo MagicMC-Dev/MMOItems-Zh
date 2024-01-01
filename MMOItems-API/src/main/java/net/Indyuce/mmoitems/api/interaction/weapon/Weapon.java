@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.flags.CustomFlag;
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.api.interaction.UseItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
@@ -12,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -41,12 +43,9 @@ public class Weapon extends UseItem {
      * @return If the attack was cast successfully
      */
     public boolean checkAndApplyWeaponCosts() {
-        if (checkWeaponCosts(null)) {
-            applyWeaponCosts(0, null);
-            return true;
-        }
-
-        return false;
+        if (!checkWeaponCosts(null)) return false;
+        applyWeaponCosts(0, null);
+        return true;
     }
 
     /**
@@ -84,15 +83,12 @@ public class Weapon extends UseItem {
     public void applyWeaponCosts(double attackDelay, @Nullable CooldownType cooldown) {
 
         double manaCost = getNBTItem().getStat("MANA_COST");
-        if (manaCost > 0)
-            playerData.getRPG().giveMana(-manaCost);
+        if (manaCost > 0) playerData.getRPG().giveMana(-manaCost);
 
         double staminaCost = getNBTItem().getStat("STAMINA_COST");
-        if (staminaCost > 0)
-            playerData.getRPG().giveStamina(-staminaCost);
+        if (staminaCost > 0) playerData.getRPG().giveStamina(-staminaCost);
 
-        if (cooldown != null)
-            getPlayerData().applyCooldown(cooldown, attackDelay);
+        if (cooldown != null) getPlayerData().applyCooldown(cooldown, attackDelay);
     }
 
     /**
@@ -100,10 +96,11 @@ public class Weapon extends UseItem {
      * targeted attacks since the vanilla attack bar already does that.
      *
      * @param attackMeta The attack being performed
+     * @param attacker   The player attacker
      * @param target     The attack target
      * @return If the attack is successful, or if it was canceled otherwise
      */
-    public boolean handleTargetedAttack(AttackMetadata attackMeta, LivingEntity target) {
+    public boolean handleTargetedAttack(AttackMetadata attackMeta, @NotNull PlayerMetadata attacker, LivingEntity target) {
 
         // Handle weapon mana and stamina costs ONLY
         if (!checkAndApplyWeaponCosts())
@@ -111,7 +108,7 @@ public class Weapon extends UseItem {
 
         // Handle item set attack effects
         if (getMMOItem().getType().getItemSet().hasAttackEffect() && !getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE"))
-            getMMOItem().getType().getItemSet().applyAttackEffect(attackMeta, playerData, target, this);
+            getMMOItem().getType().getItemSet().applyAttackEffect(attackMeta, attacker, playerData, target, this);
 
         return true;
     }

@@ -12,7 +12,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
-import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.comp.MMOItemsMetrics;
@@ -66,7 +65,7 @@ public class MMOItems extends JavaPlugin {
 
     private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
     private final CraftingManager stationRecipeManager = new CraftingManager();
-    private final LoreFormatManager formatManager = new LoreFormatManager();
+    private final LoreFormatManager loreManager = new LoreFormatManager();
     private final TemplateManager templateManager = new TemplateManager();
     private final SkillManager skillManager = new SkillManager();
     private final EntityManager entityManager = new EntityManager();
@@ -174,7 +173,7 @@ public class MMOItems extends JavaPlugin {
          * can be fully loaded
          */
         statManager.loadElements();
-        formatManager.reload();
+        loreManager.reload();
         tierManager = new TierManager();
         setManager = new SetManager();
         upgradeManager = new UpgradeManager();
@@ -499,8 +498,13 @@ public class MMOItems extends JavaPlugin {
         return templateManager;
     }
 
+    public LoreFormatManager getLore(){
+        return loreManager;
+    }
+
+    @Deprecated
     public LoreFormatManager getFormats() {
-        return formatManager;
+        return getLore();
     }
 
     @Deprecated

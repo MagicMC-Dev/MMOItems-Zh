@@ -2,7 +2,10 @@ package net.Indyuce.mmoitems.stat.component.type;
 
 import net.Indyuce.mmoitems.stat.component.Mergeable;
 import net.Indyuce.mmoitems.stat.component.StatComponent;
-
+/**
+ * @deprecated Not used yet
+ */
+@Deprecated
 public class DoubleComponent extends StatComponent implements Mergeable<DoubleComponent> {
     private double value;
 

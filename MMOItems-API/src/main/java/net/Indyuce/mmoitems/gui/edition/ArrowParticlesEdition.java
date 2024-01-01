@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.gui.edition;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
@@ -45,7 +46,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		particleItemLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "当箭落地时消失");
 		particleItemLore.add("");
 		particleItemLore.add(ChatColor.GRAY + "当前值: " + (particle == null ? ChatColor.RED + "未选择任何粒子"
-				: ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " "))));
+				: ChatColor.GOLD + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " "))));
 		particleItemLore.add("");
 		particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击选择");
 		particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
@@ -158,7 +159,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		}
 
 		for (String string : new String[] { "amount", "offset", "speed" })
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + MMOUtils.caseOnWords(string))) {
+			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + UtilityMethods.caseOnWords(string))) {
 				if (event.getAction() == InventoryAction.PICKUP_ALL)
 					new StatEdition(this, ItemStats.ARROW_PARTICLES, string).enable("在聊天栏中输入您想要的 " + string + " 数值.");
 

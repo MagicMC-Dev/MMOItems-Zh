@@ -3,8 +3,10 @@ package net.Indyuce.mmoitems.command.mmoitems;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.command.api.CommandTreeNode;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.event.MMOItemsReloadEvent;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -53,6 +55,8 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
     }
 
     public void reloadMain(CommandSender sender) {
+        Bukkit.getPluginManager().callEvent(new MMOItemsReloadEvent());
+
         MMOItems.plugin.getLanguage().reload();
         MMOItems.plugin.getDropTables().reload();
         MMOItems.plugin.getTypes().reload();
@@ -62,7 +66,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
         MMOItems.plugin.getWorldGen().reload();
         MMOItems.plugin.getCustomBlocks().reload();
         MMOItems.plugin.getLayouts().reload();
-        MMOItems.plugin.getFormats().reload();
+        MMOItems.plugin.getLore().reload();
         MMOItems.plugin.getTemplates().reload();
         MMOItems.plugin.getStats().reload(true);
         sender.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " "

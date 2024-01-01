@@ -1,9 +1,7 @@
 package net.Indyuce.mmoitems.api.edition;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.edition.input.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.input.ChatEdition;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -48,15 +46,6 @@ public class StatEdition implements Edition {
 		for (String line : message)
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.translateAlternateColorCodes('&', line));
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
-
-		/*
-		 * Anvil text input feature. enables players to use an anvil to input
-		 * text if they are having conflicts with their chat management plugins.
-		 */
-		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MythicLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
-			new AnvilGUI(this);
-			return;
-		}
 
 		// Default chat edition feature
 		new ChatEdition(this);

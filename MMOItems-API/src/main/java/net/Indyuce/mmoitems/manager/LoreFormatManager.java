@@ -3,12 +3,13 @@ package net.Indyuce.mmoitems.manager;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.item.build.TooltipTexture;
+import net.Indyuce.mmoitems.tooltip.TooltipTexture;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -38,7 +39,8 @@ public class LoreFormatManager implements Reloadable {
         final ConfigurationSection tooltipsConfig = new ConfigFile("tooltips").getConfig();
         for (String key : tooltipsConfig.getKeys(false))
             try {
-                tooltips.put(key, new TooltipTexture(tooltipsConfig.getConfigurationSection(key)));
+                final TooltipTexture tooltip = new TooltipTexture(tooltipsConfig.getConfigurationSection(key));
+                tooltips.put(tooltip.getId(), tooltip);
             } catch (Exception exception) {
                 MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load tooltip '" + key + "': " + exception.getMessage());
             }
@@ -48,8 +50,23 @@ public class LoreFormatManager implements Reloadable {
         return formats.containsKey(id);
     }
 
+    @NotNull
     public Collection<List<String>> getFormats() {
         return formats.values();
+    }
+
+    public boolean hasTooltip(@NotNull String id) {
+        return tooltips.containsKey(id);
+    }
+
+    @NotNull
+    public Collection<TooltipTexture> getTooltips() {
+        return tooltips.values();
+    }
+
+    @Nullable
+    public TooltipTexture getTooltip(@NotNull String id) {
+        return tooltips.get(id);
     }
 
     @NotNull

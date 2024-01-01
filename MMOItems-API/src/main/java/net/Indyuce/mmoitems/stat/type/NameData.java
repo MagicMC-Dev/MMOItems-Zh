@@ -1,10 +1,8 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Data that stores what an item is originally named like and prefixes or whatever.
  */
-public class NameData extends StringData implements Mergeable<StringData> {
+public class NameData extends StringData implements Mergeable<NameData> {
     public NameData(@NotNull String str) {
         super(str);
     }
@@ -109,29 +107,20 @@ public class NameData extends StringData implements Mergeable<StringData> {
     @NotNull public ArrayList<String> getSuffixes() { return suffixes; }
 
     @Override
-    public void merge(StringData data) {
-
-        // Assimilate
-        if (data instanceof NameData) {
-
-            // Replace name if not empty
-            if (!((NameData) data).getMainName().isEmpty()) { setString(((NameData) data).getMainName()); }
-
-            // Assimilate
-            for (String p : ((NameData) data).getPrefixes()) { addPrefix(p);}
-            for (String p : ((NameData) data).getSuffixes()) { addSuffix(p);}
-
-        } else if (data instanceof StringData) {
-
+    public void mergeWith(NameData data) {
+        if (!data.getMainName().isEmpty()) setString(data.getMainName());
+        for (String p : data.getPrefixes()) addPrefix(p);
+        for (String p : data.getSuffixes()) addSuffix(p);
+     /*   } else if (data instanceof StringData) {
             // Replace name if not empty
             if (data.toString().isEmpty()) { return; }
             setString(data.toString());
-        }
+        }*/
     }
 
     @NotNull
     @Override
-    public StringData cloneData() {
+    public NameData clone() {
 
         NameData c = new NameData(getMainName());
         for (String p : getPrefixes()) { c.addPrefix(p);}

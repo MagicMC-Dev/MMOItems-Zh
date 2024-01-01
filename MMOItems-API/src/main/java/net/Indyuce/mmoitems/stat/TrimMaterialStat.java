@@ -1,12 +1,12 @@
 package net.Indyuce.mmoitems.stat;
 
-import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.type.ChooseStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.util.StatChoice;
+import net.Indyuce.mmoitems.util.VersionDependant;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -20,14 +20,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Jules
  */
+@VersionDependant(minor = 20)
 public class TrimMaterialStat extends ChooseStat implements GemStoneStat {
     public TrimMaterialStat() {
         super("TRIM_MATERIAL", Material.LEATHER_CHESTPLATE, "纹饰材料", new String[]{"用来装饰你的盔甲的材料"}, new String[]{"armor"});
 
-        if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 19)) {
-            disable();
-            return;
-        }
+        // Version dependency
+        if (!isEnabled()) return;
 
         for (TrimMaterial mat : Registry.TRIM_MATERIAL)
             addChoices(new StatChoice(mat.getKey().getKey()));

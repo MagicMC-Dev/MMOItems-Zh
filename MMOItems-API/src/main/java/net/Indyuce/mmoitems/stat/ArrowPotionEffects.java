@@ -3,12 +3,12 @@ package net.Indyuce.mmoitems.stat;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.interaction.projectile.ArrowPotionEffectArrayItem;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -20,6 +20,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -96,8 +97,8 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 			lore.add(ChatColor.GRAY + "当前值: ");
 			RandomPotionEffectListData data = statData.get();
 			for (RandomPotionEffectData effect : data.getEffects())
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
-				+ ChatColor.GRAY + " 等级: " + ChatColor.GREEN + effect.getAmplifier() + ChatColor.GRAY + " Duration: " + ChatColor.GREEN
+				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + UtilityMethods.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
+				+ ChatColor.GRAY + " 等级: " + ChatColor.GREEN + effect.getAmplifier() + ChatColor.GRAY + " 持续时间: " + ChatColor.GREEN
 				+ effect.getDuration());
 		} else
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");

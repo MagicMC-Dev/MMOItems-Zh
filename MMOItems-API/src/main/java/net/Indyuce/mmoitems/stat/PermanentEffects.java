@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.google.gson.JsonSyntaxException;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -107,7 +108,7 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
             lore.add(ChatColor.GRAY + "当前值: ");
             RandomPotionEffectListData data = statData.get();
             for (RandomPotionEffectData effect : data.getEffects())
-                lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
+                lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + UtilityMethods.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
                         + " " + effect.getAmplifier().toString());
 
         } else

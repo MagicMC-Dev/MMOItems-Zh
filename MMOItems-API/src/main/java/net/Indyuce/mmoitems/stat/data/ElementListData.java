@@ -5,7 +5,6 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.util.ElementStatType;
 import net.Indyuce.mmoitems.util.Pair;
-import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -13,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class ElementListData implements Mergeable {
+public class ElementListData implements StatData, Mergeable<ElementListData> {
     private final Map<Pair<Element, ElementStatType>, Double> stats = new LinkedHashMap<>();
 
     public double getStat(Element element, ElementStatType statType) {
@@ -30,16 +29,14 @@ public class ElementListData implements Mergeable {
     }
 
     @Override
-    public void merge(StatData data) {
-        Validate.isTrue(data instanceof ElementListData, "无法合并两种不同的统计数据类型");
-        ElementListData extra = (ElementListData) data;
+    public void mergeWith(@NotNull ElementListData targetData) {
         //Includes old values if any, fixes stacking of element double values I believe - Kilo
-        extra.stats.forEach((key, value) -> stats.put(key, value + stats.getOrDefault(key,0.0)));
+        targetData.stats.forEach((key, value) -> stats.put(key, value + stats.getOrDefault(key,0.0)));
     }
 
     @NotNull
     @Override
-    public StatData cloneData() {
+    public ElementListData clone() {
         ElementListData ret = new ElementListData();
         for (Map.Entry<Pair<Element, ElementStatType>, Double> entry : stats.entrySet()) {
             Pair<Element, ElementStatType> key = entry.getKey();

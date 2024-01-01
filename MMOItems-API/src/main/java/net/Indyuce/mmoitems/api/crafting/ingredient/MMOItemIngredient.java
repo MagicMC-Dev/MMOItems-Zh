@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
@@ -122,7 +123,7 @@ public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
 
 			// Try and take the material name
 		else if (template.getBaseItemData().containsKey(ItemStats.MATERIAL))
-			name = MMOUtils.caseOnWords(((MaterialData) template.getBaseItemData().get(ItemStats.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
+			name = UtilityMethods.caseOnWords(((MaterialData) template.getBaseItemData().get(ItemStats.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
 
 			// Ultra rare case to avoid a NPE
 		else name = "Unrecognized Item";

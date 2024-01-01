@@ -1,24 +1,36 @@
 package net.Indyuce.mmoitems.api.item.template;
 
+import io.lumine.mythic.lib.util.PostLoadAction;
+import io.lumine.mythic.lib.util.PreloadedObject;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.template.NameModifier.ModifierType;
-import net.Indyuce.mmoitems.manager.TemplateManager;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.jetbrains.annotations.NotNull;
-
 public class TemplateModifier extends ModifierNode {
     private final Map<ItemStat, RandomStatData> data;
+
+    private final PostLoadAction postLoadAction = new PostLoadAction(config -> {
+        Validate.notNull(config.getConfigurationSection("stats"), "Could not find base item data");
+        for (String key : config.getConfigurationSection("stats").getKeys(false))
+            try {
+                String id = key.toUpperCase().replace("-", "_");
+                Validate.isTrue(MMOItems.plugin.getStats().has(id), "Could not find stat with ID '" + id + "'");
+
+                ItemStat stat = MMOItems.plugin.getStats().get(id);
+                TemplateModifier.this.data.put(stat, stat.whenInitialized(config.get("stats." + key)));
+            } catch (IllegalArgumentException exception) {
+                MMOItems.plugin.getLogger().log(Level.INFO, "An error occurred while trying to load modifier node " + getId() + ": " + exception.getMessage());
+            }
+    });
 
     public TemplateModifier(@NotNull ConfigurationSection config) {
         this(config.getName(), config);
@@ -45,19 +57,13 @@ public class TemplateModifier extends ModifierNode {
 
         // Make sure it's a config section
         Validate.isTrue(configObject instanceof ConfigurationSection, "Must provide a config section when not using a reference node");
-        final ConfigurationSection config = (ConfigurationSection) configObject;
+        postLoadAction.cacheConfig((ConfigurationSection) configObject);
         this.data = new HashMap<>();
-        Validate.notNull(config.getConfigurationSection("stats"), "Could not find base item data");
-        for (String key : config.getConfigurationSection("stats").getKeys(false))
-            try {
-                String id = key.toUpperCase().replace("-", "_");
-                Validate.isTrue(MMOItems.plugin.getStats().has(id), "Could not find stat with ID '" + id + "'");
+    }
 
-                ItemStat stat = MMOItems.plugin.getStats().get(id);
-                data.put(stat, stat.whenInitialized(config.get("stats." + key)));
-            } catch (IllegalArgumentException exception) {
-                MMOItems.plugin.getLogger().log(Level.INFO, "An error occurred while trying to load modifier node " + nodeId + ": " + exception.getMessage());
-            }
+    @Override
+    public PostLoadAction getPostLoadAction() {
+        return postLoadAction;
     }
 
     @NotNull

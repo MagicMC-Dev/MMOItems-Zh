@@ -35,8 +35,7 @@ public class Lore extends StringListStat implements GemStoneStat {
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {
-
-        // Apply yes
+        item.getLore().insert("lore", data.getList());
         item.addItemTag(getAppliedNBT(data));
     }
 

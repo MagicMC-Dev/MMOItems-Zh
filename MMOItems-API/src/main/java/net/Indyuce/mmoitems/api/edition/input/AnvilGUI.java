@@ -15,6 +15,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.Edition;
 import io.lumine.mythic.lib.MythicLib;
 
+@Deprecated
 public class AnvilGUI extends PlayerInputHandler implements Listener {
 	private final int containerId;
 	private final Inventory inventory;
@@ -26,6 +27,7 @@ public class AnvilGUI extends PlayerInputHandler implements Listener {
 	 * 
 	 * @param edition Data being edited
 	 */
+	@Deprecated
 	public AnvilGUI(Edition edition) {
 		super(edition);
 

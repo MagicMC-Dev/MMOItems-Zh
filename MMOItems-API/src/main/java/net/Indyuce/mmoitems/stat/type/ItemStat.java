@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -8,6 +9,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.util.VersionDependant;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -58,6 +60,13 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
 
         this.configPath = id.toLowerCase().replace("_", "-");
         this.nbtPath = "MMOITEMS_" + id;
+
+        // Version dependency
+        if (getClass().isAnnotationPresent(VersionDependant.class)) {
+            final VersionDependant implVersion = getClass().getAnnotation(VersionDependant.class);
+            if (MythicLib.plugin.getVersion().isBelowOrEqual(implVersion.major(), implVersion.minor(), implVersion.patch() - 1))
+                disable();
+        }
     }
 
     /**
@@ -187,7 +196,7 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
     /**
      * @return The stat ID
      * @deprecated Use getId() instead. Type is no longer an util since they can
-     *         now be registered from external plugins
+     * now be registered from external plugins
      */
     @Deprecated
     @NotNull
@@ -205,8 +214,8 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
 
     /**
      * @return The NBT path used by the stat to save data in an item's NBTTags.
-     *         The format is 'MMOITEMS_' followed by the stat name in capital
-     *         letters only using _
+     * The format is 'MMOITEMS_' followed by the stat name in capital
+     * letters only using _
      */
     @NotNull
     public String getNBTPath() {

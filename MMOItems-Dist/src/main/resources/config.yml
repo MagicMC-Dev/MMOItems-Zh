@@ -38,7 +38,10 @@ item-level-spread: 2
 # 当前存在客户端Minecraft的问题，左键点击会导致
 fix-left-click-interact: false
 
-# 当生成一个没有等级的物品时，使用的容量公式。
+# 没有层的项目将使用此层名称作为其默认层名称。
+default-tier-name: 'Common'
+
+# 当生成的项目没有层级时，这是它将使用的能力公式。
 default-item-capacity:
     base: 3
     scale: 0
@@ -152,11 +155,7 @@ custom-blocks:
     # 对于使用自定义方块的服务器强烈推荐，因为蘑菇方块可能会破坏所有内容。
     replace-mushroom-drops: true
 
-# 如果你的聊天管理插件与MMOItems的聊天输入功能发生冲突，可以使用这个选项。
-# 这将打开一个铁砧GUI，你可以在其中输入文本，而不是使用聊天。
-anvil-text-input: false
-
-# 当设置为true时，如果升级物品的规格（等级、职业要求）如果将物品升级会导致物品规格过高，玩家将无法升级。
+# 设定为true时，如果升级后物品的规格(等级、职业要求)对玩家来说太高，玩家就不能升级该物品。
 item-upgrade-requirements-check: true
 
 # 当玩家持有双手物品和另一件物品时，不能使用武器/技能。

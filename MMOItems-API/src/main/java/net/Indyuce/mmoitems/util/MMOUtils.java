@@ -1,16 +1,14 @@
 package net.Indyuce.mmoitems.util;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import org.apache.commons.codec.binary.Base64;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -19,13 +17,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 import java.util.*;
 
 @SuppressWarnings("unused")
@@ -36,6 +32,11 @@ public class MMOUtils {
 
     public static boolean isColorable(@NotNull Particle particle) {
         return particle.getDataType() == Particle.DustOptions.class;
+    }
+
+    public static boolean isSoulboundTo(@NotNull NBTItem item, @NotNull Player player) {
+        final @Nullable String foundNbt = item.getString("MMOITEMS_SOULBOUND");
+        return foundNbt != null && foundNbt.contains(player.getUniqueId().toString());
     }
 
     /**
@@ -62,35 +63,16 @@ public class MMOUtils {
         return isNonEmpty(str) ? str : Objects.requireNonNull(fallback);
     }
 
-    /**
-     * @return The skull texture URL from a given player head
-     */
-    @Deprecated
-    public static String getSkullTextureURL(ItemStack item) {
-        try {
-            ItemMeta meta = item.getItemMeta();
-            Field profileField = meta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            Collection<Property> properties = ((GameProfile) profileField.get(item.getItemMeta())).getProperties().get("textures");
-            Property property = properties.toArray(new Property[0])[0];
-            return new String(Base64.decodeBase64(property.getValue())).replace("{textures:{SKIN:{url:\"", "").replace("\"}}}", "");
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
     private static final String UNIVERSAL_REFERENCE = "all";
 
     /**
      * References are helpful to classify items that can interact together.
-     * They are a piece of text stored as an NBTTag for instance. Items can
-     * interact (in a certain way) only if the corresponding reference match.
+     * They are a piece of text stored as an NBTTag for instance. Items are
+     * only able to interact with items with the same reference, or with
+     * the universal reference stored in variable {@link #UNIVERSAL_REFERENCE}
      * <p>
-     * Any item can interact with an item with the universal reference 'all'.
-     * A null/empty reference is considered like the universal reference.
-     * <p>
-     * This is a simple symmetrical computation. Used for:
-     * - for item upgrading TODO
+     * At the moment, it is being used for:
+     * - for item upgrading
      * - item repairing
      *
      * @param ref1 First reference
@@ -98,30 +80,15 @@ public class MMOUtils {
      * @return If items can interact
      */
     public static boolean checkReference(@Nullable String ref1, @Nullable String ref2) {
-        return ref1 == null || ref1.isEmpty() || ref2 == null || ref2.isEmpty() || ref1.equals(UNIVERSAL_REFERENCE) || ref2.equals(UNIVERSAL_REFERENCE) || ref1.equals(ref2);
+        if (ref1 != null && ref1.equals(UNIVERSAL_REFERENCE)) return true;
+        if (ref2 != null && ref2.equals(UNIVERSAL_REFERENCE)) return true;
+        return Objects.equals(ref1, ref2);
     }
 
     /**
      * Source: https://gist.github.com/Mystiflow/c42f45bac9916c84e381155f72a96d84
      */
-    private static final Map<ChatColor, Color> COLOR_MAPPINGS = ImmutableMap.<ChatColor, Color>builder()
-            .put(ChatColor.BLACK, Color.fromRGB(0, 0, 0))
-            .put(ChatColor.DARK_BLUE, Color.fromRGB(0, 0, 170))
-            .put(ChatColor.DARK_GREEN, Color.fromRGB(0, 170, 0))
-            .put(ChatColor.DARK_AQUA, Color.fromRGB(0, 170, 170))
-            .put(ChatColor.DARK_RED, Color.fromRGB(170, 0, 0))
-            .put(ChatColor.DARK_PURPLE, Color.fromRGB(170, 0, 170))
-            .put(ChatColor.GOLD, Color.fromRGB(255, 170, 0))
-            .put(ChatColor.GRAY, Color.fromRGB(170, 170, 170))
-            .put(ChatColor.DARK_GRAY, Color.fromRGB(85, 85, 85))
-            .put(ChatColor.BLUE, Color.fromRGB(85, 85, 255))
-            .put(ChatColor.GREEN, Color.fromRGB(85, 255, 85))
-            .put(ChatColor.AQUA, Color.fromRGB(85, 255, 255))
-            .put(ChatColor.RED, Color.fromRGB(255, 85, 85))
-            .put(ChatColor.LIGHT_PURPLE, Color.fromRGB(255, 85, 255))
-            .put(ChatColor.YELLOW, Color.fromRGB(255, 255, 85))
-            .put(ChatColor.WHITE, Color.fromRGB(255, 255, 255))
-            .build();
+    private static final Map<ChatColor, Color> COLOR_MAPPINGS = ImmutableMap.<ChatColor, Color>builder().put(ChatColor.BLACK, Color.fromRGB(0, 0, 0)).put(ChatColor.DARK_BLUE, Color.fromRGB(0, 0, 170)).put(ChatColor.DARK_GREEN, Color.fromRGB(0, 170, 0)).put(ChatColor.DARK_AQUA, Color.fromRGB(0, 170, 170)).put(ChatColor.DARK_RED, Color.fromRGB(170, 0, 0)).put(ChatColor.DARK_PURPLE, Color.fromRGB(170, 0, 170)).put(ChatColor.GOLD, Color.fromRGB(255, 170, 0)).put(ChatColor.GRAY, Color.fromRGB(170, 170, 170)).put(ChatColor.DARK_GRAY, Color.fromRGB(85, 85, 85)).put(ChatColor.BLUE, Color.fromRGB(85, 85, 255)).put(ChatColor.GREEN, Color.fromRGB(85, 255, 85)).put(ChatColor.AQUA, Color.fromRGB(85, 255, 255)).put(ChatColor.RED, Color.fromRGB(255, 85, 85)).put(ChatColor.LIGHT_PURPLE, Color.fromRGB(255, 85, 255)).put(ChatColor.YELLOW, Color.fromRGB(255, 255, 85)).put(ChatColor.WHITE, Color.fromRGB(255, 255, 255)).build();
 
     @NotNull
     public static Color toRGB(ChatColor color) {
@@ -130,12 +97,10 @@ public class MMOUtils {
 
     public static int getPickaxePower(Player player) {
         final ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null || item.getType() == Material.AIR)
-            return 0;
+        if (item == null || item.getType() == Material.AIR) return 0;
 
         final NBTItem nbt = NBTItem.get(item);
-        if (nbt.hasTag("MMOITEMS_PICKAXE_POWER"))
-            return nbt.getInteger("MMOITEMS_PICKAXE_POWER");
+        if (nbt.hasTag("MMOITEMS_PICKAXE_POWER")) return nbt.getInteger("MMOITEMS_PICKAXE_POWER");
 
         switch (item.getType().name()) {
             case "WOODEN_PICKAXE":
@@ -163,9 +128,9 @@ public class MMOUtils {
      * @throws IllegalArgumentException If this does not match any trigger type
      */
     @NotNull
+    @Deprecated
     public static TriggerType backwardsCompatibleTriggerType(@NotNull String name) throws IllegalArgumentException {
-        if (name == null)
-            throw new IllegalArgumentException("Trigger cannot be null");
+        if (name == null) throw new IllegalArgumentException("Trigger cannot be null");
 
         switch (name) {
             case "ON_HIT":
@@ -184,8 +149,7 @@ public class MMOUtils {
      * @return If the given item is the desired MMOItem
      */
     public static boolean isMMOItem(@Nullable ItemStack item, @NotNull String type, @NotNull String id) {
-        if (item == null)
-            return false;
+        if (item == null) return false;
 
         // Make it into an NBT Item
         NBTItem asNBT = NBTItem.get(item);
@@ -194,12 +158,10 @@ public class MMOUtils {
         String itemID = getID(asNBT);
 
         // Not a MMOItem
-        if (itemID == null)
-            return false;
+        if (itemID == null) return false;
 
         // ID matches?
-        if (!itemID.equals(id))
-            return false;
+        if (!itemID.equals(id)) return false;
 
         // If the type matches too, we are set.
         return asNBT.getType().equals(type);
@@ -211,8 +173,7 @@ public class MMOUtils {
      */
     @Nullable
     public static Type getType(@Nullable NBTItem nbtItem) {
-        if (nbtItem == null || !nbtItem.hasType())
-            return null;
+        if (nbtItem == null || !nbtItem.hasType()) return null;
 
         // Try that one instead
         return MMOItems.plugin.getTypes().get(nbtItem.getType());
@@ -224,18 +185,16 @@ public class MMOUtils {
      */
     @Nullable
     public static String getID(@Nullable NBTItem nbtItem) {
-        if (nbtItem == null || !nbtItem.hasType())
-            return null;
+        if (nbtItem == null || !nbtItem.hasType()) return null;
 
         ItemTag type = ItemTag.getTagAtPath("MMOITEMS_ITEM_ID", nbtItem, SupportedNBTTagValues.STRING);
-        if (type == null)
-            return null;
+        if (type == null) return null;
 
         return (String) type.getValue();
     }
 
     /**
-     * * Returns either the normalized vector, or null vector if input is null
+     * Returns either the normalized vector, or null vector if input is null
      * vector which cannot be normalized.
      *
      * @param vector Vector which can be of length 0
@@ -266,8 +225,7 @@ public class MMOUtils {
      */
     @Nullable
     public static UUID UUIDFromString(@org.jetbrains.annotations.Nullable String anything) {
-        if (anything == null)
-            return null;
+        if (anything == null) return null;
 
         // Correct Format?
         if (anything.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"))
@@ -290,8 +248,7 @@ public class MMOUtils {
          */
         if (event.getDamager() instanceof Projectile) {
             Projectile proj = (Projectile) event.getDamager();
-            if (proj.getShooter() instanceof LivingEntity)
-                return (LivingEntity) proj.getShooter();
+            if (proj.getShooter() instanceof LivingEntity) return (LivingEntity) proj.getShooter();
         }
 
         return null;
@@ -305,7 +262,7 @@ public class MMOUtils {
      *
      * @param type Potion effect type
      * @return The duration that MMOItems should be using to give player
-     *         "permanent" potion effects, depending on the potion effect type
+     * "permanent" potion effects, depending on the potion effect type
      */
     public static int getEffectDuration(PotionEffectType type) {
         return type.equals(PotionEffectType.NIGHT_VISION) || type.equals(PotionEffectType.CONFUSION) ? 260 : type.equals(PotionEffectType.BLINDNESS) ? 140 : 80;
@@ -316,35 +273,19 @@ public class MMOUtils {
         if (item == null) {
             return "null";
         }
-        return (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) ?
-                item.getItemMeta().getDisplayName() :
-                caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
+        return (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) ? item.getItemMeta().getDisplayName() : caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
     }
 
-    /**
-     * Super useful to display enum names like DIAMOND_SWORD in chat
-     *
-     * @param s String with lower cases and spaces only
-     * @return Same string with capital letters at the beginning of each word.
-     */
+    @Deprecated
     public static String caseOnWords(String s) {
-        StringBuilder builder = new StringBuilder(s);
-        boolean isLastSpace = true;
-        for (int i = 0; i < builder.length(); i++) {
-            char ch = builder.charAt(i);
-            if (isLastSpace && ch >= 'a' && ch <= 'z') {
-                builder.setCharAt(i, (char) (ch + ('A' - 'a')));
-                isLastSpace = false;
-            } else isLastSpace = ch == ' ';
-        }
-        return builder.toString();
+        return UtilityMethods.caseOnWords(s);
     }
 
     /**
      * @param item The item to check
      * @param lore Whether or not MI should check for an item lore
      * @return If the item is not null, has an itemMeta and has a display name.
-     *         If 'lore' is true, also checks if the itemMeta has a lore.
+     * If 'lore' is true, also checks if the itemMeta has a lore.
      */
     public static boolean isMetaItem(ItemStack item, boolean lore) {
         return item != null && item.getType() != Material.AIR && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null && (!lore || item.getItemMeta().getLore() != null);
@@ -478,10 +419,10 @@ public class MMOUtils {
     /**
      * @param loc Where we are looking for nearby entities
      * @return List of all entities surrounding a location. This method loops
-     *         through the 9 surrounding chunks and collect all entities from
-     *         them. This list can be cached and used multiple times in the same
-     *         tick for projectile based spells which need to run entity
-     *         checkups
+     * through the 9 surrounding chunks and collect all entities from
+     * them. This list can be cached and used multiple times in the same
+     * tick for projectile based spells which need to run entity
+     * checkups
      */
     public static List<Entity> getNearbyChunkEntities(Location loc) {
         List<Entity> entities = new ArrayList<>();

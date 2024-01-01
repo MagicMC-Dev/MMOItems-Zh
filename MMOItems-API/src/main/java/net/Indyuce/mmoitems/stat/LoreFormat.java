@@ -23,14 +23,14 @@ public class LoreFormat extends StringStat implements GemStoneStat {
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
 		String path = data.toString();
-		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(path), "找不到 ID 为 '" + path + "' 的 Lore 标注格式");
+		Validate.isTrue(MMOItems.plugin.getLore().hasFormat(path), "找不到 ID 为 '" + path + "' 的 Lore 标注格式");
 
 		item.addItemTag(new ItemTag(getNBTPath(), path));
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(message), "找不到 ID 为 '" + message + "' 的 Lore 标注格式");
+		Validate.isTrue(MMOItems.plugin.getLore().hasFormat(message), "找不到 ID 为 '" + message + "' 的 Lore 标注格式");
 
 		inv.getEditedSection().set(getPath(), message);
 		inv.registerTemplateEdition();

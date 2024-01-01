@@ -57,7 +57,7 @@ public class ItemSetStat extends StringStat implements GemStoneStat {
     @Override
     public ArrayList<ItemTag> getAppliedNBT(@NotNull StringData data) {
         ItemSet set = MMOItems.plugin.getSets().get(data.toString());
-        Validate.notNull(set, "找不到 ID 为 '%s' 的物品套装".formatted(data));
+        Validate.notNull(set, String.format("找不到 ID 为 '%s' 的物品套装", data));
 
         // Make Array
         ArrayList<ItemTag> ret = new ArrayList<>();
@@ -78,7 +78,7 @@ public class ItemSetStat extends StringStat implements GemStoneStat {
     @Override
     public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
         ItemSet set = MMOItems.plugin.getSets().get(message);
-        Validate.notNull(set, "找不到名为 '%s' 的套装".formatted(message));
+        Validate.notNull(set, String.format("找不到名为 '%s' 的套装", message));
         super.whenInput(inv, message, info);
     }
 }

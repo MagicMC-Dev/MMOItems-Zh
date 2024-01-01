@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.ItemStats;
@@ -104,7 +105,7 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
 	}
 
 	private String formatName(String input) {
-		return MMOUtils.caseOnWords(input.replace("_", " ").toLowerCase());
+		return UtilityMethods.caseOnWords(input.replace("_", " ").toLowerCase());
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
 			lore.add(ChatColor.GRAY + "当前值:");
 			RandomPotionEffectListData data = statData.get();
 			for (RandomPotionEffectData effect : data.getEffects())
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
+				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + UtilityMethods.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
 						+ " " + effect.getAmplifier().toString() + " " + ChatColor.GRAY + "(" + ChatColor.GREEN + effect.getDuration().toString()
 						+ ChatColor.GRAY + "s)");
 		} else

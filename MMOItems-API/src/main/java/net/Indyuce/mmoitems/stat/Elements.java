@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -75,8 +76,8 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
         }
 
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
-                + "成功更改为 " + ChatColor.GOLD + formula + ChatColor.GRAY + ".");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + UtilityMethods.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
+                + " 成功更改为 " + ChatColor.GOLD + formula + ChatColor.GRAY + ".");
     }
 
     @Override

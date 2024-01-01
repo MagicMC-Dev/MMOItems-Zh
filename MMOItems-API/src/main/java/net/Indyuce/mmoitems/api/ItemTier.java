@@ -5,6 +5,7 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.droptable.DropTable;
+import net.Indyuce.mmoitems.tooltip.TooltipTexture;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import org.bukkit.ChatColor;
@@ -22,6 +23,9 @@ public class ItemTier {
     private final String name;
     private final String unparsedName;
     private final UnidentificationInfo unidentificationInfo;
+
+    @Nullable
+    private final TooltipTexture tooltip;
 
     // Deconstruction
     @Nullable
@@ -65,6 +69,8 @@ public class ItemTier {
             glowColor = null;
         }
 
+        tooltip = config.isConfigurationSection("tooltip") ? new TooltipTexture(config.getConfigurationSection("tooltip")) : null;
+
         // What are the chances?
         chance = config.getDouble("generation.chance");
         capacity = config.contains("generation.capacity") ? new NumericStatFormula(config.get("generation.capacity")) : null;
@@ -87,6 +93,11 @@ public class ItemTier {
     @Nullable
     public DropTable getDropTable() {
         return deconstructTable;
+    }
+
+    @Nullable
+    public TooltipTexture getTooltip() {
+        return tooltip;
     }
 
     /**

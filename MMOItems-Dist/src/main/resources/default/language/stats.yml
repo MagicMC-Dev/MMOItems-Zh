@@ -35,6 +35,7 @@ ability:
   general-format: "&8| &7{trigger} &8|&e|&8| &7&l{ability}\n"
   modifier-foreach: "&7{modifier}&8: &f{value}"
   modifier-splitter: " &8&l|&7 "
+  modifiers-per-line: 3
   ability-splitter:
     enabled: true
     format: ''

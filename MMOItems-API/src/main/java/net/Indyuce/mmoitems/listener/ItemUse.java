@@ -129,23 +129,19 @@ public class ItemUse implements Listener {
                 return;
             }
 
-            if (!weapon.handleTargetedAttack(event.getAttack(), event.getEntity())) {
+            if (!weapon.handleTargetedAttack(event.getAttack(), event.getAttacker(), event.getEntity())) {
                 event.setCancelled(true);
                 return;
             }
         }
     }
 
-    /**
-     * Event priority set to LOW to fix an infinite-exp glitch with
-     * MMOCore. MMOCore experience source listens on HIGH and must be
-     * higher than this event otherwise the exp is given even if the
-     * block is not broken.
-     */
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void specialToolAbilities(BlockBreakEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
+        if (UtilityMethods.isFake(event)) return;
+
+        final Player player = event.getPlayer();
+        final Block block = event.getBlock();
         if (player.getGameMode() == GameMode.CREATIVE)
             return;
 

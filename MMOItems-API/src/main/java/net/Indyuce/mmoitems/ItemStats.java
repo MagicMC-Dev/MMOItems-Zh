@@ -25,6 +25,7 @@ public class ItemStats {
             LORE = new Lore(),
             NBT_TAGS = new NBTTags(),
             LORE_FORMAT = new LoreFormat(),
+            TOOLTIP = new TooltipStat(),
 
     // Block Specific Stats
     BLOCK_ID = new BlockID(),

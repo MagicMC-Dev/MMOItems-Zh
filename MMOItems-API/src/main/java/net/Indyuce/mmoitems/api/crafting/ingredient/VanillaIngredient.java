@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
@@ -92,7 +93,7 @@ public class VanillaIngredient extends Ingredient<VanillaPlayerIngredient> {
 			filter.setAmount(getAmount());
 
 			// Display is the name of the material, or whatever specified in the config.
-			display = config.getString("display", MMOUtils.caseOnWords(material.toString().toLowerCase().replace("_", " ")));
+			display = config.getString("display", UtilityMethods.caseOnWords(material.toString().toLowerCase().replace("_", " ")));
 			//VING//MMOItems.log("\u00a78VING\u00a73 RD\u00a77 Determined\u00a73 " + material.toString());
 
 		}

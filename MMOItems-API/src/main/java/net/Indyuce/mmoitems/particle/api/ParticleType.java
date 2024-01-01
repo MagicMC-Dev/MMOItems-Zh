@@ -1,21 +1,15 @@
 package net.Indyuce.mmoitems.particle.api;
 
+import io.lumine.mythic.lib.UtilityMethods;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.StringValue;
+import net.Indyuce.mmoitems.particle.*;
+import net.Indyuce.mmoitems.stat.data.ParticleData;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
-
-import net.Indyuce.mmoitems.util.MMOUtils;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.StringValue;
-import net.Indyuce.mmoitems.particle.AuraParticles;
-import net.Indyuce.mmoitems.particle.DoubleRingsParticles;
-import net.Indyuce.mmoitems.particle.FirefliesParticles;
-import net.Indyuce.mmoitems.particle.GalaxyParticles;
-import net.Indyuce.mmoitems.particle.HelixParticles;
-import net.Indyuce.mmoitems.particle.OffsetParticles;
-import net.Indyuce.mmoitems.particle.VortexParticles;
-import net.Indyuce.mmoitems.stat.data.ParticleData;
 
 public enum ParticleType {
 	OFFSET(OffsetParticles::new, false, 5, "一些粒子在你的身体周围随机生成", new StringValue("amount", 5), new StringValue("vertical-offset", .5), new StringValue("horizontal-offset", .3), new StringValue("speed", 0), new StringValue("height", 1)),
@@ -59,7 +53,7 @@ public enum ParticleType {
 	}
 
 	public String getDefaultName() {
-		return MMOUtils.caseOnWords(name().toLowerCase().replace("_", " "));
+		return UtilityMethods.caseOnWords(name().toLowerCase().replace("_", " "));
 	}
 
 	public double getModifier(String path) {

@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  * <p> • Chance of successful upgrade
  * </p> • May it get destroyed if unsucessful upgrade?
  */
-public class UpgradeData implements StatData, RandomStatData<UpgradeData>, Cloneable {
+public class UpgradeData implements StatData, RandomStatData<UpgradeData> {
 
 	/**
 	 * @return The String a consumable must match to Upgrade this Item
@@ -145,8 +146,14 @@ public class UpgradeData implements StatData, RandomStatData<UpgradeData>, Clone
 		return success == 0 ? 1 : success;
 	}
 
+	@Deprecated
 	public boolean matchesReference(UpgradeData data) {
-		return reference == null || data.reference == null || reference.isEmpty() || data.reference.isEmpty() || reference.equals(data.reference);
+		return MMOUtils.checkReference(reference, data.reference);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return false;
 	}
 
 	/**
@@ -197,7 +204,6 @@ public class UpgradeData implements StatData, RandomStatData<UpgradeData>, Clone
 
 	@Override
 	public UpgradeData clone() {
-		try { super.clone(); } catch (CloneNotSupportedException ignored) { }
-
-		return new UpgradeData(reference, template, workbench, destroy, max, min, success); }
+		return new UpgradeData(reference, template, workbench, destroy, max, min, success);
+	}
 }

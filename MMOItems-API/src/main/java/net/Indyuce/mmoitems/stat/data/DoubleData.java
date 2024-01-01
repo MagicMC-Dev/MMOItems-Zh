@@ -27,12 +27,12 @@ public class DoubleData implements StatData, Mergeable<DoubleData> {
 	}
 
 	@Override
-	public void merge(DoubleData data) {
+	public void mergeWith(DoubleData data) {
 		value += data.value;
 	}
 
 	@Override
-	public DoubleData cloneData() { return new DoubleData(getValue()); }
+	public DoubleData clone() { return new DoubleData(value); }
 
 	@Override
 	public boolean isEmpty() {
@@ -42,8 +42,9 @@ public class DoubleData implements StatData, Mergeable<DoubleData> {
 	@Override
 	public String toString() { return String.valueOf(getValue()); }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof DoubleData)) { return false; }
-		return ((DoubleData) obj).getValue() == getValue(); }
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof DoubleData)) return false;
+        return ((DoubleData) obj).getValue() == getValue();
+    }
 }

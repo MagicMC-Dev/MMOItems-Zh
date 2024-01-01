@@ -1,14 +1,12 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang.Validate;
-
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class PotionEffectListData implements StatData, Mergeable<PotionEffectListData> {
 	private final List<PotionEffectData> effects = new ArrayList<>();
@@ -19,6 +17,41 @@ public class PotionEffectListData implements StatData, Mergeable<PotionEffectLis
 	// this.effects.add(new
 	// PotionEffectData(config.getConfigurationSection(key)));
 	// }
+
+    public PotionEffectListData(PotionEffectData... effects) {
+        add(effects);
+    }
+
+    public PotionEffectListData(Collection<PotionEffectData> effects) {
+        add(effects);
+    }
+
+    public void add(PotionEffectData... effects) {
+        for (PotionEffectData el : effects) this.effects.add(el);
+    }
+
+    public void add(Collection<PotionEffectData> effects) {
+        this.effects.addAll(effects);
+    }
+
+    @NotNull
+	public List<PotionEffectData> getEffects() {
+		return effects;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return effects.isEmpty();
+	}
+
+	@Override
+	public void mergeWith(PotionEffectListData data) {
+		effects.addAll(data.effects);
+	}
+
+	@Override
+	@NotNull
+	public PotionEffectListData clone() { return new PotionEffectListData(effects); }
 
 	@Override
 	public boolean equals(Object obj) {
@@ -41,29 +74,4 @@ public class PotionEffectListData implements StatData, Mergeable<PotionEffectLis
 		}
 		return true;
 	}
-
-	public PotionEffectListData(PotionEffectData... effects) {
-		add(effects);
-	}
-
-	public void add(PotionEffectData... effects) {
-		this.effects.addAll(Arrays.asList(effects));
-	}
-
-	public List<PotionEffectData> getEffects() {
-		return effects;
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return effects.isEmpty();
-	}
-
-	@Override
-	public void merge(PotionEffectListData data) {
-		effects.addAll(data.effects);
-	}
-
-	@Override
-	public @NotNull PotionEffectListData cloneData() { return new PotionEffectListData(getEffects().toArray(new PotionEffectData[0])); }
 }

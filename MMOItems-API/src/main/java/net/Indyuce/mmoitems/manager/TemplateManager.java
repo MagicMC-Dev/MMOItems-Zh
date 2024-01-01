@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.manager;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import io.lumine.mythic.lib.util.PreloadedObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -259,7 +258,7 @@ public class TemplateManager implements Reloadable {
 
     @Deprecated
     public void preloadTemplates() {
-        postloadObjects();
+        preloadObjects();
     }
 
     @Deprecated
@@ -310,7 +309,7 @@ public class TemplateManager implements Reloadable {
     }
 
     /**
-     * Loads item generator modifiers and post load item templates.
+     * Post-load generator modifiers and item templates.
      */
     public void postloadObjects() {
         FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
@@ -319,7 +318,7 @@ public class TemplateManager implements Reloadable {
         ffp.log(FriendlyFeedbackCategory.INFORMATION, "Loading template modifiers, please wait..");
         for (ModifierNode node : modifierNodes.values())
             try {
-                if (node instanceof PreloadedObject) ((PreloadedObject) node).getPostLoadAction().performAction();
+                node.getPostLoadAction().performAction();
             } catch (Exception exception) {
                 ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not post-load template modifier '{0}': {1}", node.getId(), exception.getMessage());
             }
@@ -346,7 +345,6 @@ public class TemplateManager implements Reloadable {
      * be refreshed afterwards.
      */
     public void reload() {
-        System.out.println("RELOADING TEMPLATE MANAGER");
         templates.clear();
         modifierNodes.clear();
 

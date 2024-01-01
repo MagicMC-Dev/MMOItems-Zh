@@ -3,6 +3,10 @@ package net.Indyuce.mmoitems.stat.component.type;
 import net.Indyuce.mmoitems.stat.component.StatComponent;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @deprecated Not used yet
+ */
+@Deprecated
 public abstract class AbstractObjectComponent extends StatComponent {
     public AbstractObjectComponent(String path) {
         super(path);

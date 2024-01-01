@@ -15,4 +15,9 @@ public class CrazyEnchantsData implements StatData {
     public Map<CEnchantment, Integer> getEnchants() {
         return enchants;
     }
+
+    @Override
+    public boolean isEmpty() {
+        return enchants.isEmpty();
+    }
 }

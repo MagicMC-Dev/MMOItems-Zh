@@ -28,6 +28,6 @@ public class PluginUtils {
         if (Bukkit.getPluginManager().getPlugin(name) == null)
             return;
         callback.accept(null);
-        MMOItems.plugin.getLogger().log(Level.INFO, "挂钩至 %s".formatted(name));
+        MMOItems.plugin.getLogger().log(Level.INFO, String.format("挂钩至 %s", name));
     }
 }

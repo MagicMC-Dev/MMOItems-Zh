@@ -1,32 +1,33 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import java.util.*;
-
-import org.apache.commons.lang.Validate;
-
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 
-public class CommandListData implements StatData, Mergeable, RandomStatData<CommandListData> {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class CommandListData implements StatData, Mergeable<CommandListData>, RandomStatData<CommandListData> {
     @NotNull
-    private final List<CommandData> commands;
+    private final List<CommandData> commands = new ArrayList<>();
 
     public CommandListData(@NotNull List<CommandData> commands) {
-        this.commands = commands;
+        add(commands);
     }
 
     public CommandListData(CommandData... commands) {
-        this(new ArrayList<>());
-
         add(commands);
     }
 
     public void add(CommandData... commands) {
-        for (CommandData data : commands)
-            this.commands.add(data);
+        for (CommandData data : commands) this.commands.add(data);
+    }
+
+    public void add(Collection<CommandData> commands) {
+        this.commands.addAll(commands);
     }
 
     @NotNull
@@ -43,13 +44,13 @@ public class CommandListData implements StatData, Mergeable, RandomStatData<Comm
     }
 
     @Override
-    public void merge(StatData data) {
-        Validate.isTrue(data instanceof CommandListData, "无法合并两种不同的统计数据类型");
-        commands.addAll(((CommandListData) data).commands);
+    public void mergeWith(CommandListData data) {
+        commands.addAll(data.commands);
     }
 
+    @NotNull
     @Override
-    public @NotNull StatData cloneData() {
+    public CommandListData clone() {
         return new CommandListData(commands);
     }
 
@@ -60,6 +61,6 @@ public class CommandListData implements StatData, Mergeable, RandomStatData<Comm
 
     @Override
     public CommandListData randomize(MMOItemBuilder builder) {
-        return new CommandListData(new ArrayList<>(commands));
+        return clone();
     }
 }

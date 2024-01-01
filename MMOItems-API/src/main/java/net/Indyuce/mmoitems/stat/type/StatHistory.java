@@ -257,20 +257,13 @@ public class StatHistory {
     }
 
     /**
-     * Collapses all ExSH stat data into one.
+     * Collapses all external stat datas into only one.
      */
     public void consolidateEXSH() {
 
         // Create Clear
         StatData theEXSH = getItemStat().getClearStatData();
-
-        // Merge All
-        for (StatData ex : getExternalData()) {
-            if (ex == null) {
-                continue;
-            }
-            ((Mergeable) theEXSH).merge(ex);
-        }
+        for (StatData ex : getExternalData()) if (ex != null) ((Mergeable) theEXSH).mergeWith(ex);
 
         // Clear and Register
         getExternalData().clear();
@@ -353,7 +346,7 @@ public class StatHistory {
             //UPGRD//MMOItems.log("\u00a7e   +\u00a77 Item didnt have this stat, original set as blanc.");
 
         } else {
-            original = ((Mergeable) original).cloneData();
+            original = ((Mergeable) original).clone();
             //UPGRD//MMOItems.log("\u00a7a   +\u00a77 Found original data\u00a7f " + original);
         }
         //LVL//MMOItems.log(" \u00a7d*\u00a77-\u00a7a-\u00a763? \u00a77Lvl: \u00a7b" + ofItem.getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
@@ -548,7 +541,7 @@ public class StatHistory {
         }
 
         // Clone original
-        StatData ogCloned = ((Mergeable) originalData).cloneData();
+        StatData ogCloned = ((Mergeable) originalData).clone();
         //DBL//if (ogCloned instanceof DoubleData) MMOItems.log("\u00a76  >\u00a77 Original Base: \u00a7e" + ((DoubleData) ogCloned).getValue() + "\u00a78 {Original:\u00a77 " + ((DoubleData) getOriginalData()).getValue() + "\u00a78}");
 
         // Add Modifiers (who are affected by upgrades as if they was the base item data
@@ -556,7 +549,7 @@ public class StatHistory {
 
             //DBL//if (getModifiersBonus() instanceof DoubleData) MMOItems.log("\u00a76  >\u00a7c> \u00a77 Modifier Base: \u00a7e" + ((DoubleData) getModifiersBonus()).getValue());
             // Just merge ig
-            ((Mergeable) ogCloned).merge(((Mergeable) getModifiersBonus(d)).cloneData());
+            ((Mergeable) ogCloned).mergeWith(((Mergeable) getModifiersBonus(d)).clone());
         }
 
         // Level up
@@ -602,11 +595,11 @@ public class StatHistory {
             //DBL//if (getGemstoneData(d) instanceof DoubleData) MMOItems.log("\u00a76  \u00a7b|>\u00a77 Gemstone Base: \u00a7e" + ((DoubleData) getGemstoneData(d)).getValue());
             // Apply upgrades
             //noinspection ConstantConditions
-            StatData gRet = ((Upgradable) getItemStat()).apply(((Mergeable) getGemstoneData(d)).cloneData(), inf, gLevel);
+            StatData gRet = ((Upgradable) getItemStat()).apply(((Mergeable) getGemstoneData(d)).clone(), inf, gLevel);
             //DBL//if (gRet instanceof DoubleData) MMOItems.log("\u00a76  \u00a7b|>\u00a77 Leveled Base: \u00a7e" + ((DoubleData) gRet).getValue());
 
             // Merge
-            ((Mergeable) ret).merge(((Mergeable) gRet).cloneData());
+            ((Mergeable) ret).mergeWith(((Mergeable) gRet).clone());
         }
 
         // Add up externals (who dont suffer upgrades
@@ -614,7 +607,7 @@ public class StatHistory {
 
             //DBL//if (d instanceof DoubleData) MMOItems.log("\u00a76  >\u00a7c> \u00a77 Extraneous Base: \u00a7e" + ((DoubleData) d).getValue());
             // Just merge ig
-            ((Mergeable) ret).merge(((Mergeable) d).cloneData());
+            ((Mergeable) ret).mergeWith(((Mergeable) d).clone());
         }
 
         // Return result
@@ -635,7 +628,7 @@ public class StatHistory {
         //RECALCULATE//MMOItems.log("\u00a73|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Mergeable");
 
         // Just clone bro
-        StatData ret = ((Mergeable) getOriginalData()).cloneData();
+        StatData ret = ((Mergeable) getOriginalData()).clone();
 
         //DBL//if (ret instanceof DoubleData) MMOItems.log("\u00a73  > \u00a77 Original Base: \u00a7e" + ((DoubleData) ret).getValue());
 
@@ -643,19 +636,19 @@ public class StatHistory {
         for (StatData d : perModifierBonus.values()) {
             //DBL//if (getModifiersBonus() instanceof DoubleData) MMOItems.log("\u00a73  >\u00a7c> \u00a77 Modifier Base: \u00a7e" + ((DoubleData) getModifiersBonus()).getValue());
             // Just merge ig
-            ((Mergeable) ret).merge(((Mergeable) d).cloneData());
+            ((Mergeable) ret).mergeWith(((Mergeable) d).clone());
         }
 
         // Add up gemstones
         for (StatData d : perGemstoneData.values()) {
             //DBL//if (d instanceof DoubleData) MMOItems.log("\u00a73  >\u00a7b> \u00a77 Gemstone Base: \u00a7e" + ((DoubleData) d).getValue());
-            ((Mergeable) ret).merge(((Mergeable) d).cloneData());
+            ((Mergeable) ret).mergeWith(((Mergeable) d).clone());
         }
 
         // Add up externals
         for (StatData d : getExternalData()) {
             //DBL//if (d instanceof DoubleData) MMOItems.log("\u00a73  >\u00a7c> \u00a77 Extraneous Base: \u00a7e" + ((DoubleData) d).getValue());
-            ((Mergeable) ret).merge(((Mergeable) d).cloneData());
+            ((Mergeable) ret).mergeWith(((Mergeable) d).clone());
         }
 
         // Return result
@@ -689,7 +682,7 @@ public class StatHistory {
          * And allows net.Indyuce.mmoitems.stat.Enchants.whenLoaded() to correctly initialize the
          * StatHistory of these items.
          */
-        if (!((Mergeable) getOriginalData()).isClear() || getItemStat() == ItemStats.ENCHANTS) {
+        if (!getOriginalData().isEmpty() || getItemStat() == ItemStats.ENCHANTS) {
             object.add(enc_OGS, ItemTag.compressTags(getItemStat().getAppliedNBT(getOriginalData())));
         }
 
@@ -726,7 +719,7 @@ public class StatHistory {
         for (StatData ex : getExternalData()) {
 
             // Skip clear
-            if (((Mergeable) ex).isClear()) {
+            if (ex.isEmpty()) {
                 continue;
             }
 
@@ -1078,7 +1071,7 @@ public class StatHistory {
     public StatHistory clone(@NotNull MMOItem clonedMMOItem) {
 
         // Clone
-        StatHistory res = new StatHistory(clonedMMOItem, getItemStat(), ((Mergeable) getOriginalData()).cloneData());
+        StatHistory res = new StatHistory(clonedMMOItem, getItemStat(), ((Mergeable) getOriginalData()).clone());
 
         // Add all
         for (UUID uid : getAllGemstones()) {
@@ -1092,7 +1085,7 @@ public class StatHistory {
             }
 
             // Clone
-            res.registerGemstoneData(uid, ((Mergeable) gem).cloneData());
+            res.registerGemstoneData(uid, ((Mergeable) gem).clone());
         }
 
         // Add all
@@ -1102,7 +1095,7 @@ public class StatHistory {
             }
 
             // Clone
-            res.registerExternalData(((Mergeable) ex).cloneData());
+            res.registerExternalData(((Mergeable) ex).clone());
         }
 
         // Clone
@@ -1118,7 +1111,7 @@ public class StatHistory {
             }
 
             // Clone
-            res.registerModifierBonus(uid, ((Mergeable) mod).cloneData());
+            res.registerModifierBonus(uid, ((Mergeable) mod).clone());
         }
 
         // Thats it

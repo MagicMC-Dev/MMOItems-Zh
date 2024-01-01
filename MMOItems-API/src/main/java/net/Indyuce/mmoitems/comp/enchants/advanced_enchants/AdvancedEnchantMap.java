@@ -8,4 +8,9 @@ import java.util.Map;
 
 public class AdvancedEnchantMap implements StatData {
     public final Map<String, Integer> enchants = new HashMap<>();
+
+    @Override
+    public boolean isEmpty() {
+        return enchants.isEmpty();
+    }
 }

@@ -110,12 +110,12 @@ public class StoredTagsData implements StatData, Mergeable<StoredTagsData> {
     }
 
     @Override
-    public void merge(StoredTagsData data) {
+    public void mergeWith(StoredTagsData data) {
         tags.addAll(data.tags);
     }
 
     @Override
-    public StoredTagsData cloneData() {
+    public StoredTagsData clone() {
         return new StoredTagsData(getTags());
     }
 

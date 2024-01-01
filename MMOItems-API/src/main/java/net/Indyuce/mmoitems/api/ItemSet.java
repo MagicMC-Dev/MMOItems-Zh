@@ -36,10 +36,10 @@ public class ItemSet {
 
         for (int j = 2; j <= itemLimit; j++)
             if (config.getConfigurationSection("bonuses").contains(String.valueOf(j))) {
-                final String bonusesKey = "bonuses.%d".formatted(j);
+                final String bonusesKey = String.format("bonuses.%d", j);
                 final SetBonuses bonuses = new SetBonuses();
                 final ConfigurationSection bonusesSection = config.getConfigurationSection(bonusesKey);
-                Validate.notNull(bonusesSection, "Item set '%s' is not a valid configuration section.".formatted(id));
+                Validate.notNull(bonusesSection, String.format("Item set '%s' is not a valid configuration section.", id));
 
                 // Add permissions
                 for (String perm : bonusesSection.getStringList("granted-permissions"))
@@ -52,8 +52,8 @@ public class ItemSet {
 
                             // ability
                             if (key.startsWith("ability-")) {
-                                final ConfigurationSection section = config.getConfigurationSection("%s.%s".formatted(bonusesKey, key));
-                                Validate.notNull(section, "Ability '%s' is not a valid configuration section.".formatted(key));
+                                final ConfigurationSection section = config.getConfigurationSection(String.format("%s.%s", bonusesKey, key));
+                                Validate.notNull(section, String.format("Ability '%s' is not a valid configuration section.", key));
                                 bonuses.addAbility(new AbilityData(section));
                                 continue;
                             }
@@ -61,26 +61,26 @@ public class ItemSet {
                             // potion effect
                             if (key.startsWith("potion-")) {
                                 PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
-                                Validate.notNull(potionEffectType, "Could not load potion effect type from '%s'".formatted(format));
+                                Validate.notNull(potionEffectType, String.format("Could not load potion effect type from '%s'", format));
                                 bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType),
-                                        config.getInt("%s.%s".formatted(bonusesKey, key)) - 1, true, false));
+                                        config.getInt(String.format("%s.%s", bonusesKey, key)) - 1, true, false));
                                 continue;
                             }
 
                             // particle effect
                             if (key.startsWith("particle-")) {
-                                final ConfigurationSection section = config.getConfigurationSection("bonuses.%d.%s".formatted(j, key));
-                                Validate.notNull(section, "Particle effect '%s' is not a valid configuration section.".formatted(key));
+                                final ConfigurationSection section = config.getConfigurationSection(String.format("bonuses.%d.%s", j, key));
+                                Validate.notNull(section, String.format("Particle effect '%s' is not a valid configuration section.", key));
                                 bonuses.addParticle(new ParticleData(section));
                                 continue;
                             }
 
                             // stat
                             ItemStat<?, ?> stat = MMOItems.plugin.getStats().get(format);
-                            Validate.notNull(stat, "Could not find stat called '%s'".formatted(format));
-                            bonuses.addStat(stat, config.getDouble("bonuses.%d.%s".formatted(j, key)));
+                            Validate.notNull(stat, String.format("Could not find stat called '%s'", format));
+                            bonuses.addStat(stat, config.getDouble(String.format("bonuses.%d.%s", j, key)));
                         } catch (IllegalArgumentException exception) {
-                            throw new IllegalArgumentException("Could not load set bonus '%s': %s".formatted(key, exception.getMessage()));
+                            throw new IllegalArgumentException(String.format("Could not load set bonus '%s': %s", key, exception.getMessage()));
                         }
                     }
 

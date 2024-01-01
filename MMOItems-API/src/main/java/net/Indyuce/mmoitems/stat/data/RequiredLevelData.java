@@ -18,13 +18,13 @@ public class RequiredLevelData extends DoubleData {
     }
 
     @Override
-    public void merge(DoubleData data) {
+    public void mergeWith(DoubleData data) {
         final boolean additiveMerge = MMOItems.plugin.getConfig().getBoolean("stat-merging.additive-levels", false);
         setValue(additiveMerge ? data.getValue() + getValue() : Math.max(data.getValue(), getValue()));
     }
 
     @Override
-    public DoubleData cloneData() {
+    public DoubleData clone() {
         return new RequiredLevelData(getValue());
     }
 }

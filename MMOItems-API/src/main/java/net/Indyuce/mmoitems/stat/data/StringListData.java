@@ -1,13 +1,7 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-
 import com.google.gson.JsonArray;
-
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
@@ -15,8 +9,11 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class StringListData implements StatData, RandomStatData<StringListData>, Mergeable<StringListData> {
-	@NotNull private final List<String> list;
+import java.util.ArrayList;
+import java.util.List;
+
+public class StringListData implements StatData, Mergeable<StringListData>, RandomStatData<StringListData> {
+	@NotNull private final List<String> list = new ArrayList<>();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -26,21 +23,18 @@ public class StringListData implements StatData, RandomStatData<StringListData>,
 	}
 
 	public StringListData() {
-		this(new ArrayList<>());
 	}
 
 	public StringListData(@NotNull String[] array) {
-		this(Arrays.asList(array));
+		for (String str : array) this.list.add(str);
 	}
 
 	public StringListData(@NotNull JsonArray array) {
-		this();
-
 		array.forEach(str -> list.add(str.getAsString()));
 	}
 
 	public StringListData(@NotNull List<String> list) {
-		this.list = list;
+		this.list.addAll(list);
 	}
 
 	@NotNull public List<String> getList() {
@@ -53,13 +47,13 @@ public class StringListData implements StatData, RandomStatData<StringListData>,
 	}
 
 	@Override
-	public void merge(StringListData data) {
+	public void mergeWith(StringListData data) {
 		list.addAll(data.list);
 	}
 
 	@Override
 	@NotNull
-	public StringListData cloneData() { return new StringListData(new ArrayList<>(getList())); }
+	public StringListData clone() { return new StringListData(list); }
 
 	@Override
 	public boolean isEmpty() { return list.isEmpty(); }

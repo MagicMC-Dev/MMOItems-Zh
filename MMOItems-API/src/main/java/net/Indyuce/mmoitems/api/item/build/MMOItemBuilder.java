@@ -16,21 +16,19 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
-import org.apache.commons.lang.Validate;
+import net.Indyuce.mmoitems.util.Buildable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class MMOItemBuilder {
+public class MMOItemBuilder extends Buildable<MMOItem> {
     private final MMOItemTemplate template;
     private final MMOItem mmoitem;
     private final int level;
     private final ItemTier tier;
 
     private double capacity;
-
-    boolean built = false;
 
     /**
      * Name modifiers, prefixes or suffixes, with priorities. They are saved
@@ -59,23 +57,19 @@ public class MMOItemBuilder {
         this.tier = tier;
 
         // Either use provided tier or look into the template base data
-        tier = tier != null ? tier
-                : template.getBaseItemData().containsKey(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(template.getBaseItemData().get(ItemStats.TIER).toString())
-                : null;
+        tier = tier != null ? tier : template.getBaseItemData().containsKey(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(template.getBaseItemData().get(ItemStats.TIER).toString()) : null;
 
         // Capacity is not final as it keeps lowering as modifiers are selected
-        capacity = (template.hasModifierCapacity() ? template.getModifierCapacity() :
-                tier != null && tier.hasCapacity() ? tier.getModifierCapacity() :
-                        MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
+        capacity = (template.hasModifierCapacity() ? template.getModifierCapacity() : tier != null && tier.hasCapacity() ? tier.getModifierCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
         mmoitem = new MMOItem(template.getType(), template.getId());
 
         // Apply base item data
         template.getBaseItemData().forEach((stat, random) -> applyData(stat, random.randomize(this)));
 
-        if (tier != null)
-            mmoitem.setData(ItemStats.TIER, new StringData(tier.getId()));
-        if (level > 0)
-            mmoitem.setData(ItemStats.ITEM_LEVEL, new DoubleData(level));
+        if (tier != null) mmoitem.setData(ItemStats.TIER, new StringData(tier.getId()));
+        if (level > 0) mmoitem.setData(ItemStats.ITEM_LEVEL, new DoubleData(level));
+        if (tier != null && tier.getTooltip() != null && !mmoitem.hasData(ItemStats.TOOLTIP))
+            mmoitem.setData(ItemStats.TOOLTIP, new StringData(tier.getTooltip().getId()));
 
         // Apply modifiers from the parent node
         if (!forDisplay && template.hasModifierGroup()) template.getModifierGroup().collect(this);
@@ -114,17 +108,13 @@ public class MMOItemBuilder {
      *
      * @return Built MMOItem instance
      */
-    @NotNull
-    public MMOItem build() {
-        Validate.isTrue(!built, "MMOItem already built");
-        built = true;
-
+    @Override
+    protected MMOItem whenBuilt() {
         if (!nameModifiers.isEmpty()) {
 
             // Get name data
             StatHistory hist = StatHistory.from(mmoitem, ItemStats.NAME);
-            if (!mmoitem.hasData(ItemStats.NAME))
-                mmoitem.setData(ItemStats.NAME, new NameData("Item"));
+            if (!mmoitem.hasData(ItemStats.NAME)) mmoitem.setData(ItemStats.NAME, new NameData("Item"));
 
             nameModifiers.forEach((obs, mod) -> {
 
@@ -153,18 +143,10 @@ public class MMOItemBuilder {
      * @param stat Stat owning the data
      * @param data StatData to apply
      */
-    public void applyData(ItemStat stat, StatData data) {
-
-        // Is the data mergeable? Apply as External SH
-        if (mmoitem.hasData(stat) && data instanceof Mergeable) {
-
-            ((Mergeable) mmoitem.getData(stat)).merge(data);
-
-        } else {
-
-            // Set, there is no more.
-            mmoitem.setData(stat, data);
-        }
+    public void applyData(@NotNull ItemStat stat, @NotNull StatData data) {
+        final StatData found = mmoitem.getData(stat);
+        if (found != null && found instanceof Mergeable) ((Mergeable) found).mergeWith(data);
+        else mmoitem.setData(stat, data);
     }
 
     /**
@@ -176,8 +158,7 @@ public class MMOItemBuilder {
     public void addModifierData(@NotNull ItemStat stat, @NotNull StatData data, @NotNull UUID uuid) {
         if (stat.getClearStatData() instanceof Mergeable)
             StatHistory.from(mmoitem, stat).registerModifierBonus(uuid, data);
-        else
-            mmoitem.setData(stat, data);
+        else mmoitem.setData(stat, data);
     }
 
     /**
@@ -211,8 +192,7 @@ public class MMOItemBuilder {
     @NotNull
     @Deprecated
     public static Collection<TemplateModifier> rollModifiers(@NotNull MMOItemTemplate template) {
-        if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER))
-            return template.getModifiers().values();
+        if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER)) return template.getModifiers().values();
 
         List<TemplateModifier> modifiers = new ArrayList<>(template.getModifiers().values());
         Collections.shuffle(modifiers);

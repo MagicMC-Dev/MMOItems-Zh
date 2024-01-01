@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.gui.edition;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -70,7 +71,7 @@ public class ParticlesEdition extends EditionInventory {
             for (String modifier : particleType.getModifiers()) {
                 ItemStack modifierItem = VersionMaterial.GRAY_DYE.toItem();
                 ItemMeta modifierItemMeta = modifierItem.getItemMeta();
-                modifierItemMeta.setDisplayName(ChatColor.GREEN + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")));
+                modifierItemMeta.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
                 List<String> modifierItemLore = new ArrayList<>();
                 modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "这是一个模式编辑器.");
                 modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "更改该值可略微");
@@ -100,8 +101,8 @@ public class ParticlesEdition extends EditionInventory {
         particleItemLore.add(ChatColor.GRAY + "定义粒子效果中");
         particleItemLore.add(ChatColor.GRAY + "使用的粒子");
         particleItemLore.add("");
-        particleItemLore.add(ChatColor.GRAY + "当前值: " + (particle == null ? ChatColor.RED + "未选择粒子"
-                : ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " "))));
+        particleItemLore.add(ChatColor.GRAY + "当前值: " + (particle == null ? ChatColor.RED + "未选择任何粒子"
+                : ChatColor.GOLD + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " "))));
         particleItemLore.add("");
         particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
         particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击更改此值");

@@ -5,7 +5,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
-public class RestoreData implements StatData, Mergeable {
+public class RestoreData implements StatData, Mergeable<RestoreData> {
     private double health, food, saturation;
 
     public RestoreData(double health, double food, double saturation) {
@@ -44,17 +44,16 @@ public class RestoreData implements StatData, Mergeable {
     }
 
     @Override
-    public void merge(StatData data) {
-        Validate.isTrue(data instanceof RestoreData, "无法合并两种不同的统计数据类型");
-        health += ((RestoreData) data).health;
-        food += ((RestoreData) data).food;
-        saturation += ((RestoreData) data).saturation;
+    public void mergeWith(@NotNull RestoreData targetData) {
+        health += targetData.health;
+        food += targetData.food;
+        saturation += targetData.saturation;
     }
 
     @Override
-    public @NotNull
-    StatData cloneData() {
-        return new RestoreData(getHealth(), getFood(), getSaturation());
+    @NotNull
+    public RestoreData clone() {
+        return new RestoreData(health, food, saturation);
     }
 
     @Override

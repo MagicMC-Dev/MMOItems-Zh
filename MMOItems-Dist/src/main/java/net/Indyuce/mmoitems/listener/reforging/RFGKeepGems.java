@@ -141,7 +141,7 @@ public class RFGKeepGems implements Listener {
                                 if (data instanceof Mergeable) {
 
                                     // Just ignore that lol
-                                    if (data instanceof EnchantListData && ((Mergeable) data).isClear()) { continue; }
+                                    if (data instanceof EnchantListData && data.isEmpty()) { continue; }
 
                                     //RFG//MMOItems.log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath() + "\u00a7e" + data.toString() + "\u00a78 " + reforgedGemData.getHistoricUUID().toString());
 

@@ -68,11 +68,11 @@ public class AbilityListEdition extends EditionInventory {
 						if (!modifier.equals("type") && !modifier.equals("mode") && ability.getHandler().getModifiers().contains(modifier))
 							try {
 								abilityItemLore.add(
-										ChatColor.GRAY + "* " + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": " + ChatColor.GOLD
+										ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": " + ChatColor.GOLD
 												+ new NumericStatFormula(getEditedSection().get("ability." + key + "." + modifier)).toString());
 								check = true;
 							} catch (IllegalArgumentException exception) {
-								abilityItemLore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": "
+								abilityItemLore.add(ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": "
 										+ ChatColor.GOLD + "无法读取技能");
 							}
 				if (check)

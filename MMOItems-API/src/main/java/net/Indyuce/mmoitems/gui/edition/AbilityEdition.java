@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
@@ -100,7 +101,7 @@ public class AbilityEdition extends EditionInventory {
 			for (String modifier : ability.getHandler().getModifiers()) {
 				ItemStack modifierItem = VersionMaterial.GRAY_DYE.toItem();
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
-				modifierItemMeta.setDisplayName(ChatColor.GREEN + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")));
+				modifierItemMeta.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
 				List<String> modifierItemLore = new ArrayList<>();
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "这是一个技能修改器更改此值");
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "可自定义技能的伤害冷却等等.");

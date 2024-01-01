@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.DeathDowngrading;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
@@ -41,7 +42,7 @@ public class PlayerListener implements Listener {
         if (!PlayerData.has(event.getEntity())) return;
 
         // See description of DelayedDeathDowngrade child class for full explanation
-        (new DelayedDeathDowngrade(event)).runTaskLater(MMOItems.plugin, 3L);
+        new DelayedDeathDowngrade(event).runTaskLater(MMOItems.plugin, 3L);
     }
 
     /**
@@ -67,8 +68,7 @@ public class PlayerListener implements Listener {
              * using a JsonParser followed by map checkups in the SoulboundData
              * constructor
              */
-            if ((MMOItems.plugin.getLanguage().keepSoulboundOnDeath && nbt.getBoolean("MMOITEMS_DISABLE_DEATH_DROP"))
-                    || (nbt.hasTag("MMOITEMS_SOULBOUND") && nbt.getString("MMOITEMS_SOULBOUND").contains(player.getUniqueId().toString()))) {
+            if (nbt.getBoolean("MMOITEMS_DISABLE_DEATH_DROP") || (MMOItems.plugin.getLanguage().keepSoulboundOnDeath && MMOUtils.isSoulboundTo(nbt, player))) {
                 iterator.remove();
                 soulboundInfo.registerItem(item);
             }

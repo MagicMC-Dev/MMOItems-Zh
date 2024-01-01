@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.stat.data.random;
 
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +31,7 @@ public interface UpdatableRandomStatData<S extends StatData> {
      * @param determinedItemLevel The level of the item
      * @return The rerolled StatData if the original is unreasonable.
      * <br><br>
-     * If the original is reasonable, a clone of it, probably using {@link Mergeable#cloneData()}
+     * If the original is reasonable, a clone of it, probably using {@link StatData#clone()}
      */
     @NotNull
     S reroll(@NotNull ItemStat stat, @NotNull S original, int determinedItemLevel);

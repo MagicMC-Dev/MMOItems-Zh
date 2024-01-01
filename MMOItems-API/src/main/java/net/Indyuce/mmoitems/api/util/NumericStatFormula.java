@@ -378,7 +378,7 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
             //UPGRD//MMOItems.log("\u00a7a +\u00a77 Acceptable Range --- kept");
 
             // Just clone I guess
-            return original.cloneData();
+            return original.clone();
         }
     }
 

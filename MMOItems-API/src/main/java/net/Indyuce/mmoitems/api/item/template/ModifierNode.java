@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.item.template;
 
+import io.lumine.mythic.lib.util.PreloadedObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import org.apache.commons.lang.Validate;
@@ -17,7 +18,7 @@ import java.util.UUID;
  *
  * @author jules
  */
-public abstract class ModifierNode {
+public abstract class ModifierNode implements PreloadedObject {
     private final String id;
     private final double chance, weight;
 
@@ -58,9 +59,6 @@ public abstract class ModifierNode {
         // Load from configuration section
         else if (configObject instanceof ConfigurationSection) {
             final ConfigurationSection config = (ConfigurationSection) configObject;
-            this.chance = config.getDouble("chance", 1);
-            this.weight = config.getDouble("weight");
-
             ModifierNode referenceNode = null;
             try {
                 referenceNode = findReferenceNode(id);
@@ -68,6 +66,10 @@ public abstract class ModifierNode {
                 // Do nothing
             }
             this.referenceNode = referenceNode;
+
+            this.chance = config.getDouble("chance", referenceNode != null ? referenceNode.getChance() : 1);
+            this.weight = config.getDouble("weight", referenceNode != null ? referenceNode.getWeight() : 0);
+
             this.nameModifier = config.contains("suffix") ? new NameModifier(NameModifier.ModifierType.SUFFIX, config.get("suffix"))
                     : config.contains("prefix") ? new NameModifier(NameModifier.ModifierType.PREFIX, config.get("prefix"))
                     : referenceNode != null ? referenceNode.nameModifier : null;

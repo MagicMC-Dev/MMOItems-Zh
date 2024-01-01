@@ -2,12 +2,11 @@ package net.Indyuce.mmoitems.stat.data;
 
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class StringData implements StatData, RandomStatData<StringData>, Mergeable<StringData> {
+public class StringData implements StatData, RandomStatData<StringData> {
     @Nullable
     private String value;
 
@@ -39,16 +38,9 @@ public class StringData implements StatData, RandomStatData<StringData>, Mergeab
         return value == null || value.isEmpty();
     }
 
-    @Override
-    public void merge(@Nullable StringData data) {
-
-        // Overwrite
-        value = data.getString();
-    }
-
     @NotNull
     @Override
-    public StringData cloneData() {
+    public StringData clone() {
         return new StringData(value);
     }
 }

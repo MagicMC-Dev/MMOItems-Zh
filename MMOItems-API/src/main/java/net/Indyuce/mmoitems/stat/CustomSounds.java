@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -82,7 +83,7 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 		inv.getEditedSection().set("sounds." + soundsPath + ".pitch", pitch);
 
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundsPath.replace(".", " ")) + ChatColor.GRAY
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + UtilityMethods.caseOnWords(soundsPath.replace(".", " ")) + ChatColor.GRAY
 				+ " 成功更改为 '" + soundName + "'.");
 	}
 
@@ -95,7 +96,7 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 			data.mapData()
 					.forEach((sound,
 							soundData) -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN
-									+ MMOUtils.caseOnWords(sound.getName().toLowerCase().replace("-", " ").replace("_", " ")) + ChatColor.GRAY + ": "
+									+ UtilityMethods.caseOnWords(sound.getName().toLowerCase().replace("-", " ").replace("_", " ")) + ChatColor.GRAY + ": "
 									+ ChatColor.RED + soundData.getVolume() + " " + soundData.getPitch()));
 		} else
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");

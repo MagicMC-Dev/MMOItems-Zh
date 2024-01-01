@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -9,7 +10,6 @@ import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -96,9 +96,9 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
     public void whenDisplayed(List<String> lore, Optional<RandomEnchantListData> statData) {
 
         if (statData.isPresent()) {
-            lore.add(ChatColor.GRAY + "当前值: ");
-            RandomEnchantListData data = (RandomEnchantListData) statData.get();
-            data.getEnchants().forEach(enchant -> lore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(enchant.getKey().getKey().replace("_", " "))
+            lore.add(ChatColor.GRAY + "当前值:");
+            RandomEnchantListData data = statData.get();
+            data.getEnchants().forEach(enchant -> lore.add(ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(enchant.getKey().getKey().replace("_", " "))
                     + " " + data.getLevel(enchant).toString()));
 
         } else

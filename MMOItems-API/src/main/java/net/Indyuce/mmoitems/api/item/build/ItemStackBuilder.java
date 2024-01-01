@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.gson.JsonArray;
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.util.AdventureUtils;
@@ -11,9 +12,7 @@ import net.Indyuce.mmoitems.api.event.GenerateLoreEvent;
 import net.Indyuce.mmoitems.api.event.ItemBuildEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.Previewable;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
@@ -211,25 +210,22 @@ public class ItemStackBuilder {
                 builtMMOItem.getStats().contains(ItemStats.DISPLAYED_TYPE) ? builtMMOItem.getData(ItemStats.DISPLAYED_TYPE)
                         .toString() : builtMMOItem.getType().getName()));
 
-        // Calculate extra item lore with placeholders
-        if (builtMMOItem.hasData(ItemStats.LORE)) {
-            List<String> parsed = new ArrayList<>();
-            ((StringListData) builtMMOItem.getData(ItemStats.LORE)).getList().forEach(str -> parsed.add(lore.applySpecialPlaceholders(str)));
-            lore.insert("lore", parsed);
-        }
-
         // Calculate and apply item lore
         List<String> unparsedLore = lore.getLore();
         List<String> parsedLore = lore.build();
 
         final GenerateLoreEvent event = new GenerateLoreEvent(builtMMOItem, lore, parsedLore, unparsedLore);
         Bukkit.getPluginManager().callEvent(event);
-        AdventureUtils.setLore(meta, event.getParsedLore().stream().map(s -> ChatColor.WHITE + s).toList());
+        AdventureUtils.setLore(meta, event.getParsedLore());
         if (meta.hasDisplayName()) {
 
             // Apply tooltip top
             String displayName = meta.getDisplayName();
             if (lore.hasTooltip()) displayName = lore.getTooltip().getTop() + displayName;
+            displayName = MythicLib.plugin.getPlaceholderParser().parse(null, displayName);
+            displayName = lore.applySpecialPlaceholders(displayName);
+            if (lore.hasTooltip() && lore.getTooltip().getCenteringOptions() != null && lore.getTooltip().getCenteringOptions().displayName())
+                displayName = lore.getTooltip().getCenteringOptions().centerName(displayName);
             AdventureUtils.setDisplayName(meta, ChatColor.WHITE + displayName);
         }
 

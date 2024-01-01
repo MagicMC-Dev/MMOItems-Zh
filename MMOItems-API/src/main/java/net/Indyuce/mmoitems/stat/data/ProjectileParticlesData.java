@@ -77,6 +77,11 @@ public class ProjectileParticlesData implements StatData, RandomStatData<Project
         return blue;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
     public static boolean isColorable(Particle particle) {
         return particle == Particle.REDSTONE || particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT || particle == Particle.NOTE;
     }

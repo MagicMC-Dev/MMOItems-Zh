@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * @deprecated Not used yet
+ */
+@Deprecated
 public class ObjectComponent extends AbstractObjectComponent implements Upgradable {
     private final Map<String, StatComponent> components = new HashMap<>();
 

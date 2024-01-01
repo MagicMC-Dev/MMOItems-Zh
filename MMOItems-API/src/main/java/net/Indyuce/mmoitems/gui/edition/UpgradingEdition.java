@@ -1,20 +1,19 @@
 package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ItemFactory;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.item.util.NamedItemStack;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpgradingEdition extends EditionInventory {
-	private static final ItemStack notAvailable = new NamedItemStack(VersionMaterial.RED_STAINED_GLASS_PANE.toMaterial(), "&c不可用");
+	private static final ItemStack notAvailable = ItemFactory.of(Material.RED_STAINED_GLASS_PANE).name("&c不可用").build();
 
 	public UpgradingEdition(Player player, MMOItemTemplate template) {
 		super(player, template);
@@ -114,10 +113,10 @@ public class UpgradingEdition extends EditionInventory {
 			referenceItemMeta.setDisplayName(ChatColor.GREEN + "升级参考");
 			List<String> referenceItemLore = new ArrayList<>();
 			referenceItemLore.add(ChatColor.GRAY + "该设置决定了哪些消耗品");
-			referenceItemLore.add(ChatColor.GRAY + "可以升级物品. " + ChatColor.AQUA + "消耗品的升级参照");
-			referenceItemLore.add(ChatColor.AQUA + "必须与物品的参照一致" + ChatColor.GRAY + ",");
-			referenceItemLore.add(ChatColor.GRAY + "否则无法升级");
-			referenceItemLore.add(ChatColor.GRAY + "留空，以便任何消耗品都能升级此物品.");
+			referenceItemLore.add(ChatColor.GRAY + "可以升级物品. " + ChatColor.AQUA + "消耗品的升级参考");
+			referenceItemLore.add(ChatColor.AQUA + "必须与目标物品的参考相匹配" + ChatColor.GRAY + ",");
+			referenceItemLore.add(ChatColor.GRAY + "否则它无法升级。");
+			referenceItemLore.add(ChatColor.GRAY + "保留空白，这样任何消耗品都可以升级这个项目。");
 			referenceItemLore.add("");
 			referenceItemLore
 					.add(ChatColor.GRAY + "当前值: " + (reference == null ? ChatColor.RED + "没有参考" : ChatColor.GOLD + reference));

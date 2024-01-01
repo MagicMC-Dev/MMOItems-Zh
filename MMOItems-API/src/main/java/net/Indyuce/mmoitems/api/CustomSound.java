@@ -1,10 +1,9 @@
 package net.Indyuce.mmoitems.api;
 
+import io.lumine.mythic.lib.UtilityMethods;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-
-import net.Indyuce.mmoitems.util.MMOUtils;
-import io.lumine.mythic.lib.version.VersionMaterial;
 
 public enum CustomSound {
     ON_ATTACK(Material.IRON_SWORD, 19, "攻击实体时播放。"),
@@ -33,7 +32,7 @@ public enum CustomSound {
     }
 
     public String getName() {
-        return MMOUtils.caseOnWords(name().toLowerCase().replace('_', ' '));
+        return UtilityMethods.caseOnWords(name().toLowerCase().replace('_', ' '));
     }
 
     public String[] getLore() {

@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.manager.RecipeManager;
@@ -45,7 +46,7 @@ public enum CraftingType {
     }
 
     public String getName() {
-        return MMOUtils.caseOnWords(name().toLowerCase());
+        return UtilityMethods.caseOnWords(name().toLowerCase());
     }
 
     public String getLore() {

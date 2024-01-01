@@ -47,7 +47,7 @@ public class ConfigManager implements Reloadable {
     public NumericStatFormula defaultItemCapacity;
     public ReforgeOptions revisionOptions, gemRevisionOptions, phatLootsOptions;
     public final List<String> opStats = new ArrayList<>();
-    public String itemTypeLoreTag, gemStoneLoreTag;
+    public String itemTypeLoreTag, gemStoneLoreTag, defaultTierName;
 
     public ConfigManager() {
         mkdir("layouts");
@@ -179,6 +179,7 @@ public class ConfigManager implements Reloadable {
         rerollOnItemUpdate = MMOItems.plugin.getConfig().getBoolean("item-revision.reroll-when-updated");
         levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
         disableRemovedItems = MMOItems.plugin.getConfig().getBoolean("disable-removed-items");
+        defaultTierName = MMOItems.plugin.getConfig().getString("default-tier-name");
 
         NumericStatFormula.RELATIVE_SPREAD = !MMOItems.plugin.getConfig().getBoolean("additive-spread-formula", false);
 

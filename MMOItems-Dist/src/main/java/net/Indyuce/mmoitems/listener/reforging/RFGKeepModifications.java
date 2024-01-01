@@ -45,7 +45,7 @@ public class RFGKeepModifications implements Listener {
                 if (modData == null) { continue; }
 
                 // Apply it
-                newHist.registerModifierBonus(mod, ((Mergeable) modData).cloneData());
+                newHist.registerModifierBonus(mod, ((Mergeable) modData).clone());
             }
         }
     }

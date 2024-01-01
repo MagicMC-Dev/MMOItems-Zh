@@ -7,15 +7,12 @@ import net.Indyuce.mmoitems.api.event.MMOItemReforgeEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.UUID;
 
 /**
  * Transfers enchantments from the old MMOItem to the new one.
@@ -47,7 +44,7 @@ public class RFGKeepEnchantments implements Listener {
 
         // Gather
         StatHistory hist = StatHistory.from(operable, ItemStats.ENCHANTS);
-        EnchantListData maybeOriginalEnchs = (EnchantListData) ((Mergeable) hist.getOriginalData()).cloneData();
+        EnchantListData maybeOriginalEnchs = ((EnchantListData) hist.getOriginalData()).clone();
 
         //RFG//MMOItems.log("  \u00a7b*** \u00a77Enchantments in old item:");
         //RFG//hist.log();

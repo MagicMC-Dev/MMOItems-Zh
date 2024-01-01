@@ -37,6 +37,7 @@ public class StatManager {
      * Load default stats using java reflection, get all public static final
      * fields in the ItemStat and register them as stat instances
      */
+    @Deprecated
     public void load() {
         for (Field field : ItemStats.class.getFields())
             try {

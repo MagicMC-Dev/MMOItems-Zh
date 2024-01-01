@@ -5,11 +5,9 @@ import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.stat.GemSockets;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +23,7 @@ import java.util.*;
  */
 public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, RandomStatData<GemSocketsData> {
     @NotNull
-    private final Set<GemstoneData> gems = new HashSet<>();
+    private final Set<GemstoneData> gems = new LinkedHashSet<>();
     @NotNull
     private final List<String> emptySlots;
 
@@ -126,7 +124,7 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
     }
 
     @Override
-    public void merge(GemSocketsData data) {
+    public void mergeWith(GemSocketsData data) {
 
         // Combine both actual gems, and empty slots
         emptySlots.addAll(data.emptySlots);
@@ -134,7 +132,7 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
     }
 
     @Override
-    public GemSocketsData cloneData() {
+    public GemSocketsData clone() {
 
         // Clone empty slots
         GemSocketsData ret = new GemSocketsData(new ArrayList<>(emptySlots));

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class ModifierGroup extends ModifierNode implements PreloadedObject {
+public class ModifierGroup extends ModifierNode {
     private final int min, max;
     private final List<ModifierNode> children;
 

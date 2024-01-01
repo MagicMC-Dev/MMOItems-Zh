@@ -3,10 +3,12 @@ package net.Indyuce.mmoitems.api.item.build;
 import com.google.common.collect.Lists;
 import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.tooltip.TooltipTexture;
+import net.Indyuce.mmoitems.util.Buildable;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,31 +19,29 @@ import java.util.*;
  * - Classic placeholders are like #attack-damage# are called static placeholders.
  * - Special placeholders are {placeholder-name}, they can be used inside of
  * the item lore, the one you get with {@link net.Indyuce.mmoitems.stat.Lore}
- * - Dynamic placeholders are %placeholder-name%, they
- * are used by custom durability, consumable uses left, etc.
+ * - Dynamic placeholders are %placeholder-name%, they are used by custom durability, consumable uses left, etc.
  *
- * @author indyuce
+ * @author Jules
  */
-public class LoreBuilder {
+public class LoreBuilder extends Buildable<List<String>> {
     private final List<String> lore = new ArrayList<>();
     private final List<String> end = new ArrayList<>();
-    private final TooltipTexture tooltip = null;
     private final Map<String, String> placeholders = new HashMap<>();
-
-    private boolean built;
+    private final TooltipTexture tooltip;
 
     @Deprecated
     public LoreBuilder(@NotNull Collection<String> format) {
         lore.addAll(format);
+        tooltip = null;
     }
-/*
-    @Deprecated
-    public static final TooltipTexture TEST = new TooltipTexture(new ConfigFile("tooltips").getConfig().getConfigurationSection("test"));*/
 
     public LoreBuilder(@NotNull MMOItem mmoitem) {
-        lore.addAll(MMOItems.plugin.getFormats().getFormat(mmoitem));
+        lore.addAll(MMOItems.plugin.getLore().getFormat(mmoitem));
+        tooltip = mmoitem.getTooltip();
 
-        // TODO load tooltip
+        registerPlaceholder("type", mmoitem.getType().getName());
+        final ItemTier tier = mmoitem.getTier();
+        registerPlaceholder("tier", tier != null ? tier.getName() : MMOItems.plugin.getLanguage().defaultTierName);
     }
 
     /**
@@ -65,8 +65,7 @@ public class LoreBuilder {
      */
     public void insert(String path, String... add) {
         int index = lore.indexOf("#" + path + "#");
-        if (index < 0)
-            return;
+        if (index < 0) return;
 
         for (int j = 0; j < add.length; j++)
             lore.add(index + 1, add[add.length - j - 1]);
@@ -83,8 +82,7 @@ public class LoreBuilder {
      */
     public void insert(@NotNull String path, @NotNull List<String> list) {
         int index = lore.indexOf("#" + path + "#");
-        if (index < 0)
-            return;
+        if (index < 0) return;
 
         Lists.reverse(list).forEach(string -> lore.add(index + 1, string));
         lore.remove(index);
@@ -113,9 +111,21 @@ public class LoreBuilder {
     @NotNull
     public String applySpecialPlaceholders(String str) {
 
-        while (str.contains("{") && str.substring(str.indexOf("{")).contains("}")) {
-            String holder = str.substring(str.indexOf("{") + 1, str.indexOf("}"));
-            str = str.replace("{" + holder + "}", placeholders.getOrDefault(holder, "PHE"));
+        int min = str.indexOf("{");
+        while (min >= 0) {
+            int max = str.indexOf("}", min);
+            if (max < 0) break;
+
+            // Compute and apply placeholder
+            final String placeholder = str.substring(min + 1, max);
+            final String value = placeholders.get(placeholder);
+            if (value != null) {
+                str = str.substring(0, min) + value + str.substring(max + 1);
+                max += value.length() - placeholder.length() - 2;
+            }
+
+            // Goto next placeholder
+            min = str.indexOf("{", max + 1);
         }
 
         return str;
@@ -126,19 +136,20 @@ public class LoreBuilder {
      *
      * @param str String to insert at the end
      */
+    @Deprecated
     public void end(@NotNull String str) {
         end.add(str);
     }
+
+    private static final String LINE_PREFIX = ChatColor.WHITE.toString();
 
     /**
      * @return A built item lore. This method must be called after all lines
      *         have been inserted in the lore. It cleans all unused static placeholders
      *         as well as lore bars. The dynamic placeholders still remain however.
      */
-    @NotNull
-    public List<String> build() {
-        Validate.isTrue(!built, "Lore is already built");
-        built = true;
+    @Override
+    protected List<String> whenBuilt() {
 
         /*
          * First, filtering iteration.
@@ -151,38 +162,43 @@ public class LoreBuilder {
             String line = lore.get(n);
 
             // Remove unused static lore placeholders
-            if (line.startsWith("#"))
-                lore.remove(n);
+            if (line.startsWith("#")) lore.remove(n);
 
                 // Remove empty stat categories
-            else if (line.startsWith("{bar}") && (n == lore.size() - 1 || isBar(lore.get(n + 1))))
-                lore.remove(n);
+            else if (line.startsWith("{bar}") && (n == lore.size() - 1 || isBar(lore.get(n + 1)))) lore.remove(n);
 
-            else
-                j++;
+            else j++;
+        }
+
+        // Apply extra lore lines from tooltip
+        final String tooltipSuffix = tooltip != null ? tooltip.getSuffix() : "";
+        if (tooltip != null) {
+            lore.add(tooltip.getBottom() + tooltipSuffix);
+            if (tooltip.getLoreHeader() != null) lore.addAll(0, tooltip.getLoreHeader());
         }
 
         /*
-         * Second and last, functional step.
+         * Second and last, functional iteration.
          *
          * Steps In-order:
          * - Clear bad codes
          * - Apply placeholders and math
          * - Apply \n line breaks
          * - Apply tooltip middle/bar and suffix
+         * - Ignore the N first lines of the item lore
          */
-        final String effectiveSuffix = tooltip != null ? tooltip.getSuffix() : "";
+        final int linesIgnored = tooltip != null ? tooltip.getFirstIgnored() : 0;
         for (int j = 0; j < lore.size(); ) {
             String currentLine = lore.get(j);
 
             // Replace bar prefixes
-            final boolean bar = currentLine.startsWith("{bar}"), superbar = currentLine.startsWith("{sbar}");
-            if (bar) currentLine = currentLine.substring(5);
-            if (superbar) currentLine = currentLine.substring(6);
+            final LineType lineType = getType(j, currentLine);
+            if (lineType == LineType.BAR) currentLine = currentLine.substring(5);
+            if (lineType == LineType.SUPERBAR) currentLine = currentLine.substring(6);
 
             // Apply tooltip prefixes if necessary
-            if (tooltip != null)
-                currentLine = (bar || superbar ? tooltip.getBar() : tooltip.getMiddle()) + currentLine;
+            if (tooltip != null && lineType != LineType.BOTTOM)
+                currentLine = (j < linesIgnored ? tooltip.getAlignText() : (lineType.isBar() ? tooltip.getBar() : tooltip.getMiddle())) + currentLine;
 
             // Deprecated math. PAPI math expansion is now recommended
             final String match = StringUtils.substringBetween(currentLine, "MATH%", "%");
@@ -191,11 +207,14 @@ public class LoreBuilder {
             // Apply PAPI placeholders
             currentLine = MythicLib.plugin.getPlaceholderParser().parse(null, currentLine);
 
+            // Apply internal placeholders
+            currentLine = applySpecialPlaceholders(currentLine);
+
             // Need to break down the line into multiple
-            if (currentLine.contains("\\n")) {
-                String[] split = currentLine.split("\\\\n");
+            final String[] split = currentLine.split("\n", -1);
+            if (split.length > 1) {
                 for (int k = split.length - 1; k >= 0; k -= 1)
-                    lore.add(j, split[k] + effectiveSuffix);
+                    lore.add(j, LINE_PREFIX + split[k] + (j < linesIgnored ? "" : tooltipSuffix));
 
                 // Remove the old element
                 lore.remove(j + split.length);
@@ -206,19 +225,36 @@ public class LoreBuilder {
             } else
 
                 // Simple line
-                lore.set(j++, currentLine + effectiveSuffix);
+                lore.set(j++, LINE_PREFIX + currentLine + tooltipSuffix);
         }
 
-        // Apply tooltip bottom
-        if (tooltip != null) {
-            lore.add(tooltip.getBottom() + effectiveSuffix);
-
-            // Apply tooltip lore header
-            if (tooltip.getLoreHeader() != null) lore.addAll(0, tooltip.getLoreHeader());
-        }
+        // Center lines
+        if (tooltip != null && tooltip.getCenteringOptions() != null)
+            for (int j = 0; j < tooltip.getCenteringOptions().getLoreLines(); j++)
+                lore.set(j, tooltip.getCenteringOptions().centerLore(j, lore.get(j)));
 
         lore.addAll(end);
         return lore;
+    }
+
+    /**
+     * @param index Current line counter
+     * @param line  Current line
+     * @return Type of current line lore.
+     */
+    @NotNull
+    private LineType getType(int index, String line) {
+        if (index == lore.size() - 1) return LineType.BOTTOM;
+        if (line.startsWith("{bar}") || line.startsWith("{sbar}")) return LineType.BAR;
+        return LineType.MIDDLE;
+    }
+
+    private enum LineType {
+        MIDDLE, BAR, SUPERBAR, BOTTOM;
+
+        boolean isBar() {
+            return this == BAR || this == SUPERBAR;
+        }
     }
 
     @Deprecated

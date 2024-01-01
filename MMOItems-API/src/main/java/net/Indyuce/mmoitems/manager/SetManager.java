@@ -25,10 +25,10 @@ public class SetManager implements Reloadable {
             try {
                 final ConfigurationSection section = config.getConfig().getConfigurationSection(id);
                 if (section == null)
-                    throw new IllegalStateException("Item set '%s' is not a valid configuration section.".formatted(id));
+                    throw new IllegalStateException(String.format("Item set '%s' is not a valid configuration section.", id));
                 itemSets.put(id, new ItemSet(section));
             } catch (IllegalArgumentException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load item set '%s': %s".formatted(id, exception.getMessage()));
+                MMOItems.plugin.getLogger().log(Level.WARNING, String.format("Could not load item set '%s': %s", id, exception.getMessage()));
             }
     }
 

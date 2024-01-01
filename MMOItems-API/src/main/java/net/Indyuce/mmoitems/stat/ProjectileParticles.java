@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -109,7 +110,7 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
                 inv.getEditedSection().set("projectile-particles.color.blue", 0);
                 inv.registerTemplateEdition();
                 inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子成功设置为 "
-                        + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + " 有颜色 " + red);
+                        + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + " 颜色 " + red);
             } else {
                 Validate.isTrue(msg.length == 4, "您必须为此粒子提供颜色\n"
                         + MMOItems.plugin.getPrefix() + ChatColor.AQUA + "格式: {粒子} {R G B}");
@@ -122,7 +123,7 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
                 inv.getEditedSection().set("projectile-particles.color.blue", blue);
                 inv.registerTemplateEdition();
                 inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子成功设置为 "
-                        + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + " 具有 RGB 颜色 " + red + " " + green + " " + blue);
+                        + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + " 具有 RGB 颜色 " + red + " " + green + " " + blue);
             }
         } else {
             Validate.isTrue(msg.length == 1, "该粒子无法指定颜色");
@@ -132,7 +133,7 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
             inv.getEditedSection().set("projectile-particles.color.blue", 0);
             inv.registerTemplateEdition();
             inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子成功设置为 "
-                    + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")));
+                    + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " ")));
         }
     }
 

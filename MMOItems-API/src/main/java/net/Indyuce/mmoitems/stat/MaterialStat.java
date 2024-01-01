@@ -1,12 +1,12 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.EnumUtils;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -72,7 +72,7 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 	public void whenDisplayed(List<String> lore, Optional<MaterialData> statData) {
 		lore.add(ChatColor.GRAY + "当前值: "
 				+ (statData.isPresent()
-						? ChatColor.GREEN + MMOUtils.caseOnWords(statData.get().getMaterial().name().toLowerCase().replace("_", " "))
+						? ChatColor.GREEN + UtilityMethods.caseOnWords(statData.get().getMaterial().name().toLowerCase().replace("_", " "))
 						: ChatColor.RED + "None"));
 
 		lore.add("");

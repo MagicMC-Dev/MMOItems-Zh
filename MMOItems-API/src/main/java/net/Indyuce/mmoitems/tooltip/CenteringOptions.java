@@ -38,21 +38,21 @@ public class CenteringOptions {
         this.loreFontSize = config.getDoubleList("lore.font_size");
         this.loreSpan = config.getIntegerList("lore.span");
 
-        Validate.isTrue(name || loreLines > 0, "Centering must be enabled for at least one lore line or the display name");
+        Validate.isTrue(name || loreLines > 0, "必须为至少一个的 Lore 行或显示名称启用居中设置");
 
         // Lore validation
-        Validate.isTrue(loreLines >= 0, "Lore line count must be positive");
+        Validate.isTrue(loreLines >= 0, "Lore 行数必须为正");
         if (loreLines > 0) {
-            Validate.isTrue(!loreFontSize.isEmpty(), "You must provide at least one lore font size");
+            Validate.isTrue(!loreFontSize.isEmpty(), "必须提供至少一种字体大小");
             Validate.isTrue(!loreSpan.isEmpty(), "You must provide at least one lore span");
-            for (double d : loreFontSize) Validate.isTrue(d > 0, "Font size must be positive");
-            for (double d : loreSpan) Validate.isTrue(d > 0, "Font size must be positive");
+            for (double d : loreFontSize) Validate.isTrue(d > 0, "字体大小必须为正数");
+            for (double d : loreSpan) Validate.isTrue(d > 0, "字体大小必须为正数");
         }
 
         // Name validation
         if (name) {
-            Validate.isTrue(nameFontSize > 0, "Font size must be positive");
-            Validate.isTrue(nameSpan > 0, "Name must be positive");
+            Validate.isTrue(nameFontSize > 0, "字体大小必须为正数");
+            Validate.isTrue(nameSpan > 0, "名称必须是正数");
         }
 
         this.regex = Pattern.compile(config.getString("regex", DEFAULT_REGEX));

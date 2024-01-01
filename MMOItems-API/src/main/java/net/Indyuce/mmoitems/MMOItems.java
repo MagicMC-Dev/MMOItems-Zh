@@ -154,7 +154,7 @@ public class MMOItems extends JavaPlugin {
         final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
         final int defConfigVersion = getConfig().getDefaults().getInt("config-version");
         if (configVersion != defConfigVersion) {
-            getLogger().warning("您可能正在使用过时的 config.yml！");
+            getLogger().warning("您可能正在使用过时的 config.yml!");
             getLogger().warning("(您的配置版本: '" + configVersion + "' | 预期配置版本: '" + defConfigVersion + "')");
         }
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 @VersionDependant(minor = 20)
 public class HideTrim extends BooleanStat {
     public HideTrim() {
-        super("HIDE_ARMOR_TRIM", Material.LEATHER_CHESTPLATE, "隐藏盔甲装饰", new String[]{"隐藏物品 Lore 标注中的盔甲装饰"}, new String[]{"armor"});
+        super("HIDE_ARMOR_TRIM", Material.LEATHER_CHESTPLATE, "隐藏装备装饰", new String[]{"隐藏物品 Lore 标注中的盔甲装饰"}, new String[]{"armor"});
     }
 
     @Override

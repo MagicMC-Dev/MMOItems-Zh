@@ -39,10 +39,10 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
         ConfigurationSection config = (ConfigurationSection) object;
 
         final String value = config.getString("value");
-        Validate.notNull(value, "无法加载头骨纹理值");
+        Validate.notNull(value, "无法加载头骨纹理");
 
         final String uuid = config.getString("uuid");
-        Validate.notNull(uuid, "找不到头骨纹理 UUID: 重新输入您的头骨纹理值, 系统将随机选择一个");
+        Validate.notNull(uuid, "找不到头骨纹理UUID:重新输入你的头骨纹理值，将随机选择一个。");
 
         final Object profile = MythicLib.plugin.getVersion().getWrapper().newProfile(UUID.fromString(uuid), value);
         final SkullTextureData skullTexture = new SkullTextureData(profile);
@@ -51,10 +51,10 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
 
     @Override
     public void whenDisplayed(List<String> lore, Optional<SkullTextureData> statData) {
-        lore.add(ChatColor.GRAY + "Current Value: " + (statData.isPresent() ? ChatColor.GREEN + "提供纹理值" : ChatColor.RED + "None"));
+        lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + " 提供的纹理值 " : ChatColor.RED + "None"));
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可更改此值");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除该值");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除此值");
     }
 
     @Override
@@ -88,8 +88,8 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
         if (event.getAction() == InventoryAction.PICKUP_HALF) {
             inv.getEditedSection().set(getPath(), null);
             inv.registerTemplateEdition();
-            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ".");
-        } else new StatEdition(inv, this).enable("Write in the chat the text you want.");
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除 " + getName() + ".");
+        } else new StatEdition(inv, this).enable("在聊天中输入你想要的值");
     }
 
     @Override

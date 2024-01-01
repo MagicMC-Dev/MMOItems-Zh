@@ -39,12 +39,12 @@ public class TooltipTexture {
         try {
             centering = config.isConfigurationSection("center") ? new CenteringOptions(config.getConfigurationSection("center")) : null;
         } catch (RuntimeException exception) {
-            throw new RuntimeException("Could not load centering options: " + exception.getMessage());
+            throw new RuntimeException("无法加载居中选项: " + exception.getMessage());
         }
 
-        Validate.notNull(top, "Tooltip top portion cannot be null");
-        Validate.notNull(middle, "Tooltip middle portion cannot be null");
-        Validate.notNull(bottom, "Tooltip bottom portion cannot be null");
+        Validate.notNull(top, "工具提示顶部不能为空");
+        Validate.notNull(middle, "工具提示中部不能为空");
+        Validate.notNull(bottom, "工具提示底部不能为空");
     }
 
     @NotNull

@@ -97,7 +97,7 @@ public class SoundsEdition extends EditionInventory {
 				}
 
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + UtilityMethods.caseOnWords(soundPath.replace("-", " ")) + " Sound"
+				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + UtilityMethods.caseOnWords(soundPath.replace("-", " ")) + " 声音"
 						+ ChatColor.GRAY + " 成功删除");
 			}
 		}

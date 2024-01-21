@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -43,8 +44,9 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
     @NotNull
     final ArrayList<UseItemTypes> auraWeapons = new ArrayList<>();
 
-    public MMOItemsOnShootAura(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-        super(manager, skill, mlc);
+    public MMOItemsOnShootAura(SkillExecutor manager, File file, String line, MythicLineConfig mlc) {
+        super(manager, file, line, mlc);
+
         skillName = mlc.getPlaceholderString(new String[]{"skill", "s", "ondamagedskill", "ondamaged", "od", "onhitskill", "onhit", "oh", "meta", "m", "mechanics", "$", "()"}, "skill not found");
         weaponTypes = mlc.getString(new String[]{"weapons", "weapon", "w"}, "MUSKET");
         metaskill = GetSkill(skillName.get());

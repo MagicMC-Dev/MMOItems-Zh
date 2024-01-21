@@ -28,6 +28,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -53,8 +54,9 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
     boolean fromOrigin;
     boolean allowPickup;
 
-    public MMOItemsArrowVolleyMechanic(SkillExecutor manager, String line, MythicLineConfig mlc) {
-        super(manager, line, mlc);
+    public MMOItemsArrowVolleyMechanic(SkillExecutor manager, File file, String line, MythicLineConfig mlc) {
+        super(manager, file, line, mlc);
+
         threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
         amount = mlc.getPlaceholderInteger(new String[]{"amount", "arrows", "a"}, 20);
@@ -111,7 +113,7 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
         } else {
 
             // Run as normal mythicmobs arrow volley
-            SkillAdapter.get().executeVolley(data.getCaster(), target, amount.get(data), velocity.get(data) * 0.1F, spread.get(data), fireTicks.get(data), removeDelay.get(data));
+            SkillAdapter.get().executeVolley(data.getCaster(), target, amount.get(data), velocity.get(data) * 0.1F, spread.get(data), fireTicks.get(data), removeDelay.get(data), allowPickup);
         }
         return SkillResult.SUCCESS;
     }
@@ -128,7 +130,7 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
         } else {
 
             // Run as normal mythicmobs arrow volley
-            SkillAdapter.get().executeVolley(data.getCaster(), target.getLocation(), amount.get(data, target), velocity.get(data) * 0.1F, spread.get(data), fireTicks.get(data), removeDelay.get(data));
+            SkillAdapter.get().executeVolley(data.getCaster(), target.getLocation(), amount.get(data, target), velocity.get(data) * 0.1F, spread.get(data), fireTicks.get(data), removeDelay.get(data), allowPickup);
         }
         return SkillResult.SUCCESS;
     }

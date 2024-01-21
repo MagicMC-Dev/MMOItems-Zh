@@ -41,10 +41,10 @@ public class MythicMobsCompatibility implements Listener {
         // Switch Mechanic ig
         switch (event.getMechanicName().toLowerCase()) {
             case "mmoitemsvolley":
-                event.register(new MMOItemsArrowVolleyMechanic(event.getContainer().getManager(), event.getContainer().getConfigLine(), event.getConfig()));
+                event.register(new MMOItemsArrowVolleyMechanic(event.getContainer().getManager(), event.getContainer().getFile(), event.getContainer().getConfigLine(), event.getConfig()));
                 break;
             case "onmmoitemuse":
-                event.register(new MMOItemsOnShootAura(event.getContainer().getManager(), event.getContainer().getConfigLine(), event.getConfig()));
+                event.register(new MMOItemsOnShootAura(event.getContainer().getManager(), event.getContainer().getFile(), event.getContainer().getConfigLine(), event.getConfig()));
                 break;
             default:
                 break;
@@ -78,8 +78,7 @@ public class MythicMobsCompatibility implements Listener {
 
         for (MythicMob mob : mobs)
             // Checks if it has a faction.
-            if (mob.hasFaction())
-                allFactions.add(mob.getFaction());
+            if (mob.hasFaction()) allFactions.add(mob.getFaction());
 
         return allFactions;
     }

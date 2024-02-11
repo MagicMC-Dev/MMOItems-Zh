@@ -124,7 +124,7 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 			inv.getEditedSection().set("shield-pattern." + availableKey + ".color", dyeColor.name());
 			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(
-					MMOItems.plugin.getPrefix() + UtilityMethods.caseOnWords(patternType.name().toLowerCase().replace("_", " ")) + " successfully added.");
+					MMOItems.plugin.getPrefix() + UtilityMethods.caseOnWords(patternType.name().toLowerCase().replace("_", " ")) + " 添加成功");
 			return;
 		}
 

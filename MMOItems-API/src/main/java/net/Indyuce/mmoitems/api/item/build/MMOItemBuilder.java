@@ -187,7 +187,7 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
     /**
      * @param template The template to list modifiers from
      * @return A sorted (or unsorted depending on the template options) list of
-     *         modifiers that can be later rolled and applied to the builder
+     * modifiers that can be later rolled and applied to the builder
      */
     @NotNull
     @Deprecated
@@ -197,5 +197,17 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
         List<TemplateModifier> modifiers = new ArrayList<>(template.getModifiers().values());
         Collections.shuffle(modifiers);
         return modifiers;
+    }
+
+    /**
+     * Backwards compatibility. Java interpreter cannot find a method
+     * if the method has the same name but a different location (the
+     * #build method was moved to a parent class and no longer has the
+     * same location)
+     */
+    @NotNull
+    @Override
+    public MMOItem build() {
+        return super.build();
     }
 }

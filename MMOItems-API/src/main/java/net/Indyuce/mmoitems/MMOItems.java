@@ -105,13 +105,14 @@ public class MMOItems extends JavaPlugin {
     @Override
     public void onLoad() {
         // getLogger().log(Level.INFO, "插件文件名为 '" + getFile().getName());
-        getLogger().log(Level.INFO, "  __    __     __    __     ______     __     ______   ______     __    __     ______    ");
-        getLogger().log(Level.INFO, " /\\ '-./  \\   /\\ '-./  \\   /\\  __ \\   /\\ \\   /\\__  _\\ /\\  ___\\   /\\ '-./  \\   /\\  ___\\   ");
-        getLogger().log(Level.INFO, " \\ \\ \\-./\\ \\  \\ \\ \\-./\\ \\  \\ \\ \\/\\ \\  \\ \\ \\  \\/_/\\ \\/ \\ \\  __\\   \\ \\ \\-./\\ \\  \\ \\___  \\  ");
-        getLogger().log(Level.INFO, "  \\ \\_\\ \\ \\_\\  \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\    \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\ \\_\\  \\/\\_____\\ ");
-        getLogger().log(Level.INFO, "   \\/_/  \\/_/   \\/_/  \\/_/   \\/_____/   \\/_/     \\/_/   \\/_____/   \\/_/  \\/_/   \\/_____/ ");
-        getLogger().log(Level.INFO, "INFO   汉化: INSide_734    VERSION: 6.9.5");
-        getLogger().log(Level.INFO, "       QQ:  3217962725     文件名: " + getFile().getName());
+        getLogger().log(Level.INFO, "███╗   ███╗███╗   ███╗ ██████╗ ██╗████████╗███████╗███╗   ███╗███████╗");
+        getLogger().log(Level.INFO, "████╗ ████║████╗ ████║██╔═══██╗██║╚══██╔══╝██╔════╝████╗ ████║██╔════╝");
+        getLogger().log(Level.INFO, "██╔████╔██║██╔████╔██║██║   ██║██║   ██║   █████╗  ██╔████╔██║███████╗");
+        getLogger().log(Level.INFO, "██║╚██╔╝██║██║╚██╔╝██║██║   ██║██║   ██║   ██╔══╝  ██║╚██╔╝██║╚════██║");
+        getLogger().log(Level.INFO, "██║ ╚═╝ ██║██║ ╚═╝ ██║╚██████╔╝██║   ██║   ███████╗██║ ╚═╝ ██║███████║");
+        getLogger().log(Level.INFO, "╚═╝     ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚═╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚══════╝");
+        getLogger().log(Level.INFO, "INFO   Source: phoenix-dvpmt/mmoitems    VERSION: 6.9.5");
+        getLogger().log(Level.INFO, "       QQ: 3217962725     文件: " + getFile().getName());
         getLogger().log(Level.INFO, "       (禁止倒卖)");
         
         PluginUtils.isDependencyPresent("WorldEdit", u -> {
@@ -154,7 +155,7 @@ public class MMOItems extends JavaPlugin {
         final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
         final int defConfigVersion = getConfig().getDefaults().getInt("config-version");
         if (configVersion != defConfigVersion) {
-            getLogger().warning("您可能正在使用过时的 config.yml!");
+            getLogger().warning("您可能正在使用过时的 config.yml！");
             getLogger().warning("(您的配置版本: '" + configVersion + "' | 预期配置版本: '" + defConfigVersion + "')");
         }
 

@@ -54,7 +54,7 @@ public class RMGRR_Shaped implements RecipeRegistry {
 
         // Identify the input
         ShapedRecipe input = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeEditorGUI.INPUT_INGREDIENTS)), ffp);
-        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含空气的合成配方, $fignored$b.")); }
+        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含空气的合成配方, $f已忽略$b.")); }
 
         // Read the options and output
         ShapedRecipe output = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeEditorGUI.OUTPUT_INGREDIENTS)), ffp);

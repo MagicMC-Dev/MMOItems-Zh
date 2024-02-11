@@ -96,7 +96,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
     public void whenDisplayed(List<String> lore, Optional<RandomEnchantListData> statData) {
 
         if (statData.isPresent()) {
-            lore.add(ChatColor.GRAY + "当前值:");
+            lore.add(ChatColor.GRAY + "当前值: ");
             RandomEnchantListData data = statData.get();
             data.getEnchants().forEach(enchant -> lore.add(ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(enchant.getKey().getKey().replace("_", " "))
                     + " " + data.getLevel(enchant).toString()));

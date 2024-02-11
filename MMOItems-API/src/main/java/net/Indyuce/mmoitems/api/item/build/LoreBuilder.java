@@ -105,8 +105,8 @@ public class LoreBuilder extends Buildable<List<String>> {
      *
      * @param str String with {..} unformatted placeholders
      * @return Same string with replaced placeholders. Placeholders which
-     *         couldn't be found are marked with PHE which means
-     *         PlaceHolderError
+     * couldn't be found are marked with PHE which means
+     * PlaceHolderError
      */
     @NotNull
     public String applySpecialPlaceholders(String str) {
@@ -145,8 +145,8 @@ public class LoreBuilder extends Buildable<List<String>> {
 
     /**
      * @return A built item lore. This method must be called after all lines
-     *         have been inserted in the lore. It cleans all unused static placeholders
-     *         as well as lore bars. The dynamic placeholders still remain however.
+     * have been inserted in the lore. It cleans all unused static placeholders
+     * as well as lore bars. The dynamic placeholders still remain however.
      */
     @Override
     protected List<String> whenBuilt() {
@@ -287,5 +287,17 @@ public class LoreBuilder extends Buildable<List<String>> {
     public void setLore(List<String> lore) {
         this.lore.clear();
         this.lore.addAll(lore);
+    }
+
+    /**
+     * Backwards compatibility. Java interpreter cannot find a method
+     * if the method has the same name but a different location (the
+     * #build method was moved to a parent class and no longer has the
+     * same location)
+     */
+    @NotNull
+    @Override
+    public List<String> build() {
+        return super.build();
     }
 }

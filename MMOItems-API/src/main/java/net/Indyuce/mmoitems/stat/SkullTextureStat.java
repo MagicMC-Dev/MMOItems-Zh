@@ -29,8 +29,8 @@ import java.util.UUID;
 
 public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureData> {
     public SkullTextureStat() {
-        super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toMaterial(), "头颅纹理", new String[]{"头部纹理 &nvalue&7 ", "可以在头颅数据库中找到.",
-                "建议1.20以上的用户使用纹理&n URL&7"}, new String[]{"all"}, VersionMaterial.PLAYER_HEAD.toMaterial());
+        super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toMaterial(), "头颅纹理", new String[]{"头颅纹理 &nvalue&7 可以在头颅数据库中找到。",
+                "建议 1.20+ 用户使用头颅纹理&n URL&7"}, new String[]{"all"}, VersionMaterial.PLAYER_HEAD.toMaterial());
     }
 
     @Override
@@ -39,10 +39,10 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
         ConfigurationSection config = (ConfigurationSection) object;
 
         final String value = config.getString("value");
-        Validate.notNull(value, "无法加载头骨纹理");
+        Validate.notNull(value, "无法加载头颅纹理值");
 
         final String uuid = config.getString("uuid");
-        Validate.notNull(uuid, "找不到头骨纹理UUID:重新输入你的头骨纹理值，将随机选择一个。");
+        Validate.notNull(uuid, "找不到头颅纹理 UUID: 重新输入您的头颅纹理值，系统将随机选择一个");
 
         final Object profile = MythicLib.plugin.getVersion().getWrapper().newProfile(UUID.fromString(uuid), value);
         final SkullTextureData skullTexture = new SkullTextureData(profile);
@@ -51,7 +51,7 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
 
     @Override
     public void whenDisplayed(List<String> lore, Optional<SkullTextureData> statData) {
-        lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + " 提供的纹理值 " : ChatColor.RED + "None"));
+        lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + "提供纹理值 " : ChatColor.RED + "None"));
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可更改此值");
         lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除此值");
@@ -88,8 +88,8 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
         if (event.getAction() == InventoryAction.PICKUP_HALF) {
             inv.getEditedSection().set(getPath(), null);
             inv.registerTemplateEdition();
-            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除 " + getName() + ".");
-        } else new StatEdition(inv, this).enable("在聊天中输入你想要的值");
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除 " + getName() + ".");
+        } else new StatEdition(inv, this).enable("在聊天中输入您想要的纹理");
     }
 
     @Override

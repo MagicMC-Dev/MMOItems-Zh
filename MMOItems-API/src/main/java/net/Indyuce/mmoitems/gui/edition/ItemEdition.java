@@ -65,7 +65,7 @@ public class ItemEdition extends EditionInventory {
 
         ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
         ItemMeta glassMeta = glass.getItemMeta();
-        glassMeta.setDisplayName(ChatColor.RED + "- 没有项目编号 -");
+        glassMeta.setDisplayName(ChatColor.RED + "- 无物品编号 -");
         glass.setItemMeta(glassMeta);
 
         ItemStack next = new ItemStack(Material.ARROW);

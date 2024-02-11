@@ -8,7 +8,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.item.util.NamedItemStack;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -115,7 +114,7 @@ public class UpgradingEdition extends EditionInventory {
 			List<String> referenceItemLore = new ArrayList<>();
 			referenceItemLore.add(ChatColor.GRAY + "该设置决定了哪些消耗品");
 			referenceItemLore.add(ChatColor.GRAY + "可以升级物品. " + ChatColor.AQUA + "消耗品的升级参考");
-			referenceItemLore.add(ChatColor.GRAY + "必须与目标物品的参考相匹配" + ChatColor.GRAY + ",");
+			referenceItemLore.add(ChatColor.AQUA + "必须与目标物品的参考相匹配" + ChatColor.GRAY + ",");
 			referenceItemLore.add(ChatColor.AQUA + "否则它无法升级。保留空白，这样任何消耗品都可以升级这个项目。");
 			referenceItemLore.add("");
 			referenceItemLore

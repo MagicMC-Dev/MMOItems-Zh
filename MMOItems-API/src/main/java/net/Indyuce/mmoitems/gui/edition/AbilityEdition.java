@@ -202,7 +202,7 @@ public class AbilityEdition extends EditionInventory {
 			if (getEditedSection().contains("ability." + configKey + "." + tag)) {
 				getEditedSection().set("ability." + configKey + "." + tag, null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "重置成功 " + ChatColor.GOLD + UtilityMethods.caseOnWords(tag.replace("-", " "))
+				player.sendMessage(MMOItems.plugin.getPrefix() + "重置成功" + ChatColor.GOLD + UtilityMethods.caseOnWords(tag.replace("-", " "))
 						+ ChatColor.GRAY + ".");
 			}
 		}

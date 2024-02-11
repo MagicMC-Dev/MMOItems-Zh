@@ -57,7 +57,7 @@ public class RMGRR_Smithing implements RecipeRegistry {
         // All right lets read them
         ProvidedUIFilter itemPoof = RecipeEditorGUI.readIngredientFrom(inputSplit[0], ffp);
         ProvidedUIFilter ingotPoof = RecipeEditorGUI.readIngredientFrom(inputSplit[1], ffp);
-        if (itemPoof.isAir() || ingotPoof.isAir()) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "含有空气的锻造配方, $fignored$b.")); }
+        if (itemPoof.isAir() || ingotPoof.isAir()) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "含有空气的锻造配方, $f已忽略$b.")); }
 
         // Make ingredients
         MythicRecipeIngredient itemIngredient = new MythicRecipeIngredient(itemPoof);

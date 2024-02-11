@@ -74,7 +74,7 @@ public class RMGRR_Shapeless implements RecipeRegistry {
             nonAirFound = true;
             poofs.add(new MythicRecipeIngredient(p));
         }
-        if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "含有空气的无序配方, $fignored$b.")); }
+        if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "含有空气的无序配方, $f已忽略$b.")); }
         ShapelessRecipe input = new ShapelessRecipe(nk.getKey(), poofs);
         //endregion
 

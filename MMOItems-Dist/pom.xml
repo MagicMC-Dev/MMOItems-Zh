@@ -28,7 +28,7 @@
         <dependency>
             <groupId>net.Indyuce</groupId>
             <artifactId>MMOItems-API</artifactId>
-            <version>6.10-SNAPSHOT</version>
+            <version>6.10-SNAPSHOT-ZH.dev.1.0.2</version>
             <optional>true</optional>
         </dependency>
 

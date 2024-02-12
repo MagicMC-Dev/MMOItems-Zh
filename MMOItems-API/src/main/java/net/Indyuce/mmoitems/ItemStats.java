@@ -74,7 +74,7 @@ public class ItemStats {
             DODGE_RATING = new DoubleStat("DODGE_RATING", Material.FEATHER, "躲闪几率", new String[]{"躲避攻击的几率。", "躲避完全抵消攻击伤害。"}, new String[]{"!miscellaneous", "!block", "all"}),
             DODGE_COOLDOWN_REDUCTION = new DoubleStat("DODGE_COOLDOWN_REDUCTION", Material.FEATHER, "躲闪冷却时间缩减", new String[]{"减少躲避的冷却时间（%）。"}, new String[]{"!miscellaneous", "!block", "all"}),
             PARRY_RATING = new DoubleStat("PARRY_RATING", Material.BUCKET, "招架几率", new String[]{"招架攻击的几率。", "招架抵消伤害并击退攻击者。"}, new String[]{"!miscellaneous", "!block", "all"}),
-            PARRY_COOLDOWN_REDUCTION = a DoubleStat("PARRY_COOLDOWN_REDUCTION", Material.BUCKET, "招架冷却时间缩减", new String[]{"减少招架的冷却时间（%）。"}, new String[]{"!miscellaneous", "!block", "all"}),
+            PARRY_COOLDOWN_REDUCTION = new DoubleStat("PARRY_COOLDOWN_REDUCTION", Material.BUCKET, "招架冷却时间缩减", new String[]{"减少招架的冷却时间（%）。"}, new String[]{"!miscellaneous", "!block", "all"}),
             COOLDOWN_REDUCTION = new DoubleStat("COOLDOWN_REDUCTION", Material.BOOK, "冷却时间缩减", new String[]{"减少物品和玩家技能的冷却时间（%）。"}),
             RANGE = new DoubleStat("RANGE", Material.STICK, "射程", new String[]{"你的物品攻击的射程。"}, new String[]{"staff", "whip", "wand", "musket", "gem_stone"}),
             MANA_COST = new ManaCost(),
@@ -153,7 +153,7 @@ public class ItemStats {
 
     // Unique Stats
     AUTOSMELT = new BooleanStat("AUTOSMELT", Material.COAL, "自动熔炼", new String[]{"如果设置为true, 你的工具将会", "自动熔炼挖掘到的矿石"}, new String[]{"tool"}),
-            BOUNCING_CRACK = new BooleanStat("BOUNCING_CRACK", VersionMaterial.COBBLESTONE_WALL.toMaterial(), "弹跳裂缝", new String[]{"如果设置为true, 你的工具将会", "同时破坏附近的方块"}, new String[]{"tool"}),
+            BOUNCING_CRACK = new BooleanStat("BOUNCING_CRACK", VersionMaterial.COBBLESTONE_WALL.toMaterial(), "范围挖掘", new String[]{"如果设置为true, 你的工具将会", "同时破坏附近的方块"}, new String[]{"tool"}),
             PICKAXE_POWER = new PickaxePower(),
             CUSTOM_SOUNDS = new CustomSounds(),
             ELEMENTS = new Elements(),

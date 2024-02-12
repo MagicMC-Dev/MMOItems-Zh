@@ -7,21 +7,28 @@ import io.lumine.mythic.lib.comp.interaction.InteractionType;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.util.RayTrace;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class Musket extends UntargetedWeapon {
+@Deprecated
+public class Musket extends Weapon implements LegacyWeapon {
+    @Deprecated
     public Musket(Player player, NBTItem item) {
-        super(player, item, UntargetedWeaponType.RIGHT_CLICK);
+        super(player, item);
+    }
+
+    public Musket(PlayerData player, NBTItem item) {
+        super(player, item);
     }
 
     @Override
-    public boolean canAttack(EquipmentSlot slot) {
-        return true;
+    public boolean canAttack(boolean rightClick, EquipmentSlot slot) {
+        return rightClick;
     }
 
     @Override

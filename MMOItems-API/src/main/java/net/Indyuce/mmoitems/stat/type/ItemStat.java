@@ -29,6 +29,9 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
     private final List<String> compatibleTypes;
     private final List<Material> compatibleMaterials;
 
+    @Nullable
+    private String[] aliases = {};
+
     /**
      * The stat can be enabled or not, depending on the server version to
      * prevent from displaying useless editable stats in the edition menu.
@@ -194,6 +197,25 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
     }
 
     /**
+     * Mainly for backwards compatibility. Aliases are basically
+     * other string identifiers that point to the same item stat.
+     * Useful when changing stat keys inside the item configs.
+     *
+     * Aliases have to follow the UPPER_CASE stat identifier format.
+     */
+    @Nullable
+    public String[] getAliases() {
+        return aliases;
+    }
+
+    /**
+     * @see #getAliases()
+     */
+    public void setAliases(String... aliases) {
+        this.aliases = aliases;
+    }
+
+    /**
      * @return The stat ID
      * @deprecated Use getId() instead. Type is no longer an util since they can
      * now be registered from external plugins
@@ -234,6 +256,7 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
         return lore;
     }
 
+    @NotNull
     public List<String> getCompatibleTypes() {
         return compatibleTypes;
     }
@@ -242,11 +265,17 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
      * @param type The item type to check
      * @return If a certain item type is compatible with this item stat
      */
-    public boolean isCompatible(Type type) {
-        String lower = type.getId().toLowerCase();
-        return type.isSubtype() ? isCompatible(type.getParent())
-                : !compatibleTypes.contains("!" + lower) && (compatibleTypes.contains("all") || compatibleTypes.contains(lower)
-                || compatibleTypes.contains(type.getItemSet().getName().toLowerCase()));
+    public boolean isCompatible(@NotNull Type type) {
+
+        // Special rule for weapons
+        if (type.isWeapon() && compatibleTypes.contains("weapon")) return true;
+
+        // Recursive call with root types
+        if (type.isSubtype()) return isCompatible(type.getParent());
+
+        // Parent item types
+        final String lower = type.getId().toLowerCase();
+        return !compatibleTypes.contains("!" + lower) && (compatibleTypes.contains("all") || compatibleTypes.contains(lower));
     }
 
     public boolean hasValidMaterial(ItemStack item) {

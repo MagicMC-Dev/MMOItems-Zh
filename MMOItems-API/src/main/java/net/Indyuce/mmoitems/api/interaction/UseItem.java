@@ -6,9 +6,9 @@ import io.lumine.mythic.lib.comp.flags.CustomFlag;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.*;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Lute;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Musket;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.CommandData;
@@ -27,11 +27,12 @@ public class UseItem {
 
     protected static final Random RANDOM = new Random();
 
-    public UseItem(Player player, NBTItem nbtItem) {
+    @Deprecated
+    public UseItem(@NotNull Player player, @NotNull NBTItem nbtItem) {
         this(PlayerData.get(player), nbtItem);
     }
 
-    public UseItem(PlayerData playerData, NBTItem nbtItem) {
+    public UseItem(@NotNull PlayerData playerData, @NotNull NBTItem nbtItem) {
         this.player = playerData.getPlayer();
         this.playerData = playerData;
         this.mmoitem = new VolatileMMOItem(nbtItem);
@@ -85,11 +86,9 @@ public class UseItem {
     private void scheduleCommandExecution(CommandData command) {
         String parsed = MythicLib.plugin.getPlaceholderParser().parse(player, command.getCommand());
 
-        if (!command.hasDelay())
-            dispatchCommand(parsed, command.isConsoleCommand(), command.hasOpPerms());
+        if (!command.hasDelay()) dispatchCommand(parsed, command.isConsoleCommand(), command.hasOpPerms());
         else
-            Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> dispatchCommand(parsed, command.isConsoleCommand(), command.hasOpPerms()),
-                    (long) command.getDelay() * 20);
+            Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> dispatchCommand(parsed, command.isConsoleCommand(), command.hasOpPerms()), (long) command.getDelay() * 20);
     }
 
     /**
@@ -116,33 +115,22 @@ public class UseItem {
             } finally {
                 player.setOp(false);
             }
-        } else
-            Bukkit.dispatchCommand(player, parsed);
+        } else Bukkit.dispatchCommand(player, parsed);
     }
 
+    @Deprecated
     public static UseItem getItem(Player player, NBTItem item, String type) {
         return getItem(player, item, Type.get(type));
     }
 
     public static UseItem getItem(@NotNull Player player, @NotNull NBTItem item, @NotNull Type type) {
-        if (type.corresponds(Type.CONSUMABLE))
-            return new Consumable(player, item);
-        if (type.corresponds(Type.SKIN))
-            return new ItemSkin(player, item);
-        if (type.corresponds(Type.GEM_STONE))
-            return new GemStone(player, item);
-        if (type.corresponds(Type.MUSKET))
-            return new Musket(player, item);
-        if (type.corresponds(Type.CROSSBOW))
-            return new Crossbow(player, item);
-        if (type.corresponds(Type.GAUNTLET))
-            return new Gauntlet(player, item);
-        if (type.corresponds(Type.WHIP))
-            return new Whip(player, item);
-        if (type.corresponds(Type.LUTE))
-            return new Lute(player, item);
-        if (type.corresponds(Type.STAFF))
-            return new Staff(player, item);
-        return type.isWeapon() ? new Weapon(player, item) : new UseItem(player, item);
+        final PlayerData playerData = PlayerData.get(player);
+        if (type.corresponds(Type.CONSUMABLE)) return new Consumable(playerData, item);
+        if (type.corresponds(Type.SKIN)) return new ItemSkin(playerData, item);
+        if (type.corresponds(Type.GEM_STONE)) return new GemStone(playerData, item);
+        if (type.corresponds(Type.MUSKET)) return new Musket(playerData, item);
+        if (type.corresponds(Type.LUTE)) return new Lute(playerData, item);
+
+        return type.isWeapon() ? new Weapon(playerData, item) : new UseItem(playerData, item);
     }
 }

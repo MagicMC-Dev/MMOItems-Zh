@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
@@ -28,8 +29,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class GemStone extends UseItem {
-
+    @Deprecated
     public GemStone(Player player, NBTItem item) {
+        super(player, item);
+    }
+
+    public GemStone(PlayerData player, NBTItem item) {
         super(player, item);
     }
 
@@ -60,7 +65,7 @@ public class GemStone extends UseItem {
         // Checks if the gem supports the item type, or the item set, or a weapon
         String appliableTypes = getNBTItem().getString(ItemStats.ITEM_TYPE_RESTRICTION.getNBTPath());
         if (!appliableTypes.equals("") && (!targetType.isWeapon() || !appliableTypes.contains("WEAPON"))
-                && !appliableTypes.contains(targetType.getItemSet().name()) && !appliableTypes.contains(targetType.getId()))
+                && !appliableTypes.contains(targetType.getId()))
             return new ApplyResult(ResultType.NONE);
 
         // Check for success rate

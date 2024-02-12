@@ -409,11 +409,6 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
     public enum CooldownType {
 
         /**
-         * Basic attack cooldown like staffs and lutes
-         */
-        BASIC_ATTACK,
-
-        /**
          * Elemental attacks cooldown
          */
         ELEMENTAL_ATTACK,
@@ -431,12 +426,6 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
          *
          * @see {@link Tool#miningEffects(Block)}
          */
-        BOUNCING_CRACK,
-
-        /**
-         * Special item set attack effects including slashing, piercing and
-         * blunt attack effects
-         */
-        SET_TYPE_ATTACK
+        BOUNCING_CRACK;
     }
 }

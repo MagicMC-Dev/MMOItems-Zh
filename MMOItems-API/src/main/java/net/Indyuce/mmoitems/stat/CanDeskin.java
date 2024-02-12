@@ -20,7 +20,7 @@ import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -103,7 +103,7 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
                 // Try to find the skin item.
                 // This is for backwards compatibility as cases with SKIN subtypes were not handled
                 // in the past, inducing an unfixable data loss for item skins applied onto items
-                @BackwardsCompatibility(version = "unknown") final String skinTypeId = target.getString(ItemSkin.SKIN_TYPE_TAG);
+                @Deprecated final String skinTypeId = target.getString(ItemSkin.SKIN_TYPE_TAG);
                 final Type type = Objects.requireNonNullElse(Type.get(skinTypeId), Type.SKIN);
                 Validate.notNull(type, "找不到应用皮肤的物品类型");
                 final MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(Type.SKIN, skinId);

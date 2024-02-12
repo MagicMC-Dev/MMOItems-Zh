@@ -4,8 +4,8 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
-import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.DeathItemsHandler;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -68,7 +68,6 @@ public class MMOItems extends JavaPlugin {
     private final LoreFormatManager loreManager = new LoreFormatManager();
     private final TemplateManager templateManager = new TemplateManager();
     private final SkillManager skillManager = new SkillManager();
-    private final EntityManager entityManager = new EntityManager();
     private final RecipeManager recipeManager = new RecipeManager();
     private final LayoutManager layoutManager = new LayoutManager();
     private final TypeManager typeManager = new TypeManager();
@@ -111,7 +110,7 @@ public class MMOItems extends JavaPlugin {
         getLogger().log(Level.INFO, "██║╚██╔╝██║██║╚██╔╝██║██║   ██║██║   ██║   ██╔══╝  ██║╚██╔╝██║╚════██║");
         getLogger().log(Level.INFO, "██║ ╚═╝ ██║██║ ╚═╝ ██║╚██████╔╝██║   ██║   ███████╗██║ ╚═╝ ██║███████║");
         getLogger().log(Level.INFO, "╚═╝     ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚═╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚══════╝");
-        getLogger().log(Level.INFO, "INFO   Source: phoenix-dvpmt/mmoitems    VERSION: 6.9.5");
+        getLogger().log(Level.INFO, "INFO   Source: phoenix-dvpmt/mmoitems    VERSION: 6.10");
         getLogger().log(Level.INFO, "       QQ: 3217962725     文件: " + getFile().getName());
         getLogger().log(Level.INFO, "       (禁止倒卖)");
         
@@ -129,7 +128,7 @@ public class MMOItems extends JavaPlugin {
         configManager = new ConfigManager();
 
         statManager.load();
-        typeManager.reload();
+        typeManager.reload(false);
         templateManager.preloadObjects();
 
         PluginUtils.isDependencyPresent("MMOCore", u -> new MMOCoreMMOLoader());
@@ -149,6 +148,8 @@ public class MMOItems extends JavaPlugin {
 
         MMOItemUIFilter.register();
         RecipeTypeListGUI.registerNativeRecipes();
+
+        typeManager.postload();
 
         skillManager.initialize(false);
 
@@ -194,7 +195,6 @@ public class MMOItems extends JavaPlugin {
         // This ones are not implementing Reloadable
         MMOItemReforger.reload();
 
-        Bukkit.getPluginManager().registerEvents(entityManager, this);
         Bukkit.getPluginManager().registerEvents(dropTableManager, this);
 
         // Load Dist module
@@ -419,10 +419,10 @@ public class MMOItems extends JavaPlugin {
      *
      * @param value The player inventory subclass
      * @deprecated Rather than setting this to the only inventory MMOItems will
-     * search equipment within, you must add your inventory to the
-     * handler with <code>getInventory().register()</code>. This method
-     * will clear all other PlayerInventories for now, as to keep
-     * backwards compatibility.
+     *         search equipment within, you must add your inventory to the
+     *         handler with <code>getInventory().register()</code>. This method
+     *         will clear all other PlayerInventories for now, as to keep
+     *         backwards compatibility.
      */
     @Deprecated
     public void setPlayerInventory(PlayerInventory value) {
@@ -457,10 +457,6 @@ public class MMOItems extends JavaPlugin {
 
     public TierManager getTiers() {
         return tierManager;
-    }
-
-    public EntityManager getEntities() {
-        return entityManager;
     }
 
     public DropTableManager getDropTables() {
@@ -499,7 +495,7 @@ public class MMOItems extends JavaPlugin {
         return templateManager;
     }
 
-    public LoreFormatManager getLore(){
+    public LoreFormatManager getLore() {
         return loreManager;
     }
 
@@ -536,9 +532,9 @@ public class MMOItems extends JavaPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will
-     * scale according to the player RPG level if the template has the
-     * 'level-item' option. The item will pick a random tier if the
-     * template has the 'tiered' option
+     *         scale according to the player RPG level if the template has the
+     *         'level-item' option. The item will pick a random tier if the
+     *         template has the 'tiered' option
      */
     @Nullable
     public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, @Nullable PlayerData player) {
@@ -556,9 +552,9 @@ public class MMOItems extends JavaPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will
-     * scale according to the player RPG level if the template has the
-     * 'level-item' option. The item will pick a random tier if the
-     * template has the 'tiered' option
+     *         scale according to the player RPG level if the template has the
+     *         'level-item' option. The item will pick a random tier if the
+     *         template has the 'tiered' option
      */
     @Nullable
     public ItemStack getItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
@@ -575,7 +571,7 @@ public class MMOItems extends JavaPlugin {
      * @param itemLevel The desired item level
      * @param itemTier  The desired item tier, can be null
      * @return Generates an item given an item template with a
-     * specific item level and item tier
+     *         specific item level and item tier
      */
     @Nullable
     public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
@@ -595,7 +591,7 @@ public class MMOItems extends JavaPlugin {
      * @param itemLevel The desired item level
      * @param itemTier  The desired item tier, can be null
      * @return Generates an item given an item template with a
-     * specific item level and item tier
+     *         specific item level and item tier
      */
     @Nullable
     public ItemStack getItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
@@ -610,10 +606,10 @@ public class MMOItems extends JavaPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will be
-     * 0 and the item will have no item tier unless one is specified in
-     * the base item data.
-     * <p></p>
-     * Will return <code>null</code> if such MMOItem does not exist.
+     *         0 and the item will have no item tier unless one is specified in
+     *         the base item data.
+     *         <p></p>
+     *         Will return <code>null</code> if such MMOItem does not exist.
      */
     @Nullable
     public MMOItem getMMOItem(@Nullable Type type, @Nullable String id) {
@@ -622,10 +618,10 @@ public class MMOItems extends JavaPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will be
-     * 0 and the item will have no item tier unless one is specified in
-     * the base item data.
-     * <p></p>
-     * Will return <code>null</code> if such MMOItem does not exist.
+     *         0 and the item will have no item tier unless one is specified in
+     *         the base item data.
+     *         <p></p>
+     *         Will return <code>null</code> if such MMOItem does not exist.
      */
 
     @Nullable
@@ -638,10 +634,10 @@ public class MMOItems extends JavaPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will be
-     * 0 and the item will have no item tier unless one is specified in
-     * the base item data.
-     * <p></p>
-     * Will return <code>null</code> if such MMOItem does not exist.
+     *         0 and the item will have no item tier unless one is specified in
+     *         the base item data.
+     *         <p></p>
+     *         Will return <code>null</code> if such MMOItem does not exist.
      */
     @Nullable
     public ItemStack getItem(@Nullable Type type, @Nullable String id) {

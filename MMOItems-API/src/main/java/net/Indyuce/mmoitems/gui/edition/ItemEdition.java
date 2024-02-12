@@ -13,7 +13,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ItemEdition extends EditionInventory {
     private static final int[] slots = {19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};
@@ -45,7 +45,7 @@ public class ItemEdition extends EditionInventory {
          * the for loop will just let some slots empty
          */
         List<ItemStat> appliable = new ArrayList<>(getEdited().getType().getAvailableStats()).stream()
-                .filter(stat -> stat.hasValidMaterial(getCachedItem()) && !(stat instanceof InternalStat)).toList();
+                .filter(stat -> stat.hasValidMaterial(getCachedItem()) && !(stat instanceof InternalStat)).collect(Collectors.toList());
 
         for (int j = min; j < Math.min(appliable.size(), max); j++) {
             ItemStat stat = appliable.get(j);
@@ -53,7 +53,7 @@ public class ItemEdition extends EditionInventory {
             ItemMeta meta = item.getItemMeta();
             meta.addItemFlags(ItemFlag.values());
             meta.setDisplayName(ChatColor.GREEN + stat.getName());
-            List<String> lore = MythicLib.plugin.parseColors(Arrays.stream(stat.getLore()).map(s -> ChatColor.GRAY + s).toList());
+            List<String> lore = MythicLib.plugin.parseColors(Arrays.stream(stat.getLore()).map(s -> ChatColor.GRAY + s).collect(Collectors.toList()));
             lore.add("");
 
             stat.whenDisplayed(lore, getEventualStatData(stat));

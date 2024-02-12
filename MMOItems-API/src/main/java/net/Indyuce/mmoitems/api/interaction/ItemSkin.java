@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
@@ -19,13 +20,17 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 public class ItemSkin extends UseItem {
+    @Deprecated
     public ItemSkin(Player player, NBTItem item) {
+        super(player, item);
+    }
+
+    public ItemSkin(PlayerData player, NBTItem item) {
         super(player, item);
     }
 
@@ -42,9 +47,9 @@ public class ItemSkin extends UseItem {
         //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Applying onto " + MMOUtils.getDisplayName(target.getItem()));
 
         // Types compatibility check
-        if (getMMOItem().hasData(ItemStats.COMPATIBLE_TYPES)) {
+        if (mmoitem.hasData(ItemStats.COMPATIBLE_TYPES)) {
             //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that TYPE is compatible: ");
-            final List<String> acceptedTypes = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_TYPES)).getList();
+            final List<String> acceptedTypes = ((StringListData) mmoitem.getData(ItemStats.COMPATIBLE_TYPES)).getList();
             if (acceptedTypes.size() > 0 && acceptedTypes.stream().noneMatch(s -> s.equalsIgnoreCase(targetType.getId()))) {
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
                 Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
@@ -54,9 +59,9 @@ public class ItemSkin extends UseItem {
         }
 
         // IDs compatibility check
-        if (getMMOItem().hasData(ItemStats.COMPATIBLE_IDS)) {
+        if (mmoitem.hasData(ItemStats.COMPATIBLE_IDS)) {
             //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that ID is compatible: ");
-            final List<String> acceptedIDs = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_IDS)).getList();
+            final List<String> acceptedIDs = ((StringListData) mmoitem.getData(ItemStats.COMPATIBLE_IDS)).getList();
             final String targetId = target.getString("MMOITEMS_ITEM_ID");
 
             if (acceptedIDs.size() > 0 && acceptedIDs.stream()
@@ -69,9 +74,9 @@ public class ItemSkin extends UseItem {
         }
 
         // Material compatibility check
-        if (getMMOItem().hasData(ItemStats.COMPATIBLE_MATERIALS)) {
+        if (mmoitem.hasData(ItemStats.COMPATIBLE_MATERIALS)) {
             //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that MATERIAL is compatible: ");
-            List<String> acceptedMaterials = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_MATERIALS)).getList();
+            List<String> acceptedMaterials = ((StringListData) mmoitem.getData(ItemStats.COMPATIBLE_MATERIALS)).getList();
 
             if (acceptedMaterials.size() > 0 && acceptedMaterials.stream()
                     .noneMatch(s -> s.equalsIgnoreCase(target.getItem().getType().name()))) {
@@ -93,7 +98,7 @@ public class ItemSkin extends UseItem {
             }
 
         // Apply skin
-        ItemStack item = applySkin(target, getMMOItem());
+        ItemStack item = applySkin(target, mmoitem);
 
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
         Message.SKIN_APPLIED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);

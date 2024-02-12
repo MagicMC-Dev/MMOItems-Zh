@@ -16,6 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class SlashLuteAttack implements LuteAttackHandler {
 
     @Override

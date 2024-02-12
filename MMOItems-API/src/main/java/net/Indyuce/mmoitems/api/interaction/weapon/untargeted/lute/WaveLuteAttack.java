@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Deprecated
 public class WaveLuteAttack implements LuteAttackHandler {
 
     @Override

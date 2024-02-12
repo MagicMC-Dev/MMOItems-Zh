@@ -109,7 +109,7 @@ public class CraftingManager implements Reloadable {
 
 		for (CraftingStation station : stations.values())
 			try {
-				station.postLoad();
+				station.getPostLoadAction().performAction();
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
 						"Could not post-load station '" + station.getId() + "': " + exception.getMessage());

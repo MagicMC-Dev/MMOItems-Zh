@@ -1,18 +1,25 @@
 package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.event.armorequip.ArmorEquipEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.damage.ProjectileAttackMetadata;
+import io.lumine.mythic.lib.entity.ProjectileMetadata;
+import io.lumine.mythic.lib.entity.ProjectileType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.DeathItemsHandler;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.interaction.projectile.ArrowPotionEffectArrayItem;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.DeathDowngrading;
+import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
@@ -24,8 +31,10 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
@@ -119,8 +128,28 @@ public class PlayerListener implements Listener {
                 return;
             }
 
-            MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(EquipmentSlot.fromBukkit(item.getSlot())), event.getEntity(), 1);
+            final ProjectileMetadata proj = ProjectileMetadata.create(playerData.getStats().newTemporary(EquipmentSlot.fromBukkit(item.getSlot())), ProjectileType.TRIDENT, event.getEntity());
+            proj.setSourceItem(nbtItem);
+            proj.setCustomDamage(true);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void registerArrowSpecialEffects(PlayerAttackEvent event) {
+        if (!(event.getAttack() instanceof ProjectileAttackMetadata)) return;
+
+        final ProjectileAttackMetadata projAttack = (ProjectileAttackMetadata) event.getAttack();
+        final @Nullable ProjectileMetadata data = ProjectileMetadata.get(projAttack.getProjectile());
+        if (data == null || data.getSourceItem() == null) return;
+
+        // Apply MMOItems-specific effects
+        applyPotionEffects(data, event.getEntity());
+    }
+
+    private void applyPotionEffects(ProjectileMetadata proj, LivingEntity target) {
+        if (proj.getSourceItem().hasTag("MMOITEMS_ARROW_POTION_EFFECTS"))
+            for (ArrowPotionEffectArrayItem entry : MythicLib.plugin.getJson().parse(proj.getSourceItem().getString("MMOITEMS_ARROW_POTION_EFFECTS"), ArrowPotionEffectArrayItem[].class))
+                target.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(entry.type), entry.duration, entry.level).toEffect());
     }
 
     /**
@@ -129,7 +158,7 @@ public class PlayerListener implements Listener {
      * player cast abilities or attacks with not the correct stats
      *
      * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
+     * method NEEDS some improvement in the future
      */
     @Deprecated
     @EventHandler
@@ -143,7 +172,7 @@ public class PlayerListener implements Listener {
      * player cast abilities or attacks with not the correct stats
      *
      * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
+     * method NEEDS some improvement in the future
      */
     @Deprecated
     @EventHandler

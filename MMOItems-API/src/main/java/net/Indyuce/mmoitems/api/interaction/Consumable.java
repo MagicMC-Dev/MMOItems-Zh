@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ConsumableConsumedEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.util.LoreUpdate;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
 import org.bukkit.Bukkit;
@@ -22,7 +23,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class Consumable extends UseItem {
+
+    @Deprecated
     public Consumable(Player player, NBTItem item) {
+        super(player, item);
+    }
+
+    public Consumable(PlayerData player, NBTItem item) {
         super(player, item);
     }
 

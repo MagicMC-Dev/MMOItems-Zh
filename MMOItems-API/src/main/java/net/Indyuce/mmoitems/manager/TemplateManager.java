@@ -172,7 +172,7 @@ public class TemplateManager implements Reloadable {
 
         try {
             MMOItemTemplate template = new MMOItemTemplate(type, type.getConfigFile().getConfig().getConfigurationSection(id));
-            template.postLoad();
+            template.getPostLoadAction().performAction();
             registerTemplate(template);
             return template;
 
@@ -327,7 +327,7 @@ public class TemplateManager implements Reloadable {
         ffp.log(FriendlyFeedbackCategory.INFORMATION, "Loading item templates, please wait...");
         templates.forEach(template -> {
             try {
-                template.postLoad();
+                template.getPostLoadAction().performAction();
             } catch (IllegalArgumentException exception) {
                 ffp.activatePrefix(true, "Item Templates \u00a78($r" + template.getType().getId() + "\u00a78)");
                 ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not post-load item template '" + template.getId() + "': " + exception.getMessage());

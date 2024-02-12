@@ -11,7 +11,7 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
-import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
+//import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import net.Indyuce.mmoitems.util.LanguageFile;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -138,9 +138,9 @@ public class ConfigManager implements Reloadable {
 
         // Staff spirits
         final LanguageFile attackEffects = new LanguageFile("attack-effects");
-        for (StaffSpirit sp : StaffSpirit.values())
+     /*   for (StaffSpirit sp : StaffSpirit.values())
             sp.setName(attackEffects.computeTranslation("staff-spirit." + sp.name().toLowerCase().replace("_", "-"),
-                    () -> UtilityMethods.caseOnWords(sp.name().toLowerCase().replace("_", " "))));
+                    () -> UtilityMethods.caseOnWords(sp.name().toLowerCase().replace("_", " "))));*/
 
         // Lute attack effects
         for (LuteAttackEffect eff : LuteAttackEffect.values())
@@ -262,11 +262,11 @@ public class ConfigManager implements Reloadable {
     public String getLuteAttackEffectName(LuteAttackEffect effect) {
         return effect.getName();
     }
-
+/*
     @Deprecated
     public String getStaffSpiritName(StaffSpirit spirit) {
         return spirit.getName();
-    }
+    }*/
 
     /**
      * @deprecated See {@link net.Indyuce.mmoitems.api.item.util.LoreUpdate}

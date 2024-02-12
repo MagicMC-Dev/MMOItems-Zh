@@ -18,7 +18,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -193,10 +192,6 @@ public class ItemTypeRestriction extends ItemStat<StringListData, StringListData
 
 		for (Type type : MMOItems.plugin.getTypes().getAll())
 			if (type.getId().equals(format))
-				return true;
-
-		for (TypeSet set : TypeSet.values())
-			if (set.name().equals(format))
 				return true;
 
 		return false;

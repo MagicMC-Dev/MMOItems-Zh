@@ -23,6 +23,12 @@ import java.util.logging.Level;
 public class StatManager {
     private final Map<String, ItemStat<?, ?>> stats = new LinkedHashMap<>();
 
+    /**
+     * TODO refactor with stat categories
+     */
+    @Deprecated
+    private final Map<String, ItemStat<?, ?>> legacyAliases = new HashMap<>();
+
     /*
      * These lists are sets of stats collected when the stats are registered for
      * the first time to make their access easier. Check the classes
@@ -33,11 +39,13 @@ public class StatManager {
     private final List<ConsumableItemInteraction> consumableActions = new ArrayList<>();
     private final List<PlayerConsumable> playerConsumables = new ArrayList<>();
 
+
     /**
      * Load default stats using java reflection, get all public static final
      * fields in the ItemStat and register them as stat instances
+     * <p>
+     * TODO refactor
      */
-    @Deprecated
     public void load() {
         for (Field field : ItemStats.class.getFields())
             try {
@@ -53,9 +61,9 @@ public class StatManager {
 
     /**
      * @see FictiveNumericStat
-     * @deprecated Needs refactor
+     * <p>
+     * TODO refactor
      */
-    @Deprecated
     public void reload(boolean cleanFirst) {
 
         // Clean fictive numeric stats before
@@ -81,10 +89,9 @@ public class StatManager {
 
     /**
      * Load custom stats
-     *
-     * @deprecated Needs refactor
+     * <p>
+     * TODO refactor
      */
-    @Deprecated
     public void loadCustom() {
         ConfigManager.DefaultFile.CUSTOM_STATS.checkFile();
         ConfigFile config = new ConfigFile("custom-stats");
@@ -95,10 +102,9 @@ public class StatManager {
 
     /**
      * Register all MythicLib elements as stats
-     *
-     * @deprecated Needs refactor
+     * <p>
+     * TODO refactor
      */
-    @Deprecated
     public void loadElements() {
         for (ElementStatType type : ElementStatType.values())
             for (Element element : MythicLib.plugin.getElements().getAll())
@@ -154,11 +160,21 @@ public class StatManager {
 
     @Nullable
     public ItemStat<?, ?> get(String id) {
-        ItemStat<?, ?> stat = stats.getOrDefault(id, null);
-        if (stat == null) {
-            stat = numeric.stream().filter(doubleStat -> doubleStat.getId().equals(id)).findFirst().orElse(null);
-        }
-        return stat;
+
+        // Default registry
+        ItemStat<?, ?> stat = stats.get(id);
+        if (stat != null) return stat;
+
+        // Numeric registry (see to-do)
+        stat = numeric.stream().filter(doubleStat -> doubleStat.getId().equals(id)).findFirst().orElse(null);
+        if (stat != null) return stat;
+
+        // Legacy liases
+        stat = legacyAliases.get(id);
+        if (stat != null) return stat;
+
+        // Non existing stat
+        return null;
     }
 
     /**
@@ -189,9 +205,14 @@ public class StatManager {
             return;
         }
 
+        // Main registry
         stats.put(stat.getId(), stat);
 
-        // Custom registries
+        // Register aliases
+        for (String alias : stat.getAliases())
+            legacyAliases.put(alias, stat);
+
+        // Use-case specific registries
         if (stat instanceof DoubleStat && !(stat instanceof GemStoneStat) && stat.isCompatible(Type.GEM_STONE))
             numeric.add((DoubleStat) stat);
         if (stat instanceof ItemRestriction) itemRestriction.add((ItemRestriction) stat);
@@ -244,8 +265,7 @@ public class StatManager {
 
         // Create a new stat instance
         try {
-            ItemStat<?, ?> stat = statClass.getConstructor(String.class, Material.class, String.class, String[].class, String[].class, Material[].class)
-                    .newInstance(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}, new Material[0]);
+            ItemStat<?, ?> stat = statClass.getConstructor(String.class, Material.class, String.class, String[].class, String[].class, Material[].class).newInstance(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}, new Material[0]);
             register(stat);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {

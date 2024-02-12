@@ -1,14 +1,14 @@
 package net.Indyuce.mmoitems.api.event.item;
 
 import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class UntargetedWeaponUseEvent extends PlayerDataEvent implements Cancellable {
-    private final UntargetedWeapon weapon;
+    private final Weapon weapon;
 
     private boolean cancelled;
 
@@ -20,7 +20,7 @@ public class UntargetedWeaponUseEvent extends PlayerDataEvent implements Cancell
      * @param who    Player attacking
      * @param weapon Weapon being used
      */
-    public UntargetedWeaponUseEvent(@NotNull PlayerData who, @NotNull UntargetedWeapon weapon) {
+    public UntargetedWeaponUseEvent(@NotNull PlayerData who, @NotNull Weapon weapon) {
         super(who);
 
         this.weapon = weapon;
@@ -30,7 +30,7 @@ public class UntargetedWeaponUseEvent extends PlayerDataEvent implements Cancell
      * @return The weapon used by the player that fired this event
      */
     @NotNull
-    public UntargetedWeapon getWeapon() {
+    public Weapon getWeapon() {
         return weapon;
     }
 

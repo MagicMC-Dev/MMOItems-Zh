@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.crafting;
 
-import io.lumine.mythic.lib.api.util.PostLoadObject;
+import io.lumine.mythic.lib.util.PostLoadAction;
+import io.lumine.mythic.lib.util.PreloadedObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
@@ -13,12 +14,13 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
 
-public class CraftingStation extends PostLoadObject {
+public class CraftingStation implements PreloadedObject {
     private final String id;
     private final String name;
     private final Layout layout;
@@ -38,8 +40,17 @@ public class CraftingStation extends PostLoadObject {
 
     private CraftingStation parent;
 
+    private final PostLoadAction postLoadAction = new PostLoadAction(config -> {
+        if (!config.contains("parent")) return;
+
+        String id = config.getString("parent").toLowerCase().replace(" ", "-").replace("_", "-");
+        Validate.isTrue(!id.equals(CraftingStation.this.id), "Station cannot use itself as parent");
+        Validate.isTrue(MMOItems.plugin.getCrafting().hasStation(id), "Could not find parent station with ID '" + id + "'");
+        parent = MMOItems.plugin.getCrafting().getStation(id);
+    });
+
     public CraftingStation(String id, FileConfiguration config) {
-        super(config);
+        postLoadAction.cacheConfig(config);
 
         this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
         this.name = config.getString("name", "Unnamed");
@@ -59,8 +70,6 @@ public class CraftingStation extends PostLoadObject {
     }
 
     public CraftingStation(String id, String name, Layout layout, Sound sound, StationItemOptions itemOptions, int maxQueueSize, CraftingStation parent) {
-        super(null);
-
         Validate.notNull(id, "Crafting station ID must not be null");
         Validate.notNull(name, "Crafting station name must not be null");
         Validate.notNull(sound, "Crafting station sound must not be null");
@@ -72,6 +81,12 @@ public class CraftingStation extends PostLoadObject {
         this.itemOptions = itemOptions;
         this.maxQueueSize = maxQueueSize;
         this.parent = parent;
+    }
+
+    @NotNull
+    @Override
+    public PostLoadAction getPostLoadAction() {
+        return postLoadAction;
     }
 
     public String getId() {
@@ -167,16 +182,6 @@ public class CraftingStation extends PostLoadObject {
     public int getMaxPage() {
         int recipes = getRecipes().size();
         return Math.max(1, (int) Math.ceil((double) recipes / getLayout().getRecipeSlots().size()));
-    }
-
-    @Override
-    protected void whenPostLoaded(ConfigurationSection config) {
-        if (config.contains("parent")) {
-            String id = config.getString("parent").toLowerCase().replace(" ", "-").replace("_", "-");
-            Validate.isTrue(!id.equals(this.id), "Station cannot use itself as parent");
-            Validate.isTrue(MMOItems.plugin.getCrafting().hasStation(id), "Could not find parent station with ID '" + id + "'");
-            parent = MMOItems.plugin.getCrafting().getStation(id);
-        }
     }
 
     /*

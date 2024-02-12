@@ -8,6 +8,8 @@ import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.data.ProjectileParticlesData;
@@ -23,14 +25,20 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class Lute extends UntargetedWeapon {
+@Deprecated
+public class Lute extends Weapon implements LegacyWeapon {
+    @Deprecated
     public Lute(Player player, NBTItem item) {
-        super(player, item, UntargetedWeaponType.RIGHT_CLICK);
+        super(player, item);
+    }
+
+    public Lute(PlayerData player, NBTItem item) {
+        super(player, item);
     }
 
     @Override
-    public boolean canAttack(EquipmentSlot slot) {
-        return true;
+    public boolean canAttack(boolean rightClick, EquipmentSlot slot) {
+        return rightClick;
     }
 
     @Override
@@ -40,8 +48,7 @@ public class Lute extends UntargetedWeapon {
         final Vector weight = new Vector(0, -.003 * stats.getStat("NOTE_WEIGHT"), 0);
 
         final @Nullable LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());
-        @Deprecated
-        final SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound());
+        @Deprecated final SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound());
         final @NotNull ProjectileParticlesData projParticle = getNBTItem().hasTag("MMOITEMS_PROJECTILE_PARTICLES") ?
                 new ProjectileParticlesData(getNBTItem().getString("MMOITEMS_PROJECTILE_PARTICLES")) : ProjectileParticlesData.DEFAULT;
 

@@ -1,8 +1,10 @@
 package net.Indyuce.mmoitems.api.item.template;
 
-import io.lumine.mythic.lib.api.util.PostLoadObject;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.util.PostLoadAction;
+import io.lumine.mythic.lib.util.PreloadedObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
@@ -25,7 +27,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class MMOItemTemplate extends PostLoadObject implements ItemReference {
+public class MMOItemTemplate implements ItemReference, PreloadedObject {
     private final Type type;
     private final String id;
     private final int revId;
@@ -42,40 +44,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
     private ModifierGroup modifierGroup;
     private final Set<TemplateOption> options = new HashSet<>();
 
-    /**
-     * Public constructor which can be used to register extra item templates
-     * using other addons or plugins
-     *
-     * @param type The item type of your template
-     * @param id   The template identifier, it's ok if two templates with
-     *             different item types share the same ID
-     */
-    public MMOItemTemplate(Type type, String id) {
-        super(null);
-
-        this.type = type;
-        this.id = id;
-        this.revId = 1;
-    }
-
-    /**
-     * Used to load MMOItem templates from config files
-     *
-     * @param type   The item type of your template
-     * @param config The config file read to load the template
-     */
-    public MMOItemTemplate(Type type, ConfigurationSection config) {
-        super(config);
-        Validate.notNull(config, "Could not load template config");
-
-        this.type = type;
-        this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
-        this.revId = config.getInt("base.revision-id", 1);
-    }
-
-    @Override
-    protected void whenPostLoaded(ConfigurationSection config) {
-
+    private final PostLoadAction postLoadAction = new PostLoadAction(config -> {
         FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
         ffp.activatePrefix(true, getType().getId() + " " + getId());
 
@@ -95,7 +64,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 
         // Read modifiers
         try {
-            modifierGroup = config.contains("modifiers") ? new ModifierGroup(id, config) : null;
+            modifierGroup = config.contains("modifiers") ? new ModifierGroup(getId(), config) : null;
             if (modifierGroup != null) modifierGroup.getPostLoadAction().performAction();
         } catch (Exception exception) {
             ffp.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier group: {0}", exception.getMessage());
@@ -105,10 +74,9 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
         Validate.notNull(config.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find base item data"));
         for (String key : config.getConfigurationSection("base").getKeys(false))
             try {
-                String id = key.toUpperCase().replace("-", "_");
-                Validate.isTrue(MMOItems.plugin.getStats().has(id), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find stat with ID '$i{0}$b'", id));
-
-                ItemStat stat = MMOItems.plugin.getStats().get(id);
+                final String id = UtilityMethods.enumName(key);
+                final ItemStat stat = MMOItems.plugin.getStats().get(id);
+                Validate.notNull(stat, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find stat with ID '$i{0}$b'", id));
                 RandomStatData data = stat.whenInitialized(config.get("base." + key));
                 if (data != null)
                     base.put(stat, data);
@@ -121,6 +89,42 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 
         // Print all failures
         ffp.sendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
+    });
+
+    /**
+     * Public constructor which can be used to register extra item templates
+     * using other addons or plugins
+     *
+     * @param type The item type of your template
+     * @param id   The template identifier, it's ok if two templates with
+     *             different item types share the same ID
+     */
+    public MMOItemTemplate(Type type, String id) {
+        this.type = type;
+        this.id = id;
+        this.revId = 1;
+    }
+
+    /**
+     * Used to load MMOItem templates from config files
+     *
+     * @param type   The item type of your template
+     * @param config The config file read to load the template
+     */
+    public MMOItemTemplate(Type type, ConfigurationSection config) {
+        Validate.notNull(config, "Could not load template config");
+
+        postLoadAction.cacheConfig(config);
+
+        this.type = type;
+        this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
+        this.revId = config.getInt("base.revision-id", 1);
+    }
+
+    @NotNull
+    @Override
+    public PostLoadAction getPostLoadAction() {
+        return postLoadAction;
     }
 
     @NotNull
@@ -281,8 +285,8 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 
     /**
      * @return Attempts to get the crafted amount registered in the Stat.
-     *         <p></p>
-     *         Default is <b>1</b> obviously.
+     * <p></p>
+     * Default is <b>1</b> obviously.
      * @deprecated Don't use this method, the Crafted Amount Stat will be deleted in the near future.
      */
     @Deprecated

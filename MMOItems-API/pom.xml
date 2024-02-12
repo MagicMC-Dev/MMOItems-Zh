@@ -5,7 +5,7 @@
     <parent>
         <artifactId>MMOItems</artifactId>
         <groupId>net.Indyuce</groupId>
-        <version>6.9.5-SNAPSHOT-ZH.dev.1.0.2</version>
+        <version>6.10-SNAPSHOT-ZH.dev.1.0.2</version>
     </parent>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>

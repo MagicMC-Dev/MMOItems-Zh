@@ -12,7 +12,6 @@ import io.lumine.mythic.core.skills.auras.Aura;
 import io.lumine.mythic.bukkit.utils.Events;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.item.SpecialWeaponAttackEvent;
-import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +30,7 @@ import java.util.Optional;
  *
  * @author Gunging
  */
-public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
+public class MMOItemsOnUseAura extends Aura implements ITargetedEntitySkill {
     @NotNull
     PlaceholderString skillName;
     @NotNull
@@ -44,7 +43,7 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
     @NotNull
     final ArrayList<UseItemTypes> auraWeapons = new ArrayList<>();
 
-    public MMOItemsOnShootAura(SkillExecutor manager, File file, String line, MythicLineConfig mlc) {
+    public MMOItemsOnUseAura(SkillExecutor manager, File file, String line, MythicLineConfig mlc) {
         super(manager, file, line, mlc);
 
         skillName = mlc.getPlaceholderString(new String[]{"skill", "s", "ondamagedskill", "ondamaged", "od", "onhitskill", "onhit", "oh", "meta", "m", "mechanics", "$", "()"}, "skill not found");
@@ -109,7 +108,7 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
             caster = new GenericCaster(target);
         }
 
-        new MMOItemsOnShootAura.Tracker(caster, data, target);
+        new MMOItemsOnUseAura.Tracker(caster, data, target);
         return SkillResult.SUCCESS;
     }
 
@@ -169,7 +168,7 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
                 }
 
             }));
-            this.executeAuraSkill(MMOItemsOnShootAura.this.onStartSkill, this.skillMetadata);
+            this.executeAuraSkill(MMOItemsOnUseAura.this.onStartSkill, this.skillMetadata);
         }
     }
 
@@ -223,12 +222,13 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
     }
 
     enum UseItemTypes {
-        CROSSBOW(Crossbow.class),
-        GAUNTLET(Gauntlet.class),
+      //  CROSSBOW(Crossbow.class),
+       // GAUNTLET(Gauntlet.class),
         LUTE(Lute.class),
         MUSKET(Musket.class),
-        STAFF(Staff.class),
-        WHIP(Whip.class);
+     //   STAFF(Staff.class),
+       // WHIP(Whip.class);
+        ;
 
         /**
          * @return Class to use InstanceOf and identify a weapon.

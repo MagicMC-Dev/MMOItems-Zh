@@ -52,7 +52,6 @@ default-item-capacity:
 default:
     attack-speed: 0.67
     range: 16
-    blunt-rating: 33
     recoil: 0.1
 
 # 更改此选项时请重启服务器

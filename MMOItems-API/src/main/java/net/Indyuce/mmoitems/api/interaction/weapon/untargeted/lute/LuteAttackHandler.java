@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
+@Deprecated
 public interface LuteAttackHandler {
     static final Random RANDOM = new Random();
 

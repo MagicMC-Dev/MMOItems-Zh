@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.item.template;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.util.PostLoadAction;
-import io.lumine.mythic.lib.util.PreloadedObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
@@ -22,10 +22,9 @@ public class TemplateModifier extends ModifierNode {
         Validate.notNull(config.getConfigurationSection("stats"), "Could not find base item data");
         for (String key : config.getConfigurationSection("stats").getKeys(false))
             try {
-                String id = key.toUpperCase().replace("-", "_");
-                Validate.isTrue(MMOItems.plugin.getStats().has(id), "Could not find stat with ID '" + id + "'");
-
-                ItemStat stat = MMOItems.plugin.getStats().get(id);
+                final String statId = UtilityMethods.enumName(key);
+                final ItemStat stat = MMOItems.plugin.getStats().get(statId);
+                Validate.notNull(stat, "Could not find stat with ID '" + statId + "'");
                 TemplateModifier.this.data.put(stat, stat.whenInitialized(config.get("stats." + key)));
             } catch (IllegalArgumentException exception) {
                 MMOItems.plugin.getLogger().log(Level.INFO, "An error occurred while trying to load modifier node " + getId() + ": " + exception.getMessage());

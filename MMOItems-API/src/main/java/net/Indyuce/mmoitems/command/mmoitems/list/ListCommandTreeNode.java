@@ -12,7 +12,6 @@ public class ListCommandTreeNode extends CommandTreeNode {
 
 		addChild(new AbilityCommandTreeNode(this));
 		addChild(new LuteAttackCommandTreeNode(this));
-		addChild(new StaffSpiritCommandTreeNode(this));
 		addChild(new TypeCommandTreeNode(this));
 	}
 
@@ -21,7 +20,6 @@ public class ListCommandTreeNode extends CommandTreeNode {
 		sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " MMOItems: lists "
 				+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list type " + ChatColor.WHITE + "shows all item types (sword, axe...)");
-		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list spirit " + ChatColor.WHITE + "shows all available staff spirits");
 		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list lute " + ChatColor.WHITE + "shows all available lute attack effects");
 		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list ability " + ChatColor.WHITE + "shows all available abilities");
 		if (sender instanceof Player) {

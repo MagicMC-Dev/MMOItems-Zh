@@ -2,7 +2,7 @@
 # QQ: 3217962725
 FIGHTING_GAUNTLETS:
   base:
-    material: IRON_HORSE_ARMOR
+    material: IRON_SHOVEL
     lore:
       - §7当你厌倦挥舞剑时，
       - §e这是个好主意！

@@ -35,7 +35,6 @@ DUAL_LONGSWORD:
     perm-effects:
       SPEED: 1.0
       SLOW: 1.0
-    item-particles: {}
     ability:
       ability1:
         type: HOLY_MISSILE

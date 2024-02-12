@@ -39,7 +39,6 @@ QUICKCASTER_CATALYST:
     cooldown-reduction: 25.0
     skill-damage: 15.0
     max-mana: 5.0
-    mana-regeneration: 1.0
     required-class:
       - Mage
     required-level: 5.0

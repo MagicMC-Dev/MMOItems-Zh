@@ -411,7 +411,6 @@ YANISDARK_SWORD:
     enchants:
       fortune: 5.0
       looting: 5.0
-    additional-experience: 30.0
     element:
       lightness:
         damage: 30.0

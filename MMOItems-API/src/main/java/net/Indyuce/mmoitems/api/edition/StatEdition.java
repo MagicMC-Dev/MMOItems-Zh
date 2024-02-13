@@ -45,7 +45,7 @@ public class StatEdition implements Edition {
 		inv.getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
 		for (String line : message)
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.translateAlternateColorCodes('&', line));
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "输入 'cancel' 取消编辑");
 
 		// Default chat edition feature
 		new ChatEdition(this);

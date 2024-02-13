@@ -332,7 +332,7 @@ public class MMOItems extends JavaPlugin {
      * plugins in the installed plugin list.
      */
     public void findRpgPlugins() {
-        Validate.isTrue(rpgPlugins.isEmpty(), "RPG 挂钩已经计算出来");
+        Validate.isTrue(rpgPlugins.isEmpty(), "RPG 挂钩已成功计算");
 
         // Default hook
         rpgPlugins.add(new DefaultHook());
@@ -380,7 +380,7 @@ public class MMOItems extends JavaPlugin {
             HandlerList.unregisterAll((Plugin) getMainRPG());
 
         rpgPlugins.add(0, handler);
-        getLogger().log(Level.INFO, "正在使用 " + handler.getClass().getSimpleName() + " 作为 RPG 提供商");
+        getLogger().log(Level.INFO, "正在使用 " + handler.getClass().getSimpleName() + " 作为 RPG 提供");
 
         // Register new events
         if (handler instanceof Listener && isEnabled())

@@ -218,7 +218,7 @@ public abstract class EditionInventory extends PluginInventory {
         if (displaysBack) {
             ItemStack back = new ItemStack(Material.BARRIER);
             ItemMeta backMeta = back.getItemMeta();
-            backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + "返回");
+            backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " 返回");
             back.setItemMeta(backMeta);
 
             inventory.setItem(6, back);

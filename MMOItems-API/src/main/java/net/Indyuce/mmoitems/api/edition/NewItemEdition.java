@@ -24,8 +24,8 @@ public class NewItemEdition implements Edition {
         inv.getPlayer().closeInventory();
 
         inv.getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Write in the chat, the id of the new item.");
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "在聊天中输入新物品的 ID");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "输入 'cancel' 取消编辑");
 
         // Default chat edition feature
         new ChatEdition(this);

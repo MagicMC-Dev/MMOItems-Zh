@@ -31,7 +31,7 @@ public class ItemEdition extends EditionInventory {
 
     @Override
     public String getName() {
-        return "Item Edition: " + getEdited().getId();
+        return "编辑物品: " + getEdited().getId();
     }
 
     @Override

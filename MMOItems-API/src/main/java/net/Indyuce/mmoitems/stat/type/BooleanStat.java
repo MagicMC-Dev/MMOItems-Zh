@@ -145,8 +145,8 @@ public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "否");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可切换该值");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击选择有此选项的概率");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击可切换该值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击选择有此选项的概率");
 	}
 
 	@NotNull

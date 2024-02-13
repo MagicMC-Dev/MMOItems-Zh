@@ -74,8 +74,8 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<ParticleData> statData) {
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击以设置项目粒子");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击清除");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击以设置项目粒子");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击清除");
 	}
 
 	@NotNull

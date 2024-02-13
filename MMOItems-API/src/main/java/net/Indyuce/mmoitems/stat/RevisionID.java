@@ -94,8 +94,8 @@ public class RevisionID extends ItemStat<NumericStatFormula, DoubleData> impleme
 			lore.add(ChatColor.GRAY + "当前修改 ID: " + ChatColor.GREEN + "1");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可增加该值");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可减小该值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击可增加该值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击可减小该值");
 	}
 
 	@NotNull

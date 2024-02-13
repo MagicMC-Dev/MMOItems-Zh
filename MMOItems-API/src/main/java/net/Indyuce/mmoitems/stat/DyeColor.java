@@ -73,8 +73,8 @@ public class DyeColor extends ItemStat<ColorData, ColorData> {
 	public void whenDisplayed(List<String> lore, Optional<ColorData> statData) {
 		lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + statData.get().toString() : ChatColor.RED + "None"));
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除染料颜色");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击进行选择");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击以删除染料颜色");
 	}
 
 	@NotNull

@@ -104,8 +104,8 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以添加效果");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个效果");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 单击以添加效果");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击以删除最后一个效果");
 	}
 
 	@NotNull

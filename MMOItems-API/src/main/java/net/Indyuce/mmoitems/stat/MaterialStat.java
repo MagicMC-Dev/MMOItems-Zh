@@ -76,8 +76,8 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 						: ChatColor.RED + "None"));
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可更改此值");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除该值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击可更改此值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击可删除该值");
 	}
 
 	@NotNull

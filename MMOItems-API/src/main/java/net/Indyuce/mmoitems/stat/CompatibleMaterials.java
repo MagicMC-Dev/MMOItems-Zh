@@ -88,8 +88,8 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
             lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + " 与任何材料兼容");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以添加新材料");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个材料");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " 单击以添加新材料");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击以删除最后一个材料");
     }
 
     @NotNull

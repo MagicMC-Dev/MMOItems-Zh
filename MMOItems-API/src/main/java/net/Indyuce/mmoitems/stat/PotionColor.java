@@ -88,8 +88,8 @@ public class PotionColor extends ItemStat<ColorData, ColorData> {
 		lore.add(statData.isPresent() ? ChatColor.GREEN + statData.get().toString() : ChatColor.RED + "Uncolored");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除药水颜色");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击进行选择");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击以删除药水颜色");
 	}
 
 	@NotNull

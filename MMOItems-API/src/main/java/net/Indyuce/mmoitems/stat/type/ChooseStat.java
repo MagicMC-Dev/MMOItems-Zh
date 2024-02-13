@@ -100,8 +100,8 @@ public abstract class ChooseStat extends StringStat {
             lore.add(ChatColor.GRAY + " " + definition);
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可返回默认值");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可循环显示可用选项: ");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击可返回默认值");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击可循环显示可用选项: ");
         for (StatChoice existing : choices) {
 
             // Is it the one?

@@ -102,8 +102,8 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击可访问声音编辑菜单");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除所有自定义声音");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 单击可访问声音编辑菜单");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击可删除所有自定义声音");
 	}
 
 	@Override

@@ -118,8 +118,8 @@ public class ItemTypeRestriction extends ItemStat<StringListData, StringListData
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + " 与任何类型兼容");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击可添加支持的物品类型/集");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个元素");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 单击可添加支持的物品类型/集");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击以删除最后一个元素");
 	}
 
 	@Override public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {

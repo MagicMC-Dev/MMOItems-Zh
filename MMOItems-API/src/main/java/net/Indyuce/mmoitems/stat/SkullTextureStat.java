@@ -53,8 +53,8 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
     public void whenDisplayed(List<String> lore, Optional<SkullTextureData> statData) {
         lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + "提供纹理值 " : ChatColor.RED + "None"));
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可更改此值");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除此值");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击可更改此值");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击可删除此值");
     }
 
     @Override

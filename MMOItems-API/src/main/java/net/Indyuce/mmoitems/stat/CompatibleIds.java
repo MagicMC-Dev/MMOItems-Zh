@@ -77,8 +77,8 @@ public class CompatibleIds extends ItemStat<StringListData, StringListData> {
             lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + " 与任何物品兼容");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以添加新 ID");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个 ID");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " 单击以添加新 ID");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击以删除最后一个 ID");
     }
 
     @NotNull

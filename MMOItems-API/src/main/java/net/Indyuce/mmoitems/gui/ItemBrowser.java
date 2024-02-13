@@ -90,7 +90,7 @@ public class ItemBrowser extends PluginInventory {
                 AdventureUtils.setDisplayName(meta, String.format("&a%s&8 (点击浏览)", currentType.getName()));
                 meta.addItemFlags(ItemFlag.values());
                 List<String> lore = new ArrayList<>();
-                lore.add(String.format("&7&o当前%s %s &7%s 个物品.", items == 1 ? "该类型有" : "此类型有", items < 1 ? "&c&o没" : "&6&o" + items, items == 1 ? "" : ""));
+                lore.add(String.format("&7&o当前%s %s &7%s 物品.", items == 1 ? "该类型" : "此类型", items < 1 ? "&c&o没有" : "&6&o有" + items, items == 1 ? "" : ""));
                 AdventureUtils.setLore(meta, lore);
                 item.setItemMeta(meta);
 
@@ -160,7 +160,7 @@ public class ItemBrowser extends PluginInventory {
 
         ItemStack back = new ItemStack(Material.ARROW);
         ItemMeta backMeta = back.getItemMeta();
-        backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " 返回");
+        backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + "返回");
         back.setItemMeta(backMeta);
 
         ItemStack create = new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial());
@@ -286,8 +286,8 @@ public class ItemBrowser extends PluginInventory {
 
                 // Editing lore?
             } else {
-                lore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 左键单击即可获得该物品");
-                lore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 右键单击可编辑此物品");
+                lore.add(ChatColor.YELLOW + AltChar.smallListDash + " 左键单击即可获得该物品");
+                lore.add(ChatColor.YELLOW + AltChar.smallListDash + " 右键单击可编辑此物品");
             }
 
             meta.setLore(lore);
@@ -346,7 +346,7 @@ public class ItemBrowser extends PluginInventory {
             } else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "上一页")) {
                 page--;
                 open();
-            } else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " 返回"))
+            } else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + "返回"))
                 new ItemBrowser(getPlayer()).open();
 
             else if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "取消删除")) {

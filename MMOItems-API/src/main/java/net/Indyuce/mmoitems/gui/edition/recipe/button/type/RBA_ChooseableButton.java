@@ -94,8 +94,8 @@ public abstract class RBA_ChooseableButton extends RecipeButtonAction {
         addedDefinitions.add("\u00a77当前值:\u00a73 " + current);
         addedDefinitions.addAll(SilentNumbers.chop(getChooseableDefinition(current), 50, "  \u00a7b\u00a7o"));
         addedDefinitions.add("");
-        addedDefinitions.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可返回默认值");
-        addedDefinitions.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可循环选择选项:");
+        addedDefinitions.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击可返回默认值");
+        addedDefinitions.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击可循环选择选项:");
         for (String str : getChooseableList()) {
 
             // Is it the one?

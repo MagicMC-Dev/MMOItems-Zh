@@ -100,7 +100,7 @@ public abstract class RBA_BooleanButton extends RecipeButtonAction {
         return RecipeEditorGUI.addLore(getBooleanButton().clone(),
                 SilentNumbers.toArrayList(
                         "", "\u00a77当前值: " + input, "",
-                        ChatColor.YELLOW + AltChar.listDash + "► 右键单击​​重置 \u00a78(为\u00a74 FALSE\u00a78)\u00a7e",
-                        ChatColor.YELLOW + AltChar.listDash + "► 左键单击可切换此选项" ));
+                        ChatColor.YELLOW + AltChar.listDash + " 右键单击​​重置 \u00a78(为\u00a74 FALSE\u00a78)\u00a7e",
+                        ChatColor.YELLOW + AltChar.listDash + " 左键单击可切换此选项" ));
     }
 }

@@ -77,6 +77,6 @@ public class RBA_InputOutput extends RecipeButtonAction {
 
         // Copy and send
         return RecipeEditorGUI.addLore(button.clone(), SilentNumbers.toArrayList("\u00a77当前正在展示: " + input, "",
-                ChatColor.YELLOW + AltChar.listDash + "► 左键单击切换模式" ));
+                ChatColor.YELLOW + AltChar.listDash + " 左键单击切换模式" ));
     }
 }

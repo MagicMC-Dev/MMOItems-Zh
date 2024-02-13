@@ -208,17 +208,17 @@ public abstract class EditionInventory extends PluginInventory {
         getMeta.setDisplayName(ChatColor.GREEN + AltChar.fourEdgedClub + "获取物品!" + AltChar.fourEdgedClub);
         List<String> getLore = new ArrayList<>();
         getLore.add(ChatColor.GRAY + "");
-        getLore.add(ChatColor.GRAY + "您也可以使用 /mi give" + template.getType().getId() + " " + template.getId());
+        getLore.add(ChatColor.GRAY + "您也可以使用 /mi give " + template.getType().getId() + " " + template.getId());
         getLore.add(ChatColor.GRAY + "");
-        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 左键点击获取物品");
-        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 右键点击可重新调整其属性状态");
+        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + " 左键点击获取物品");
+        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + " 右键点击可重新调整其属性状态");
         getMeta.setLore(getLore);
         get.setItemMeta(getMeta);
 
         if (displaysBack) {
             ItemStack back = new ItemStack(Material.BARRIER);
             ItemMeta backMeta = back.getItemMeta();
-            backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " 返回");
+            backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + "返回");
             back.setItemMeta(backMeta);
 
             inventory.setItem(6, back);

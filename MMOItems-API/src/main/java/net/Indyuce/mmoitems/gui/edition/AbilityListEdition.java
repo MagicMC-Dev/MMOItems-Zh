@@ -78,8 +78,8 @@ public class AbilityListEdition extends EditionInventory {
 				if (check)
 					abilityItemLore.add("");
 
-				abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行编辑");
-				abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击即可删除");
+				abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击进行编辑");
+				abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击即可删除");
 				abilityItemMeta.setLore(abilityItemLore);
 				abilityItem.setItemMeta(abilityItemMeta);
 

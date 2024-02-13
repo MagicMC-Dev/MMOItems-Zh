@@ -87,7 +87,7 @@ public abstract class RecipeEditorGUI extends EditionInventory {
 
     @Override
     public String getName() {
-        return "Edit " + getRecipeRegistry().getRecipeTypeName() + " Recipe";
+        return "编辑 " + getRecipeRegistry().getRecipeTypeName() + " 配方";
     }
 
     // Button Bar Buttons

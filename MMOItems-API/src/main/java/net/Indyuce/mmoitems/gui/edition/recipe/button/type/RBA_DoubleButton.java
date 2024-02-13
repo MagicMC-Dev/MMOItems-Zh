@@ -139,7 +139,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
         return RecipeEditorGUI.addLore(getDoubleButton().clone(),
                 SilentNumbers.toArrayList(
                         "", "\u00a77当前值: " + getValue(), "",
-                        ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置\u00a78(至\u00a74" + getDefaultValue() + "\u00a78)\u00a7e.",
-                        ChatColor.YELLOW + AltChar.listDash + "► 左键单击可切换此选项" ));
+                        ChatColor.YELLOW + AltChar.listDash + " 右键单击重置\u00a78(至\u00a74" + getDefaultValue() + "\u00a78)\u00a7e.",
+                        ChatColor.YELLOW + AltChar.listDash + " 左键单击可切换此选项" ));
     }
 }

@@ -56,7 +56,7 @@ public class RevisionInventory extends EditionInventory {
                     , 40, "\u00a77")).build();
 
             enchantments = ItemFactory.of(Material.EXPERIENCE_BOTTLE).name("\u00a7b附魔").lore(SilentNumbers.chop(
-                    "这保留了升级中未考虑的特殊结界或宝石 (可能是由玩家添加的 ) "
+                    "这保留了升级中未考虑的特殊附魔或宝石 (可能是由玩家添加的 ) "
                     , 40, "\u00a77")).build();
 
             upgrades = ItemFactory.of(Material.NETHER_STAR).name("\u00a7a升级").lore(SilentNumbers.chop(
@@ -64,7 +64,7 @@ public class RevisionInventory extends EditionInventory {
                     , 40, "\u00a77")).build();
 
             gemstones = ItemFactory.of(Material.EMERALD).name("\u00a7e宝石").lore(SilentNumbers.chop(
-                    "更新时该物品会保留其宝石吗？  (请注意, 这会允许宝石溢出 -即使您减少了宝石插槽, 也会保留所有旧宝石 ) "
+                    "更新时该物品会保留其宝石吗？  (请注意, 这会允许宝石溢出, 即使您减少了宝石插槽, 也会保留所有旧宝石 ) "
                     , 40, "\u00a77")).build();
 
             soulbind = ItemFactory.of(Material.ENDER_EYE).name("\u00a7c灵魂绑定").lore(SilentNumbers.chop(
@@ -141,7 +141,7 @@ public class RevisionInventory extends EditionInventory {
                 if (enable != null) {
 
                     // Add mentioning if enabled
-                    inventory.setItem(i, addLore(which, "", "\u00a78启用 (在配置中? \u00a76" + enable.toString()));
+                    inventory.setItem(i, addLore(which, "", "\u00a78启用 (在配置中)? \u00a76" + enable.toString()));
 
                 // If ID is enabled
                 } else if (id != null) {

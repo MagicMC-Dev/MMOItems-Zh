@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class ActionLeftClick extends StringStat {
     public ActionLeftClick() {
-        super("ON_LEFT_CLICK", Material.COMMAND_BLOCK_MINECART, "Left Click Action", new String[]{"ID of skill ran when left clicking. When used,", "The item will naturally apply item costs like", "mana, stamina, cooldown. This option overrides the", "script provided by the item type."}, new String[]{"weapon"});
+        super("ON_LEFT_CLICK", Material.COMMAND_BLOCK_MINECART, "左键活动", new String[]{"左键时运行的技能ID。在使用时，", "物品将自然应用项目成本，如法力、耐力和冷却。", "此选项将覆盖物品类型提供的脚本。"}, new String[]{"weapon"});
 
         // Staff spirit set as alias
         setAliases(LEGACY_ID);
@@ -29,7 +29,7 @@ public class ActionLeftClick extends StringStat {
         MythicLib.plugin.getSkills().getHandlerOrThrow(format);
         inv.getEditedSection().set(getPath(), format);
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to '" + format + "'");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "成功设置为 '" + format + "'");
     }
 
     @Override

@@ -1160,7 +1160,7 @@ public class StatHistory {
                 }
             }
 
-            MMOItems.print(null, "\u00a7d++ 修改器", null);
+            MMOItems.print(null, "\u00a7d++ 修饰符", null);
             for (UUID ui : getAllModifiers()) {
                 StatData sd = getModifiersBonus(ui);
                 if (!(sd instanceof StringListData)) {
@@ -1192,7 +1192,7 @@ public class StatHistory {
                 MMOItems.print(null, "\u00a7e ++\u00a77 " + sd, null);
             }
 
-            MMOItems.print(null, "\u00a7d-- 修改器", null);
+            MMOItems.print(null, "\u00a7d-- 修饰符", null);
             for (UUID ui : getAllModifiers()) {
                 StatData sd = getModifiersBonus(ui);
                 if (sd == null) {

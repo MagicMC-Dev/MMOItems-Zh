@@ -138,11 +138,11 @@ public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 
 		if (statData.isPresent()) {
 			final double chance = statData.get().getChance();
-			lore.add(ChatColor.GRAY + "当前值: " + (chance >= 1 ? ChatColor.GREEN + "是"
-					: chance <= 0 ? ChatColor.RED + "False" : ChatColor.GREEN + MythicLib.plugin.getMMOConfig().decimal.format(chance * 100) + "% Chance"));
+			lore.add(ChatColor.GRAY + "当前值: " + (chance >= 1 ? ChatColor.GREEN + "Ture"
+					: chance <= 0 ? ChatColor.RED + "False" : ChatColor.GREEN + MythicLib.plugin.getMMOConfig().decimal.format(chance * 100) + "%"));
 
 		} else
-			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "否");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "False");
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击可切换该值");

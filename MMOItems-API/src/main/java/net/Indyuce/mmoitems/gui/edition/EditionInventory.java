@@ -205,7 +205,7 @@ public abstract class EditionInventory extends PluginInventory {
         ItemStack get = new ItemStack(Material.CHEST);
         ItemMeta getMeta = get.getItemMeta();
         getMeta.addItemFlags(ItemFlag.values());
-        getMeta.setDisplayName(ChatColor.GREEN + AltChar.fourEdgedClub + "获取物品!" + AltChar.fourEdgedClub);
+        getMeta.setDisplayName(ChatColor.GREEN + AltChar.fourEdgedClub + " 获取物品! " + AltChar.fourEdgedClub);
         List<String> getLore = new ArrayList<>();
         getLore.add(ChatColor.GRAY + "");
         getLore.add(ChatColor.GRAY + "您也可以使用 /mi give " + template.getType().getId() + " " + template.getId());

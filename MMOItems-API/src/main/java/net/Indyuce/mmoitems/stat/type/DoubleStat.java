@@ -317,7 +317,7 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
         if (statData.isPresent()) {
             NumericStatFormula data = statData.get();
             if (data.isUniform()) {
-                lore.add(ChatColor.GRAY + "Uniform: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMin()) + ChatColor.GRAY + " -> " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMax()));
+                lore.add(ChatColor.GRAY + "更改: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMin()) + ChatColor.GRAY + " -> " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMax()));
             } else {
                 lore.add(ChatColor.GRAY + "基础值: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getBase())
                         + (data.getScale() != 0 ? ChatColor.GRAY + " (+" + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getScale()) + ChatColor.GRAY + "/Lvl)" : ""));
@@ -325,9 +325,9 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
                     lore.add(ChatColor.GRAY + "速度: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getSpread() * 100) + "%" + ChatColor.GRAY + " (Max: "
                             + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMaxSpread() * 100) + "%" + ChatColor.GRAY + ")");
                 if (data.hasMin())
-                    lore.add(ChatColor.GRAY + "Min: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMin()));
+                    lore.add(ChatColor.GRAY + "最小: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMin()));
                 if (data.hasMax())
-                    lore.add(ChatColor.GRAY + "Max: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMax()));
+                    lore.add(ChatColor.GRAY + "最大: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMax()));
             }
         } else
             lore.add(ChatColor.GRAY + "当前值: " + ChatColor.GREEN + "---");

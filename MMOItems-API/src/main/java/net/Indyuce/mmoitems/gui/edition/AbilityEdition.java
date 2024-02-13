@@ -103,7 +103,7 @@ public class AbilityEdition extends EditionInventory {
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
 				modifierItemMeta.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
 				List<String> modifierItemLore = new ArrayList<>();
-				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "这是一个技能修改器更改此值");
+				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "这是一个技能修饰符更改此值");
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "可自定义技能的伤害冷却等等.");
 				modifierItemLore.add("");
 
@@ -131,7 +131,7 @@ public class AbilityEdition extends EditionInventory {
 
 		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
 		ItemMeta glassMeta = glass.getItemMeta();
-		glassMeta.setDisplayName(ChatColor.RED + "- 没有修改器 -");
+		glassMeta.setDisplayName(ChatColor.RED + "- 无修饰符 -");
 		glass.setItemMeta(glassMeta);
 
 		while (n < slots.length)

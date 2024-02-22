@@ -84,7 +84,7 @@ public class CommandListEdition extends EditionInventory {
 		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
 			return;
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "创建命令...")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "创建一个命令...")) {
 			new StatEdition(this, ItemStats.COMMANDS).enable("在聊天中输入您要添加的命令", "", "要添加延迟, 请使用" + ChatColor.RED + "-d:<delay>",
 					"要使命令通过控制台自行转换, 请使用" + ChatColor.RED + "-c", "要使命令具有 OP 权限, 请使用" + ChatColor.RED + "-op", "",
 					ChatColor.YELLOW + "例如: -d:10.3 -op bc Hello, 这是一个测试命令");

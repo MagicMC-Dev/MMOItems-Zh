@@ -40,7 +40,7 @@ public class UpgradingEdition extends EditionInventory {
 
 			ItemStack workbenchItem = new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial());
 			ItemMeta workbenchItemMeta = workbenchItem.getItemMeta();
-			workbenchItemMeta.setDisplayName(ChatColor.GREEN + "仅在工作台升级?");
+			workbenchItemMeta.setDisplayName(ChatColor.GREEN + "仅在工作台升级");
 			List<String> workbenchItemLore = new ArrayList<>();
 			workbenchItemLore.add(ChatColor.GRAY + "开启后, 玩家必须使用制作");
 			workbenchItemLore.add(ChatColor.GRAY + "站配方才能升级他们的武器");
@@ -72,7 +72,7 @@ public class UpgradingEdition extends EditionInventory {
 			int max = getEditedSection().getInt("upgrade.max");
 			ItemStack maxItem = new ItemStack(Material.BARRIER);
 			ItemMeta maxItemMeta = maxItem.getItemMeta();
-			maxItemMeta.setDisplayName(ChatColor.GREEN + "最大升级数");
+			maxItemMeta.setDisplayName(ChatColor.GREEN + "最大升级次数");
 			List<String> maxItemLore = new ArrayList<>();
 			maxItemLore.add(ChatColor.GRAY + "你的物品可获得的最大升级次数");
 			maxItemLore.add(ChatColor.GRAY + "（配方或消耗品）");
@@ -171,7 +171,7 @@ public class UpgradingEdition extends EditionInventory {
 		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
 			return;
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "成功机率")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "升级成功机率")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
 				new StatEdition(this, ItemStats.UPGRADE, "rate").enable("在聊天栏中输入您想要的成功率.");
 
@@ -182,7 +182,7 @@ public class UpgradingEdition extends EditionInventory {
 			}
 		}
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "最大升级数")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "最大升级次数")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
 				new StatEdition(this, ItemStats.UPGRADE, "max").enable("在聊天栏中输入您想要的次数(整数).");
 
@@ -226,7 +226,7 @@ public class UpgradingEdition extends EditionInventory {
 			}
 		}
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "仅通过工作台升级?")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "仅在工作台升级")) {
 			boolean bool = !getEditedSection().getBoolean("upgrade.workbench");
 			getEditedSection().set("upgrade.workbench", bool);
 			registerTemplateEdition();
@@ -234,7 +234,7 @@ public class UpgradingEdition extends EditionInventory {
 					+ (bool ? "您的物品现在必须通过工作台配方升级." : "您的物品现在可以使用消耗品升级."));
 		}
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "升级失败时销毁?")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "升级失败时销毁物品")) {
 			boolean bool = !getEditedSection().getBoolean("upgrade.destroy");
 			getEditedSection().set("upgrade.destroy", bool);
 			registerTemplateEdition();

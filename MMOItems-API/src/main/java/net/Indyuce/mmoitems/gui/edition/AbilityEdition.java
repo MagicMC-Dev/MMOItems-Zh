@@ -173,7 +173,7 @@ public class AbilityEdition extends EditionInventory {
 			return;
 		}
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "触发器")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "触发器(具体看wiki)")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				new StatEdition(this, ItemStats.ABILITIES, configKey, "mode").enable();
 

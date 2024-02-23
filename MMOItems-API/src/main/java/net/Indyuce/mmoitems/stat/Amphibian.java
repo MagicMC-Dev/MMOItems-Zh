@@ -186,7 +186,7 @@ public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneSt
             }
         }
 
-        //BKK//MMOItems. Log("Total: \u00a7e" + ret.size() + "\u00a77 blocks.");
+        //BKK//MMOItems. Log("Tot: \u00a7e" + ret.size() + "\u00a77 blocks.");
         return ret;
     }
 }

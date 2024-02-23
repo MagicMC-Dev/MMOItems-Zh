@@ -37,6 +37,6 @@ public class MMOItemsBukkit {
         if (MythicLib.plugin.hasProfiles())
             Bukkit.getPluginManager().registerEvents(new ProfileSupportListener(), plugin);
 
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);
+        Bukkit.getScheduler().runTaskTimer(plugin, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).timedRunnable()), 100, 20);
     }
 }

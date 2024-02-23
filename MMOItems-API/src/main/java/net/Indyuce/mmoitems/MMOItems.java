@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.util.MMOPlugin;
 import io.lumine.mythic.lib.version.SpigotPlugin;
 import net.Indyuce.mmoitems.api.DeathItemsHandler;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -49,7 +50,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,7 +60,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
-public class MMOItems extends JavaPlugin {
+public class MMOItems extends MMOPlugin {
     public static MMOItems plugin;
 
     private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
@@ -273,7 +273,7 @@ public class MMOItems extends JavaPlugin {
             return;
 
         // Save player data
-        playerDataManager.saveAll(false);
+        playerDataManager.close();
 
         // Drop abandoned items
         DeathItemsHandler.getActive().forEach(info -> info.giveItems(true));

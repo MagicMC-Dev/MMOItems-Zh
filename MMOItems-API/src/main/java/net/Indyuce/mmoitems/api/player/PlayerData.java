@@ -40,9 +40,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class PlayerData extends SynchronizedDataHolder implements Closeable {
-    @NotNull
-    private final MMOPlayerData mmoData;
-
     // Reloaded everytime the player reconnects in case of major change.
     private RPGPlayer rpgPlayer;
 
@@ -60,9 +57,8 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
     private final Set<String> permissions = new HashSet<>();
 
     public PlayerData(@NotNull MMOPlayerData mmoData) {
-        super(mmoData);
+        super(MMOItems.plugin, mmoData);
 
-        this.mmoData = mmoData;
         rpgPlayer = MMOItems.plugin.getMainRPG().getInfo(this);
         stats = new PlayerStats(this);
     }
@@ -73,7 +69,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
     }
 
     public boolean isOnline() {
-        return mmoData.isOnline();
+        return getMMOPlayerData().isOnline();
     }
 
     public RPGPlayer getRPG() {
@@ -93,7 +89,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
 
     /**
      * @return If the player hands are full i.e if the player is holding
-     *         two items in their hands, one being two handed
+     * two items in their hands, one being two handed
      */
     public boolean isEncumbered() {
 
@@ -122,10 +118,8 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
         this.rpgPlayer = rpgPlayer;
     }
 
-    @SuppressWarnings("deprecation")
     public void updateInventory() {
-        if (!mmoData.isOnline())
-            return;
+        if (!isOnline()) return;
 
         /*
          * Very important, clear particle data AFTER canceling the runnable
@@ -134,7 +128,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
         inventory.getEquipped().clear();
         permanentEffects.clear();
         cancelRunnables();
-        mmoData.getPassiveSkillMap().removeModifiers("MMOItemsItem");
+        getMMOPlayerData().getPassiveSkillMap().removeModifiers("MMOItemsItem");
         itemParticles.clear();
         overridingItemParticles = null;
         if (MMOItems.plugin.hasPermissions()) {
@@ -180,7 +174,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
             if (item.hasData(ItemStats.ABILITIES))
                 for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
                     ModifierSource modSource = equipped.getCached().getType().getModifierSource();
-                    mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipped.getSlot(), modSource));
+                    getMMOPlayerData().getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipped.getSlot(), modSource));
                 }
 
             // Modifier application rules
@@ -254,7 +248,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
                         perms.playerAdd(getPlayer(), perm);
             }
             for (AbilityData ability : setBonuses.getAbilities())
-                mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability, EquipmentSlot.OTHER, ModifierSource.OTHER));
+                getMMOPlayerData().getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability, EquipmentSlot.OTHER, ModifierSource.OTHER));
             for (ParticleData particle : setBonuses.getParticles())
                 itemParticles.add(particle.start(this));
             for (PotionEffect effect : setBonuses.getPotionEffects())
@@ -277,7 +271,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
         inventory.offhand = getPlayer().getInventory().getItemInOffHand();
     }
 
-    public void updateStats() {
+    public void timedRunnable() {
 
         // Permanent effects
         permanentEffects.values().forEach(effect -> getPlayer().addPotionEffect(effect));
@@ -335,11 +329,11 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
     }
 
     public boolean isOnCooldown(CooldownType type) {
-        return mmoData.getCooldownMap().isOnCooldown(type.name());
+        return getMMOPlayerData().getCooldownMap().isOnCooldown(type.name());
     }
 
     public void applyCooldown(CooldownType type, double value) {
-        mmoData.getCooldownMap().applyCooldown(type.name(), value);
+        getMMOPlayerData().getCooldownMap().applyCooldown(type.name(), value);
     }
 
     /**
@@ -347,7 +341,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
      */
     @Deprecated
     public boolean isOnCooldown(ItemReference ref) {
-        return mmoData.getCooldownMap().isOnCooldown(ref);
+        return getMMOPlayerData().getCooldownMap().isOnCooldown(ref);
     }
 
     /**
@@ -355,7 +349,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
      */
     @Deprecated
     public void applyItemCooldown(ItemReference ref, double value) {
-        mmoData.getCooldownMap().applyCooldown(ref, value);
+        getMMOPlayerData().getCooldownMap().applyCooldown(ref, value);
     }
 
     /**
@@ -363,7 +357,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
      */
     @Deprecated
     public double getItemCooldown(ItemReference ref) {
-        return mmoData.getCooldownMap().getInfo(ref).getRemaining() / 1000d;
+        return getMMOPlayerData().getCooldownMap().getInfo(ref).getRemaining() / 1000d;
     }
 
     @NotNull

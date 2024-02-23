@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.stat.type.AttackWeaponStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerStats {
     private final PlayerData playerData;
@@ -23,15 +24,17 @@ public class PlayerStats {
         return playerData;
     }
 
+    @NotNull
     public StatMap getMap() {
         return playerData.getMMOPlayerData().getStatMap();
     }
 
-    public double getStat(ItemStat<?, ?> stat) {
-        return getMap().getInstance(stat.getId()).getTotal();
+    public double getStat(@NotNull ItemStat<?, ?> stat) {
+        return getMap().getStat(stat.getId());
     }
 
-    public StatInstance getInstance(ItemStat<?, ?> stat) {
+    @NotNull
+    public StatInstance getInstance(@NotNull ItemStat<?, ?> stat) {
         return getMap().getInstance(stat.getId());
     }
 
@@ -44,7 +47,8 @@ public class PlayerStats {
      *                 source will NOT be taken into account for stat calculation
      * @return
      */
-    public PlayerMetadata newTemporary(EquipmentSlot castSlot) {
+    @NotNull
+    public PlayerMetadata newTemporary(@NotNull EquipmentSlot castSlot) {
         return playerData.getMMOPlayerData().getStatMap().cache(castSlot);
     }
 
@@ -79,7 +83,7 @@ public class PlayerStats {
             }
 
             // Finally run a stat update after all modifiers have been gathered in the packet
-            packet.runUpdate();
+            packet.update();
         }
     }
 }

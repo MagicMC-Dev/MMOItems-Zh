@@ -149,7 +149,7 @@ public class UpgradingEdition extends EditionInventory {
 			ItemStack destroyOnFail = new ItemStack(Material.FISHING_ROD);
 			ItemMeta destroyOnFailMeta = destroyOnFail.getItemMeta();
 			((Damageable) destroyOnFailMeta).setDamage(30);
-			destroyOnFailMeta.setDisplayName(ChatColor.GREEN + "升级失败时销毁物品?");
+			destroyOnFailMeta.setDisplayName(ChatColor.GREEN + "升级失败时销毁物品");
 			List<String> destroyOnFailLore = new ArrayList<>();
 			destroyOnFailLore.add(ChatColor.GRAY + "开启后，升级失败时");
 			destroyOnFailLore.add(ChatColor.GRAY + "该物品将被销毁.");

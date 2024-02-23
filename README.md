@@ -1,4 +1,4 @@
-Official repository for MMOItems Premium
+Official repository for MMOItems Dev-build Premium
 
 <div align="center">
 
@@ -14,7 +14,6 @@ Official repository for MMOItems Premium
 [下载][download-link] | [加群][group-link]
 
 </div>
-
 
 [banner]: https://socialify.git.ci/MagicMC-Dev/MMOItems-Zh/image?description=1&descriptionEditable=A%20Chinese%20version%20of%20MMOItems&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Auto
 
@@ -54,7 +53,7 @@ Official repository for MMOItems Premium
 
 ## 关于 MMOItems
 
-MMOItems 是一款强大的 Minecraft 插件，它允许服务器管理员创建自定义的物品、装备和武器，并赋予它们独特的属性和效果。这个插件为服务器提供了更加丰富的玩法和个性化的装备系统，使玩家可以在游戏中收集、制作和使用各种特殊物品。
+MMOItems 是一款强大的 Minecraft MMO 插件，它允许服务器管理员创建自定义的物品、装备和武器，并赋予它们独特的属性和效果。这个插件为服务器提供了更加丰富的玩法和个性化的装备系统，使玩家可以在游戏中收集、制作和使用各种特殊物品。
 
 ## 汉化目的
 
@@ -68,6 +67,10 @@ MMOItems 是一款强大的 Minecraft 插件，它允许服务器管理员创建
 2. **安装插件**：将下载的插件文件（通常是一个 JAR 文件）放入您的服务器插件文件夹中，并确保您的服务器支持使用该插件。
 3. **配置插件**：按照 MMOItems 官方版的配置指南，在服务器配置文件中设置插件的参数和选项。您可以参考汉化版本的 README 或翻译后的插件说明来了解具体设置。
 4. **启动服务器**：启动您的 Minecraft 服务器，并确保 MMOItems 插件已成功加载。您现在应该能够在游戏中看到物品和装备的中文名称和描述了。
+
+> [!TIP]
+> 仅推荐使用 [**Paper**](https://papermc.io/) 或 [**Purpur**](https://purpurmc.org/) 作为服务端使用!
+> MythicLib 建议使用 [**Dev-Build**](https://phoenixdevt.fr/devbuilds)!
 
 ## 贡献
 

@@ -1,5 +1,7 @@
 Official repository for MMOItems Dev-build Premium
 
+- 若有人将此插件进行倒卖，此仓库将不再对外开放，仅允许付费用户访问!
+
 <div align="center">
 
 ![][banner]

@@ -1,22 +1,26 @@
 package net.Indyuce.mmoitems.api.crafting;
 
+import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
+import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.QueueItem;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
 
 public class CraftingStatus {
 
-    /*
-     * saves data about items being constructed in specific stations. players
+    /**
+     * Saves data about items being constructed in specific stations. players
      * must go back to the station GUI and claim their item once it's ready
      */
-    private final Map<String, CraftingQueue> queues = new HashMap<>();
+    private final Map<CraftingStation, CraftingQueue> queues = new HashMap<>();
 
     public void load(PlayerData data, ConfigurationSection config) {
         String name = data.isOnline() ? data.getPlayer().getName() : "Unknown Player";
@@ -32,7 +36,10 @@ public class CraftingStatus {
 
             CraftingStation station = MMOItems.plugin.getCrafting().getStation(stationId);
             CraftingQueue queue = new CraftingQueue(station);
-            queues.put(stationId, queue);
+            queues.put(station, queue);
+
+            @BackwardsCompatibility(version = "6.10") final Optional<String> legacyOpt = config.getConfigurationSection(stationId).getKeys(false).stream().findFirst();
+            final boolean legacyLoading = legacyOpt.isPresent() && config.contains(stationId + "." + legacyOpt.get() + ".delay");
 
             for (String recipeConfigId : config.getConfigurationSection(stationId).getKeys(false)) {
                 String recipeId = config.getString(stationId + "." + recipeConfigId + ".recipe");
@@ -51,39 +58,47 @@ public class CraftingStatus {
                     continue;
                 }
 
-                queue.add((CraftingRecipe) recipe, config.getLong(stationId + "." + recipeConfigId + ".started"),
-                        config.getLong(stationId + "." + recipeConfigId + ".delay"));
+                // Backwards compatibility config loading for MI <6.10
+                if (legacyLoading) {
+                    final long started = config.getLong(stationId + "." + recipeConfigId + ".started");
+                    final long delay = config.getLong(stationId + "." + recipeConfigId + ".delay");
+
+                    queue.add((CraftingRecipe) recipe,
+                            started,
+                            started + delay);
+                    continue;
+                }
+
+                queue.add((CraftingRecipe) recipe,
+                        config.getLong(stationId + "." + recipeConfigId + ".start"),
+                        config.getLong(stationId + "." + recipeConfigId + ".completion"));
             }
         }
     }
 
     public void save(ConfigurationSection config) {
-        for (String station : queues.keySet()) {
-            CraftingQueue queue = queues.get(station);
-
-            for (CraftingInfo craft : queue.getCrafts()) {
-                config.set(station + ".recipe-" + craft.getUniqueId().toString() + ".recipe", craft.getRecipe().getId());
-                config.set(station + ".recipe-" + craft.getUniqueId().toString() + ".started", craft.started);
-                config.set(station + ".recipe-" + craft.getUniqueId().toString() + ".delay", craft.delay);
+        queues.forEach((station, queue) -> {
+            for (QueueItem craft : queue.getCrafts()) {
+                config.set(station.getId() + ".recipe-" + craft.getUniqueId().toString() + ".recipe", craft.getRecipe().getId());
+                config.set(station.getId() + ".recipe-" + craft.getUniqueId().toString() + ".start", craft.start);
+                config.set(station.getId() + ".recipe-" + craft.getUniqueId().toString() + ".completion", craft.completion);
             }
-        }
+        });
     }
 
-    public CraftingQueue getQueue(CraftingStation station) {
-        if (!queues.containsKey(station.getId()))
-            queues.put(station.getId(), new CraftingQueue(station));
-        return queues.get(station.getId());
+    public CraftingQueue getQueue(@NotNull CraftingStation station) {
+        return queues.computeIfAbsent(station, CraftingQueue::new);
     }
 
     public static class CraftingQueue {
         private final String station;
-        private final List<CraftingInfo> crafts = new ArrayList<>();
+        private final List<QueueItem> crafts = new ArrayList<>();
 
         public CraftingQueue(CraftingStation station) {
             this.station = station.getId();
         }
 
-        public List<CraftingInfo> getCrafts() {
+        public List<QueueItem> getCrafts() {
             return crafts;
         }
 
@@ -91,51 +106,55 @@ public class CraftingStatus {
             return crafts.size() >= station.getMaxQueueSize();
         }
 
-        public void remove(CraftingInfo craft) {
-            int index = crafts.indexOf(craft);
-            if (index != -1)
-                for (int j = index + 1; j < crafts.size(); j++) {
-                    CraftingInfo nextCraft = crafts.get(j);
-                    nextCraft.delay = Math.max(0, nextCraft.delay - craft.getLeft());
-                }
-            crafts.remove(craft);
+        public void remove(QueueItem item) {
+            final int index = crafts.indexOf(item);
+            Validate.isTrue(index >= 0, "Could not find item in queue");
+            crafts.remove(index);
+            final long remaining = item.getLeft();
+            for (int j = index; j < crafts.size(); j++)
+                crafts.get(j).removeDelay(remaining);
         }
 
-        public CraftingInfo getCraft(UUID uuid) {
-            for (CraftingInfo craft : crafts)
+        @Nullable
+        public QueueItem getCraft(UUID uuid) {
+            for (QueueItem craft : crafts)
                 if (craft.getUniqueId().equals(uuid))
                     return craft;
             return null;
         }
 
-        /*
-         * when adding a crafting recipe, the delay is the actual crafting time
-         * PLUS the delay left for the previous item since it's a queue.
-         */
         public void add(CraftingRecipe recipe) {
-            add(recipe, System.currentTimeMillis(),
-                    (crafts.size() == 0 ? 0 : crafts.get(crafts.size() - 1).getLeft()) + (long) recipe.getCraftingTime() * 1000);
+            final long completion = (long) recipe.getCraftingTime() * 1000
+                    + (CraftingQueue.this.crafts.isEmpty() ? System.currentTimeMillis() :
+                    CraftingQueue.this.crafts.get(CraftingQueue.this.crafts.size() - 1).completion);
+            add(recipe, System.currentTimeMillis(), completion);
         }
 
-        private void add(CraftingRecipe recipe, long started, long delay) {
-            crafts.add(new CraftingInfo(recipe, started, delay));
+        private void add(CraftingRecipe recipe, long start, long completion) {
+            crafts.add(new QueueItem(recipe, start, completion));
         }
 
-        @Deprecated
         public CraftingStation getStation() {
             return MMOItems.plugin.getCrafting().getStation(station);
         }
 
-        public class CraftingInfo {
+        public class QueueItem {
             private final String recipe;
             private final UUID uuid = UUID.randomUUID();
-            private final long started;
-            private long delay;
+            private final long start;
 
-            private CraftingInfo(CraftingRecipe recipe, long started, long delay) {
+            /**
+             * A crafting queue is composed of a series of queue items
+             * that each wait on the previous item in the queue for completion.
+             * It is much easier to work with the timestamp of completion for
+             * any queued item, in order to avoid confusion.
+             */
+            private long completion;
+
+            public QueueItem(@NotNull CraftingRecipe recipe, long start, long completion) {
                 this.recipe = recipe.getId();
-                this.started = started;
-                this.delay = delay;
+                this.start = start;
+                this.completion = completion;
             }
 
             public UUID getUniqueId() {
@@ -143,10 +162,9 @@ public class CraftingStatus {
             }
 
             /**
-             * @deprecated /mi reload stations force MI to save the recipe
+             * /mi reload stations force MI to save the recipe
              * IDs instead of a direct reference to the crafting recipe
              */
-            @Deprecated
             public CraftingRecipe getRecipe() {
                 return (CraftingRecipe) getStation().getRecipe(recipe);
             }
@@ -156,20 +174,28 @@ public class CraftingStatus {
             }
 
             public void removeDelay(long amount) {
-                this.delay -= amount;
+                this.completion -= amount;
             }
 
             public long getElapsed() {
-                return Math.max((long) getRecipe().getCraftingTime() * 1000, System.currentTimeMillis() - started);
+                return Math.max((long) getRecipe().getCraftingTime() * 1000, System.currentTimeMillis() - start);
             }
 
             public long getLeft() {
-                return Math.max(0, started + delay - System.currentTimeMillis());
+                return Math.max(0, completion - System.currentTimeMillis());
             }
 
             @Override
-            public boolean equals(Object obj) {
-                return obj instanceof CraftingInfo && ((CraftingInfo) obj).uuid.equals(uuid);
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                QueueItem that = (QueueItem) o;
+                return Objects.equals(uuid, that.uuid);
+            }
+
+            @Override
+            public int hashCode() {
+                return Objects.hash(uuid);
             }
         }
     }

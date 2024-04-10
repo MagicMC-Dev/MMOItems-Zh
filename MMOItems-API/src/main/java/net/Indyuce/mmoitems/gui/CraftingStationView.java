@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
-import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
+import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.QueueItem;
 import net.Indyuce.mmoitems.api.crafting.Layout;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
@@ -175,7 +175,7 @@ public class CraftingStationView extends PluginInventory {
         }
 
         if (!(tag = item.getString("queueId")).isEmpty()) {
-            CraftingInfo recipeInfo = playerData.getCrafting().getQueue(station).getCraft(UUID.fromString(tag));
+            QueueItem recipeInfo = playerData.getCrafting().getQueue(station).getCraft(UUID.fromString(tag));
             CraftingRecipe recipe = recipeInfo.getRecipe();
 
             /*

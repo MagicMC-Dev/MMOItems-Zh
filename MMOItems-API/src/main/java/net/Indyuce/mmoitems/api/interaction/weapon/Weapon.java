@@ -67,7 +67,7 @@ public class Weapon extends UseItem {
 
     /**
      * @return If instantaneous weapon costs are met.
-     * @see {@link #applyWeaponCosts(Double)}
+     * @see #applyWeaponCosts(Double)
      */
     public boolean checkWeaponCosts(boolean cooldowns) {
         if (cooldowns && getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(mmoitem.getType()))
@@ -96,7 +96,7 @@ public class Weapon extends UseItem {
      * Other weapon costs are inherent to the item type and are
      * fully configurable inside of the types config file.
      *
-     * @see {@link #checkWeaponCosts(boolean)}
+     * @see #checkWeaponCosts(boolean)
      */
     public void applyWeaponCosts(@Nullable Double attackDelay) {
 
@@ -204,7 +204,7 @@ public class Weapon extends UseItem {
     private WeaponAttackResult legacyHandleUntargetedAttack(boolean rightClick, @NotNull EquipmentSlot actionHand) {
 
         // Check for attack effect conditions
-        if (((LegacyWeapon) this).canAttack(rightClick, actionHand)) return WeaponAttackResult.NO_ATTACK;
+        if (!((LegacyWeapon) this).canAttack(rightClick, actionHand)) return WeaponAttackResult.NO_ATTACK;
 
         // Check for durability
         UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), actionHand);

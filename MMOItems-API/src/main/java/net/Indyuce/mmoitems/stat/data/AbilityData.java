@@ -169,6 +169,14 @@ public class AbilityData extends Skill {
     }
 
     @Override
+    public String toString() {
+        return "AbilityData{" +
+                "ability=" + ability +
+                ", modifiers=" + modifiers +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(ability, modifiers);
     }

@@ -18,6 +18,7 @@ import net.Indyuce.mmoitems.api.interaction.GemStone;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
@@ -601,7 +602,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
                 continue; }
 
             // Ok proceed
-            GemStone asGem = new GemStone(p, m.newBuilder().buildNBT());
+            GemStone asGem = new GemStone(PlayerData.get(p), m.newBuilder().buildNBT());
 
             // Put
             GemStone.ApplyResult res = asGem.applyOntoItem(gen, gen.getType(), "", false, true);

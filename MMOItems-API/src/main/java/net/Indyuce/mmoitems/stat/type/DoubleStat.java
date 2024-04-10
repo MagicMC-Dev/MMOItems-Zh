@@ -354,46 +354,14 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
     @NotNull
     @Override
     public StatData apply(@NotNull StatData original, @NotNull UpgradeInfo info, int level) {
-
-        // Must be DoubleData
-        int i = level;
         if (original instanceof DoubleData && info instanceof DoubleUpgradeInfo) {
-
-            // Get value
+            int i = level;
             double value = ((DoubleData) original).getValue();
-
-            // If leveling up
-            if (i > 0) {
-
-                // While still positive
-                while (i > 0) {
-
-                    // Apply PMP Operation Positively
-                    value = ((DoubleUpgradeInfo) info).getPMP().apply(value);
-
-                    // Decrease
-                    i--;
-                }
-
-                // Degrading the item
-            } else if (i < 0) {
-
-                // While still negative
-                while (i < 0) {
-
-                    // Apply PMP Operation Reversibly
-                    value = ((DoubleUpgradeInfo) info).getPMP().reverse(value);
-
-                    // Decrease
-                    i++;
-                }
-            }
-
-            // Update
+            while (i-- > 0) value = ((DoubleUpgradeInfo) info).getPMP().apply(value);
+            while (i++ < 0) value = ((DoubleUpgradeInfo) info).getPMP().reverse(value);
             ((DoubleData) original).setValue(value);
         }
 
-        // Upgraded
         return original;
     }
 

@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.api.item.util.crafting;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.util.AdventureUtils;
-import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
+import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.QueueItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -22,18 +22,18 @@ public class QueueItemDisplay extends ConfigItem {
                 "{queue}&eClick to cancel.");
     }
 
-    public ItemBuilder newBuilder(CraftingInfo crafting, int position) {
+    public ItemBuilder newBuilder(QueueItem crafting, int position) {
         return new ItemBuilder(crafting, position);
     }
 
     public class ItemBuilder {
-        private final CraftingInfo crafting;
+        private final QueueItem crafting;
         private final int position;
 
         private final String name = getName();
         private final List<String> lore = new ArrayList<>(getLore());
 
-        public ItemBuilder(CraftingInfo crafting, int position) {
+        public ItemBuilder(QueueItem crafting, int position) {
             this.crafting = crafting;
             this.position = position;
         }

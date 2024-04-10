@@ -168,7 +168,7 @@ public class ItemStackBuilder {
                     builtMMOItem.setData(stat, s.recalculate(l));
 
                     // Add to NBT, if the gemstones were not purged
-                    if (!s.isClear()) {
+                    if (!s.isEmpty()) {
 
                         //GEM//MMOItems.log("\u00a7a -+- \u00a77Recording History");
                         addItemTag(new ItemTag(history_keyword + stat.getId(), s.toNBTString()));

@@ -32,7 +32,8 @@ faction-damage-undead: '&3 &7■ 不死派系伤害加成: &f<plus>{value}%'
 
 # Abilities (changed in MI 6.9.5)
 ability:
-  general-format: "&8| &7{trigger} &8|&e|&8| &7&l{ability}\n"
+  general-format: "&8| &7{trigger} &8|&e|&8| &7&l{ability}"
+  modifier-if-any: "\n" # Appended to general-format if the skill has at least one modifier
   modifier-foreach: "&7{modifier}&8: &f{value}"
   modifier-splitter: " &8&l|&7 "
   modifiers-per-line: 3

@@ -499,7 +499,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
         key = key.toLowerCase().replace("-", "_");
         Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(key));
 
-        //  Vanilla enchant
+        // Vanilla enchant
         if (enchant != null)
             return enchant;
 

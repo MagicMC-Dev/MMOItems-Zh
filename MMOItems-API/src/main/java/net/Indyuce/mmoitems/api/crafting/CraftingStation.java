@@ -53,7 +53,7 @@ public class CraftingStation implements PreloadedObject {
         postLoadAction.cacheConfig(config);
 
         this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-        this.name = config.getString("name", "Unnamed");
+        this.name = config.getString("name", "A Station With No Name");
         this.layout = MMOItems.plugin.getLayouts().getLayout(config.getString("layout", "default"));
         this.sound = Sound.valueOf(config.getString("sound", "ENTITY_EXPERIENCE_ORB_PICKUP").toUpperCase());
 
@@ -191,5 +191,18 @@ public class CraftingStation implements PreloadedObject {
      */
     private Recipe loadRecipe(ConfigurationSection config) throws IllegalArgumentException {
         return config.contains("output") ? new CraftingRecipe(config) : new UpgradingRecipe(config);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CraftingStation that = (CraftingStation) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

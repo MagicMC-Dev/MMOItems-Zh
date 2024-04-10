@@ -14,17 +14,13 @@ public abstract class Buildable<B> {
 
     protected abstract B whenBuilt();
 
-    public void validateNotBuilt() {
-        Validate.isTrue(lock, "Has already been built");
-    }
-
     public boolean isBuilt() {
         return !lock;
     }
 
     @NotNull
     public B build() {
-        validateNotBuilt();
+        Validate.isTrue(lock, "Has already been built");
         lock = false;
         return whenBuilt();
     }

@@ -323,7 +323,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
     @NotNull
     @Override
     public StringData getClearStatData() {
-        return new NameData("");
+        return new NameData("Item");
     }
 
     @Override

@@ -114,7 +114,6 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
 
             // Get name data
             StatHistory hist = StatHistory.from(mmoitem, ItemStats.NAME);
-            if (!mmoitem.hasData(ItemStats.NAME)) mmoitem.setData(ItemStats.NAME, new NameData("Item"));
 
             nameModifiers.forEach((obs, mod) -> {
 
@@ -123,7 +122,7 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
 
                 // Include modifier information
                 if (mod.getType() == ModifierType.PREFIX) modName.addPrefix(mod.getFormat());
-                if (mod.getType() == ModifierType.SUFFIX) modName.addSuffix(mod.getFormat());
+                else if (mod.getType() == ModifierType.SUFFIX) modName.addSuffix(mod.getFormat());
 
                 // Register onto SH
                 hist.registerModifierBonus(obs, modName);
@@ -145,7 +144,7 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
      */
     public void applyData(@NotNull ItemStat stat, @NotNull StatData data) {
         final StatData found = mmoitem.getData(stat);
-        if (found != null && found instanceof Mergeable) ((Mergeable) found).mergeWith(data);
+        if (found != null && found instanceof Mergeable) ((Mergeable) found).mergeWith((Mergeable) data);
         else mmoitem.setData(stat, data);
     }
 

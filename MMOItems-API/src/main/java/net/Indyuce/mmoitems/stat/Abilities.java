@@ -7,8 +7,8 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -51,32 +51,32 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
         return list;
     }
 
-    private String generalFormat, modifierForEach, modifierSplitter, abilitySplitter;
+    private String generalFormat, modifierIfAny, modifierForEach, modifierSplitter, abilitySplitter;
     private boolean legacyFormat, useAbilitySplitter;
     private int modifiersPerLine;
 
-    @Deprecated
+    @BackwardsCompatibility(version = "6.10")
     @Override
     public void loadConfiguration(@NotNull ConfigurationSection legacyLanguageFile, @NotNull Object configObject) {
 
-        // MI <7 config
-        if (configObject instanceof ConfigurationSection) {
-            legacyFormat = false;
-            final ConfigurationSection config = (ConfigurationSection) configObject;
-            generalFormat = config.getString("general-format");
-            modifierForEach = config.getString("modifier-foreach");
-            modifierSplitter = config.getString("modifier-splitter");
-            abilitySplitter = config.getString("ability-splitter.format");
-            useAbilitySplitter = config.getBoolean("ability-splitter.enabled");
-            modifiersPerLine = config.getInt("modifiers-per-line");
-
-        } else {
+        // COMPATIBILITY CODE FOR MI <6.10
+        if (!(configObject instanceof ConfigurationSection)) {
             legacyFormat = true;
             generalFormat = legacyLanguageFile.getString("ability-format");
             modifierForEach = legacyLanguageFile.getString("ability-modifier");
             abilitySplitter = legacyLanguageFile.getString("ability-splitter");
             useAbilitySplitter = abilitySplitter != null && !abilitySplitter.isEmpty();
+            return;
         }
+
+        final ConfigurationSection config = (ConfigurationSection) configObject;
+        generalFormat = config.getString("general-format");
+        modifierIfAny = config.getString("modifier-if-any");
+        modifierForEach = config.getString("modifier-foreach");
+        modifierSplitter = config.getString("modifier-splitter");
+        abilitySplitter = config.getString("ability-splitter.format");
+        useAbilitySplitter = config.getBoolean("ability-splitter.enabled");
+        modifiersPerLine = config.getInt("modifiers-per-line");
     }
 
     @Override
@@ -111,6 +111,8 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
                         .replace("{trigger}", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger()))
                         .replace("{ability}", ability.getAbility().getName()));
 
+                if (!ability.getModifiers().isEmpty()) builder.append(modifierIfAny);
+
                 boolean modifierAppened = false;
                 int lineCounter = 0;
                 for (String modifier : ability.getModifiers()) {
@@ -126,12 +128,11 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
                     if (modifiersPerLine > 0 && lineCounter >= modifiersPerLine) {
                         lineCounter = 0;
                         modifierAppened = false;
-                        abilityLore.add(builder.toString());
-                        builder.setLength(0);
+                        builder.append("\n"); // Will be processed later on by MMOItems
                     }
                 }
 
-                if (modifierAppened) abilityLore.add(builder.toString());
+                abilityLore.add(builder.toString());
 
                 if (useAbilitySplitter)
                     abilityLore.add(abilitySplitter);

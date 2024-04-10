@@ -17,13 +17,15 @@ import org.jetbrains.annotations.NotNull;
  * <b>Strongly encouraged to override the <code>equals</code> method
  * to something fitting here as Mergeable stats should support comparisons.</b>
  */
-public interface Mergeable<S extends StatData> extends StatData {
+public interface Mergeable<S extends Mergeable<S>> extends StatData {
 
     /**
      * Merging two stat datas is required when an item benefits from
-     * a buff in a stat, given by
+     * a buff in a stat, given by:
      * - the base item data + 1 modifier
      * - at least 2 modifiers
+     * - base item data + 1 gemstone
+     * - ...
      */
     void mergeWith(S data);
 

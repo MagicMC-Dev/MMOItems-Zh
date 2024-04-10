@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat.type;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -141,8 +142,8 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
      * actual Stat Data from the NBT stored within the item. Reverses
      * <code>getAppliedNBT()</code> actually.
      * <p></p>
-     * Shall return null if the tags passed dont provide enough
-     * information to generate a useable StatData.
+     * Shall return null if the tags passed don't provide enough
+     * information to generate a usable StatData.
      *
      * @author gunging
      */
@@ -163,7 +164,7 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
 
     protected String generalStatFormat;
 
-    @Deprecated
+    @BackwardsCompatibility(version = "6.10")
     public void loadConfiguration(@NotNull ConfigurationSection legacyLanguageFile, @NotNull Object configObject) {
         loadConfiguration(configObject);
     }
@@ -172,7 +173,7 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
         generalStatFormat = configObject.toString();
     }
 
-    @Deprecated
+    @BackwardsCompatibility(version = "6.10")
     public String getLegacyTranslationPath() {
         return getPath();
     }
@@ -200,7 +201,7 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
      * Mainly for backwards compatibility. Aliases are basically
      * other string identifiers that point to the same item stat.
      * Useful when changing stat keys inside the item configs.
-     *
+     * <p>
      * Aliases have to follow the UPPER_CASE stat identifier format.
      */
     @Nullable

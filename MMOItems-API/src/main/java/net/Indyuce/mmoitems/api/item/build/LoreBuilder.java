@@ -158,14 +158,15 @@ public class LoreBuilder extends Buildable<List<String>> {
          * The backwards loop allows to condense into one full iteration.
          */
         for (int j = 0; j < lore.size(); ) {
-            int n = lore.size() - j - 1;
-            String line = lore.get(n);
+            final int n = lore.size() - j - 1;
+            final String line = lore.get(n);
 
             // Remove unused static lore placeholders
             if (line.startsWith("#")) lore.remove(n);
 
                 // Remove empty stat categories
-            else if (line.startsWith("{bar}") && (n == lore.size() - 1 || isBar(lore.get(n + 1)))) lore.remove(n);
+            else if (line.startsWith("{bar}") && (j == 0 || getType(n + 1).isBar()))
+                lore.remove(n);
 
             else j++;
         }
@@ -193,11 +194,11 @@ public class LoreBuilder extends Buildable<List<String>> {
 
             // Replace bar prefixes
             final LineType lineType = getType(j, currentLine);
-            if (lineType == LineType.BAR) currentLine = currentLine.substring(5);
-            if (lineType == LineType.SUPERBAR) currentLine = currentLine.substring(6);
+            if (lineType.isNormalBar()) currentLine = currentLine.substring(5);
+            if (lineType.isSuperBar()) currentLine = currentLine.substring(6);
 
             // Apply tooltip prefixes if necessary
-            if (tooltip != null && lineType != LineType.BOTTOM)
+            if (tooltip != null && !lineType.isBottom())
                 currentLine = (j < linesIgnored ? tooltip.getAlignText() : (lineType.isBar() ? tooltip.getBar() : tooltip.getMiddle())) + currentLine;
 
             // Deprecated math. PAPI math expansion is now recommended
@@ -237,6 +238,11 @@ public class LoreBuilder extends Buildable<List<String>> {
         return lore;
     }
 
+    @NotNull
+    private LineType getType(int index) {
+        return getType(index, lore.get(index));
+    }
+
     /**
      * @param index Current line counter
      * @param line  Current line
@@ -244,16 +250,33 @@ public class LoreBuilder extends Buildable<List<String>> {
      */
     @NotNull
     private LineType getType(int index, String line) {
-        if (index == lore.size() - 1) return LineType.BOTTOM;
-        if (line.startsWith("{bar}") || line.startsWith("{sbar}")) return LineType.BAR;
+        if (index == lore.size() - 1) {
+            if (line.startsWith("{bar}")) return LineType.BAR;
+            if (line.startsWith("{sbar}")) return LineType.SUPERBAR;
+            return LineType.BOTTOM;
+        }
+        if (line.startsWith("{bar}")) return LineType.BAR;
+        if (line.startsWith("{sbar}")) return LineType.SUPERBAR;
         return LineType.MIDDLE;
     }
 
     private enum LineType {
-        MIDDLE, BAR, SUPERBAR, BOTTOM;
+        MIDDLE, BAR, SUPERBAR, BOTTOM, BOTTOM_BAR, BOTTOM_SUPERBAR;
 
         boolean isBar() {
-            return this == BAR || this == SUPERBAR;
+            return isNormalBar() || isSuperBar();
+        }
+
+        boolean isBottom() {
+            return this == BOTTOM || this == BOTTOM_BAR || this == BOTTOM_SUPERBAR;
+        }
+
+        boolean isSuperBar() {
+            return this == SUPERBAR || this == BOTTOM_SUPERBAR;
+        }
+
+        boolean isNormalBar() {
+            return this == BAR || this == BOTTOM_BAR;
         }
     }
 
@@ -264,10 +287,6 @@ public class LoreBuilder extends Buildable<List<String>> {
         } catch (Throwable throwable) {
             return "<ParsingError>";
         }
-    }
-
-    private boolean isBar(String str) {
-        return str.startsWith("{bar}") || str.startsWith("{sbar}");
     }
 
     @NotNull

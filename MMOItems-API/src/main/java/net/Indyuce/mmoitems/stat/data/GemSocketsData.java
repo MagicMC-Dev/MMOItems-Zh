@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, RandomStatData<GemSocketsData> {
     @NotNull
-    private final Set<GemstoneData> gems = new LinkedHashSet<>();
+    private final List<GemstoneData> gems = new ArrayList<>();
     @NotNull
     private final List<String> emptySlots;
 
@@ -55,7 +55,7 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
     @Nullable
     public String getEmptySocket(@NotNull String gem) {
         for (String slot : emptySlots)
-            if (gem.equals("") || slot.equals(getUncoloredGemSlot()) || gem.equals(slot))
+            if (gem.isEmpty() || slot.equals(getUncoloredGemSlot()) || gem.equals(slot))
                 return slot;
         return null;
     }
@@ -70,9 +70,12 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
         gems.add(gem);
     }
 
-    public void apply(String gem, GemstoneData gemstone) {
-        emptySlots.remove(getEmptySocket(gem));
+    public boolean apply(String gem, GemstoneData gemstone) {
+        final String matchingSocket = getEmptySocket(gem);
+        if (matchingSocket == null) return false;
+        emptySlots.remove(matchingSocket);
         gems.add(gemstone);
+        return true;
     }
 
     public void addEmptySlot(@NotNull String slot) {
@@ -84,8 +87,18 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
         return emptySlots;
     }
 
-    @NotNull
+    /**
+     * @see #getGems()
+     * @deprecated Gems are stored inside a list
+     * rather than inside a linked hash set.
+     */
+    @Deprecated
     public Set<GemstoneData> getGemstones() {
+        return new HashSet<>(gems);
+    }
+
+    @NotNull
+    public List<GemstoneData> getGems() {
         return gems;
     }
 

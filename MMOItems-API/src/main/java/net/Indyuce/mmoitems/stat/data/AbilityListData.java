@@ -4,7 +4,10 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class AbilityListData implements StatData, Mergeable<AbilityListData> {
     private final List<AbilityData> abilities = new ArrayList<>();
@@ -18,16 +21,16 @@ public class AbilityListData implements StatData, Mergeable<AbilityListData> {
     }
 
     public void add(@NotNull AbilityData... abilities) {
-        this.abilities.addAll(Arrays.asList(abilities));
+        Collections.addAll(this.abilities, abilities);
     }
 
-    public void add(@NotNull Collection<AbilityData> abilit) {
-        abilities.addAll(abilit);
+    public void add(@NotNull Collection<AbilityData> abilities) {
+        this.abilities.addAll(abilities);
     }
 
     @NotNull
-    public Set<AbilityData> getAbilities() {
-        return new HashSet<>(abilities);
+    public List<AbilityData> getAbilities() {
+        return abilities;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class AbilityListData implements StatData, Mergeable<AbilityListData> {
     @NotNull
     @Override
     public AbilityListData clone() {
-        return new AbilityListData();
+        return new AbilityListData(this.abilities);
     }
 
     @Override
@@ -74,6 +77,13 @@ public class AbilityListData implements StatData, Mergeable<AbilityListData> {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "AbilityListData{" +
+                "abilities=" + abilities +
+                '}';
     }
 
     @Override

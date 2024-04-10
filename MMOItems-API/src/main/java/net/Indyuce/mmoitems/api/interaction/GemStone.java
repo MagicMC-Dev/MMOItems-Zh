@@ -45,8 +45,7 @@ public class GemStone extends UseItem {
          * Entirely loads the MMOItem and checks if
          * it has the required empty socket for the gem
          */
-        MMOItem targetMMO = new LiveMMOItem(target);
-        return applyOntoItem(targetMMO, targetType, MMOUtils.getDisplayName(target.getItem()), true, false);
+        return applyOntoItem(new LiveMMOItem(target), targetType, MMOUtils.getDisplayName(target.getItem()), true, false);
     }
 
     @NotNull
@@ -64,7 +63,7 @@ public class GemStone extends UseItem {
 
         // Checks if the gem supports the item type, or the item set, or a weapon
         String appliableTypes = getNBTItem().getString(ItemStats.ITEM_TYPE_RESTRICTION.getNBTPath());
-        if (!appliableTypes.equals("") && (!targetType.isWeapon() || !appliableTypes.contains("WEAPON"))
+        if (!appliableTypes.isEmpty() && (!targetType.isWeapon() || !appliableTypes.contains("WEAPON"))
                 && !appliableTypes.contains(targetType.getId()))
             return new ApplyResult(ResultType.NONE);
 
@@ -89,79 +88,29 @@ public class GemStone extends UseItem {
             return new ApplyResult(ResultType.FAILURE);
         }
 
-        /*
-         * To not clear enchantments put by players
-         */
+        // To not clear enchantments put by players
         Enchants.separateEnchantments(targetMMO);
 
         /*
-         * Gem stone can be successfully applied. apply stats then abilities and
-         * permanent effects. also REGISTER gem stone in the item gem stone list.
+         * Gemstone can be successfully applied. Apply stats then abilities and
+         * permanent effects. also REGISTER gemstone in the item gemstone list.
          */
         LiveMMOItem gemMMOItem = new LiveMMOItem(getNBTItem());
         GemstoneData gemData = new GemstoneData(gemMMOItem, foundSocketColor);
 
         /*
          * Now must apply the gem sockets data to the Stat History and then recalculate.
-         *
-         * Gotta, however, find the correct StatData to which apply it to. Damn this can
-         * be pretty complicated!
+         * Gotta, however, find the correct StatData to which apply it to.
          */
         StatHistory gemStory = StatHistory.from(targetMMO, ItemStats.GEM_SOCKETS);
-
-        // Original?
-        if (((GemSocketsData) gemStory.getOriginalData()).getEmptySocket(gemType) != null) {
-            //UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76Original\u00a77: \u00a73" + foundSocketColor);
-
-            // Charmer
-            ((GemSocketsData) gemStory.getOriginalData()).apply(gemType, gemData);
-
-        } else {
-
-            // Check Gem gems are not supported >:l. Check the modifiers ig
-            boolean success = false;
-            for (UUID uid : gemStory.getAllModifiers()) {
-
-                // Get that gem
-                GemSocketsData registeredGemData = (GemSocketsData) gemStory.getModifiersBonus(uid);
-                if (registeredGemData != null && registeredGemData.getEmptySocket(gemType) != null) {
-                    //UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76Gemstone\u00a77: \u00a73" + foundSocketColor);
-
-                    // Charmer
-                    success = true;
-                    registeredGemData.apply(gemType, gemData);
-                    break;
-                }
-            }
-
-            if (!success) {
-
-                for (StatData extraneousGem : gemStory.getExternalData()) {
-
-                    // Get that gem
-                    GemSocketsData registeredGemData = (GemSocketsData) extraneousGem;
-                    if (registeredGemData != null && registeredGemData.getEmptySocket(gemType) != null) {
-                        //UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76External\u00a77: \u00a73" + foundSocketColor);
-
-                        // Charmer
-                        registeredGemData.apply(gemType, gemData);
-                        break;
-                    }
-                }
-            }
-        }
-
-        // Recalculate
-        //HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Gem Application Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
+        findEmptySocket(gemStory, gemType, gemData);
         targetMMO.setData(ItemStats.GEM_SOCKETS, gemStory.recalculate(targetMMO.getUpgradeLevel()));
-        //UPGRD//MMOItems.log("Applied Gemstone: \u00a73" + foundSocketColor);
 
         /*
          * Get the item's level, important for the GemScalingStat
          */
         Integer levelIdentified = null;
         final String scaling = gemMMOItem.hasData(ItemStats.GEM_UPGRADE_SCALING) ? gemMMOItem.getData(ItemStats.GEM_UPGRADE_SCALING).toString() : GemUpgradeScaling.defaultValue;
-        //UPGRD//MMOItems.log("Scaling Identified: \u00a73" + scaling);
         switch (scaling) {
             case "HISTORIC":
                 levelIdentified = 0;
@@ -169,32 +118,18 @@ public class GemStone extends UseItem {
             case "SUBSEQUENT":
                 levelIdentified = targetMMO.getUpgradeLevel();
                 break;
-            case "NEVER":
             default:
                 break;
         }
-
         gemData.setLevel(levelIdentified);
-        //UPGRD//MMOItems.log("Set Level: \u00a7b" + gemData.getLevel());
-        /*
-         * Only applies NON PROPER and MERGEABLE item stats
-         */
+
+        // Only applies NON PROPER and MERGEABLE item stats
         for (ItemStat stat : gemMMOItem.getStats()) {
+            if (stat instanceof GemStoneStat) continue;
 
-            // If it is not PROPER
-            if (!(stat instanceof GemStoneStat)) {
-
-                // Get the stat data
-                StatData data = gemMMOItem.getData(stat);
-
-                // If the data is MERGEABLE
-                if (data instanceof Mergeable) {
-                    //UPGRD//MMOItems.log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath());
-
-                    // Merge into it
-                    targetMMO.mergeData(stat, data, gemData.getHistoricUUID());
-                }
-            }
+            final StatData data = gemMMOItem.getData(stat);
+            if (data instanceof Mergeable)
+                targetMMO.mergeData(stat, data, gemData.getHistoricUUID());
         }
 
         if (!silent) {
@@ -204,9 +139,35 @@ public class GemStone extends UseItem {
 
         if (buildStack)
             return new ApplyResult(targetMMO.newBuilder().build());
-
         else
             return new ApplyResult(targetMMO, ResultType.SUCCESS);
+    }
+
+    private void findEmptySocket(StatHistory socketHistory, String gemType, GemstoneData gemstone) {
+
+        // Og data
+        GemSocketsData data = ((GemSocketsData) socketHistory.getOriginalData());
+        if (data.apply(gemType, gemstone)) return;
+
+        // Modifiers
+        for (UUID modifierId : socketHistory.getAllModifiers()) {
+            data = (GemSocketsData) socketHistory.getModifiersBonus(modifierId);
+            if (data.apply(gemType, gemstone)) return;
+        }
+
+        // External
+        for (StatData untypedData : socketHistory.getExternalData()) {
+            data = (GemSocketsData) untypedData;
+            if (data.apply(gemType, gemstone)) return;
+        }
+
+        // Gems
+        for (UUID gemId : socketHistory.getAllGemstones()) {
+            data = (GemSocketsData) socketHistory.getGemstoneData(gemId);
+            if (data.apply(gemType, gemstone)) return;
+        }
+
+        throw new RuntimeException("MMOItem contains available socket but not its socket stat history");
     }
 
     public static class ApplyResult {

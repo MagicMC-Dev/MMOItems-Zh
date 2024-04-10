@@ -4,6 +4,8 @@ Official repository for MMOItems Dev-build Premium
 
 <div align="center">
 
+༼ つ ◕_◕ ༽つ Please share
+
 ![][banner]
 
 [![][actions]][actions-link]

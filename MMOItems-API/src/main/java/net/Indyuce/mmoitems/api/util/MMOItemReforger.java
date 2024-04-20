@@ -447,12 +447,12 @@ public class MMOItemReforger {
 
     @Deprecated
     void regenerate(@Nullable RPGPlayer p) {
-        reforge(new ReforgeOptions(false, false, false, false, false, false, false, true), p);
+        reforge(new ReforgeOptions(), p);
     }
 
     @Deprecated
     int regenerate(@Nullable RPGPlayer player, @NotNull MMOItemTemplate template) {
-        reforge(new ReforgeOptions(false, false, false, false, false, false, false, true), player);
+        reforge(new ReforgeOptions(), player);
         return 0;
     }
 

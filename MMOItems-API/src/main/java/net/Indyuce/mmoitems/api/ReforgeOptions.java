@@ -99,19 +99,19 @@ public class ReforgeOptions {
         keepTier = config.contains("tier") ? config.getBoolean("tier", true) : null;
     }
 
-    public ReforgeOptions(boolean... values) {
-        keepName = arr(values, 0);
-        keepLore = arr(values, 1);
-        keepEnchantments = arr(values, 2);
-        keepUpgrades = arr(values, 3);
-        keepGemStones = arr(values, 4);
-        keepSoulBind = arr(values, 5);
-        keepExternalSH = arr(values, 6);
-        reRoll = arr(values, 7);
-        keepModifications = arr(values, 8);
-        keepAdvancedEnchantments = arr(values, 9);
-        keepSkins = arr(values, 10);
-        keepTier = arr(values, 11);
+    public ReforgeOptions() {
+        keepName = false;
+        keepLore = false;
+        keepEnchantments = true;
+        keepUpgrades = true;
+        keepGemStones = true;
+        keepSoulBind = true;
+        keepExternalSH = true;
+        reRoll = false;
+        keepModifications = true;
+        keepAdvancedEnchantments = true;
+        keepSkins = true;
+        keepTier = true;
     }
 
     boolean arr(@NotNull boolean[] booleans, int idx) {

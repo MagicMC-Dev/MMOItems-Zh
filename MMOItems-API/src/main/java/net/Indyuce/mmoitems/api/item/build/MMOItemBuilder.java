@@ -6,9 +6,9 @@ import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate.TemplateOption;
+import net.Indyuce.mmoitems.api.item.template.ModifierNode;
 import net.Indyuce.mmoitems.api.item.template.NameModifier;
 import net.Indyuce.mmoitems.api.item.template.NameModifier.ModifierType;
-import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
@@ -118,7 +118,7 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
             nameModifiers.forEach((obs, mod) -> {
 
                 // Create new Name Data
-                NameData modName = new NameData("");
+                NameData modName = new NameData(null);
 
                 // Include modifier information
                 if (mod.getType() == ModifierType.PREFIX) modName.addPrefix(mod.getFormat());
@@ -190,10 +190,10 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
      */
     @NotNull
     @Deprecated
-    public static Collection<TemplateModifier> rollModifiers(@NotNull MMOItemTemplate template) {
+    public static Collection<ModifierNode> rollModifiers(@NotNull MMOItemTemplate template) {
         if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER)) return template.getModifiers().values();
 
-        List<TemplateModifier> modifiers = new ArrayList<>(template.getModifiers().values());
+        List<ModifierNode> modifiers = new ArrayList<>(template.getModifiers().values());
         Collections.shuffle(modifiers);
         return modifiers;
     }

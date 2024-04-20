@@ -81,16 +81,32 @@ public class StatHistory {
 
         /*
          * Enchant list data is not clear even if redundant.
+         *
          * Its an important assumption in several methods
-         * like Enchants#separateEnchantments()
+         * like Enchants.separateEnchantments()
          */
-        if (getOriginalData() instanceof EnchantListData && ((EnchantListData) getOriginalData()).getEnchants().size() != 0)
+        if (getOriginalData() instanceof EnchantListData) {
+            if (((EnchantListData) getOriginalData()).getEnchants().size() != 0) {
+                //CLR//MMOItems.log("\u00a7a -+- \u00a77Found Enchantments, \u00a7cnot clear. \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}");
+                return false;
+            }
+        }
+
+        // Any gemstones or external SH? Then its NOT CLEAR
+        if (getAllGemstones().size() > 0 || getExternalData().size() > 0 || getAllModifiers().size() > 0) {
+            //CLR//MMOItems.log("\u00a7a -+- \u00a77Found Gemstones / ESH, \u00a7cnot clear. \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}");
             return false;
+        }
 
-        // Any gemstones, external or modifier data?
-        if (getAllGemstones().size() > 0 || getExternalData().size() > 0 || getAllModifiers().size() > 0) return false;
+        // Is it clear?
+        if (getOriginalData().isEmpty() && (!isUpgradeable() || getMMOItem().getUpgradeLevel() == 0)) {
+            //CLR//MMOItems.log("\u00a7a -+- \u00a77Original data is clear & unupgraded, \u00a7aclear. \u00A73(\u00a78Upgradeable? \u00a7b" + isUpgradeable() + "\u00a78, Upgrade Level:\u00a7b " + getMMOItem().getUpgradeLevel() + "\u00a73) \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}");
+            return true;
+        }
 
-        return true;
+        // Exactly the same as the MMOItem? [This check should basically always be true though]
+        //CLR//if (getOriginalData().equals(getMMOItem().getData(getItemStat()))) { MMOItems.log("\u00a7a -+- \u00a77Original data has never been merged, \u00a7aclear. \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}"); }
+        return getOriginalData().equals(getMMOItem().getData(getItemStat()));
     }
 
     public void setParent(@NotNull MMOItem parent) {

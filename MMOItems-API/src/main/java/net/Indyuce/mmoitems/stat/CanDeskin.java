@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
 import com.google.gson.JsonObject;
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.SmartGive;
-import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -29,9 +29,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -82,15 +82,9 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
                 ((LeatherArmorMeta) targetItemMeta).setColor(((LeatherArmorMeta) originalItemMeta).getColor());
 
             if (target.hasTag("SkullOwner") && (targetItem.getType() == VersionMaterial.PLAYER_HEAD.toMaterial())
-                    && (originalItem.getType() == VersionMaterial.PLAYER_HEAD.toMaterial())) {
-                try {
-                    Field profileField = targetItemMeta.getClass().getDeclaredField("profile");
-                    profileField.setAccessible(true);
-                    profileField.set(targetItemMeta, ((SkullTextureData) originalMmoitem.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
-                } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-                    MMOItems.plugin.getLogger().warning("无法读取头颅纹理");
-                }
-            }
+                    && (originalItem.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()))
+                MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta) targetItemMeta,
+                        ((SkullTextureData) originalMmoitem.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
 
             // Update deskined item
             final ItemStack updated = target.getItem();

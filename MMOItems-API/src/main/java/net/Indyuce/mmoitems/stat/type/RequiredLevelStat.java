@@ -2,15 +2,12 @@ package net.Indyuce.mmoitems.stat.type;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.RequiredLevelData;
 import net.Indyuce.mmoitems.stat.data.random.RandomRequiredLevelData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 /**
- * Used by {@link net.Indyuce.mmoitems.comp.rpg.AureliumSkillsHook} to handle
- * required skill levels.
+ * Used by {@link net.Indyuce.mmoitems.comp.rpg.AuraSkillsHook}
+ * to handle required skill levels.
  */
 public abstract class RequiredLevelStat extends DoubleStat implements ItemRestriction, GemStoneStat {
     // private final String idKey;

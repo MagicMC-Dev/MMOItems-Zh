@@ -265,7 +265,7 @@ public class MMOUtils {
      * "permanent" potion effects, depending on the potion effect type
      */
     public static int getEffectDuration(PotionEffectType type) {
-        return type.equals(PotionEffectType.NIGHT_VISION) || type.equals(PotionEffectType.CONFUSION) ? 260 : type.equals(PotionEffectType.BLINDNESS) ? 140 : 80;
+        return type.equals(PotionEffectType.NIGHT_VISION) || type.equals(PotionEffectType.CONFUSION) ? 260 : type.equals(PotionEffectType.BLINDNESS) ? 140 : 100;
     }
 
     @NotNull

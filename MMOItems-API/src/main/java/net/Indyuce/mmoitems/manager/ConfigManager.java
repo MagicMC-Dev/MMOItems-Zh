@@ -192,9 +192,9 @@ public class ConfigManager implements Reloadable {
         ConfigurationSection phatLoots = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.phat-loots");
         ConfigurationSection gemKeepData = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-gem-data");
         ReforgeOptions.dropRestoredGems = MMOItems.plugin.getConfig().getBoolean("item-revision.drop-extra-gems", true);
-        revisionOptions = keepData != null ? new ReforgeOptions(keepData) : new ReforgeOptions(false, false, false, false, false, false, false, true);
-        gemRevisionOptions = gemKeepData != null ? new ReforgeOptions(gemKeepData) : new ReforgeOptions(false, false, false, false, false, false, false, true);
-        phatLootsOptions = phatLoots != null ? new ReforgeOptions(phatLoots) : new ReforgeOptions(false, false, false, false, false, false, false, true);
+        revisionOptions = keepData != null ? new ReforgeOptions(keepData) : new ReforgeOptions();
+        gemRevisionOptions = gemKeepData != null ? new ReforgeOptions(gemKeepData) : new ReforgeOptions();
+        phatLootsOptions = phatLoots != null ? new ReforgeOptions(phatLoots) : new ReforgeOptions();
 
         List<String> exemptedPhatLoots = MMOItems.plugin.getConfig().getStringList("item-revision.disable-phat-loot");
         for (String epl : exemptedPhatLoots)

@@ -9,7 +9,6 @@ import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.ModifierNode;
-import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.util.TemplateMap;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import org.apache.commons.lang.Validate;
@@ -21,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 public class TemplateManager implements Reloadable {
 
@@ -184,8 +182,8 @@ public class TemplateManager implements Reloadable {
     }
 
     /**
-     * @return Collects all existing mmoitem templates into a set so that it can
-     * be filtered afterwards to generate random loot
+     * @return Collects all existing MMOItems templates into a set
+     * so that it can be filtered afterward to generate random loot
      */
     public Collection<MMOItemTemplate> collectTemplates() {
         return templates.collectValues();
@@ -193,20 +191,18 @@ public class TemplateManager implements Reloadable {
 
     @Deprecated
     public boolean hasModifier(String id) {
-        final ModifierNode node = modifierNodes.get(id);
-        return node != null && node instanceof TemplateModifier;
+        return modifierNodes.get(id) != null;
     }
 
     @Deprecated
     @Nullable
-    public TemplateModifier getModifier(String id) {
-        final ModifierNode node = modifierNodes.get(id);
-        return node instanceof TemplateModifier ? (TemplateModifier) node : null;
+    public ModifierNode getModifier(String id) {
+        return modifierNodes.get(id);
     }
 
     @Deprecated
-    public Collection<TemplateModifier> getModifiers() {
-        return modifierNodes.values().stream().filter(node -> node instanceof TemplateModifier).map(node -> (TemplateModifier) node).collect(Collectors.toList());
+    public Collection<ModifierNode> getModifiers() {
+        return modifierNodes.values();
     }
 
     public boolean hasModifierNode(@NotNull String id) {

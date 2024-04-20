@@ -6,7 +6,7 @@ main: net.Indyuce.mmoitems.MMOItems
 author: Indyuce
 description: ${project.description}
 depend: [MythicLib]
-softdepend: [WorldGuard,Residence,BossShopPro,SkillAPI,SkillsPro,MMOCore,MMOProfiles,MythicMobs,MMOInventory,PlaceholderAPI,Vault,Denizen,AureliumSkills]
+softdepend: [WorldGuard,Residence,BossShopPro,SkillAPI,SkillsPro,MMOCore,MMOProfiles,MythicMobs,MMOInventory,PlaceholderAPI,Vault,Denizen,AureliumSkills,AuraSkills]
 api-version: 1.13
 commands:
     mmoitems:

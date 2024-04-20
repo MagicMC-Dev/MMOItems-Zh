@@ -10,7 +10,6 @@ import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.manager.StatManager;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -33,9 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 
 public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> implements Upgradable, Previewable<NumericStatFormula, DoubleData> {
@@ -354,14 +351,46 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
     @NotNull
     @Override
     public StatData apply(@NotNull StatData original, @NotNull UpgradeInfo info, int level) {
+
+        // Must be DoubleData
+        int i = level;
         if (original instanceof DoubleData && info instanceof DoubleUpgradeInfo) {
-            int i = level;
+
+            // Get value
             double value = ((DoubleData) original).getValue();
-            while (i-- > 0) value = ((DoubleUpgradeInfo) info).getPMP().apply(value);
-            while (i++ < 0) value = ((DoubleUpgradeInfo) info).getPMP().reverse(value);
+
+            // If leveling up
+            if (i > 0) {
+
+                // While still positive
+                while (i > 0) {
+
+                    // Apply PMP Operation Positively
+                    value = ((DoubleUpgradeInfo) info).getPMP().apply(value);
+
+                    // Decrease
+                    i--;
+                }
+
+                // Degrading the item
+            } else if (i < 0) {
+
+                // While still negative
+                while (i < 0) {
+
+                    // Apply PMP Operation Reversibly
+                    value = ((DoubleUpgradeInfo) info).getPMP().reverse(value);
+
+                    // Decrease
+                    i++;
+                }
+            }
+
+            // Update
             ((DoubleData) original).setValue(value);
         }
 
+        // Upgraded
         return original;
     }
 

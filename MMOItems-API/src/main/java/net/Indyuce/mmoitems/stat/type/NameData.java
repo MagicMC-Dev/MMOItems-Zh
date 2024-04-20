@@ -7,13 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Data that stores what an item is originally named like and prefixes or whatever.
  */
 public class NameData extends StringData implements Mergeable<NameData> {
-    public NameData(@NotNull String str) {
-        super(str);
+    public NameData(@Nullable String string) {
+        super(string);
     }
 
     public void readPrefixes(@Nullable ItemTag tag) {
@@ -26,7 +27,24 @@ public class NameData extends StringData implements Mergeable<NameData> {
         }
     }
 
-    @NotNull public String getMainName() { return getString(); }
+    public void readSuffixes(@Nullable ItemTag tag) {
+        if (tag == null) { return; }
+
+        for (String str : ItemTag.getStringListFromTag(tag)) {
+            if (str == null) { continue; }
+
+            addSuffix(str);
+        }
+    }
+
+    public boolean hasMainName() {
+        return getString() != null && !getString().isEmpty();
+    }
+
+    @NotNull
+    public String getMainName() {
+        return Objects.requireNonNullElse(getString(), "");
+    }
 
     public boolean hasPrefixes() { return prefixes.size() > 0; }
     public boolean hasSuffixes() { return suffixes.size() > 0; }
@@ -86,16 +104,6 @@ public class NameData extends StringData implements Mergeable<NameData> {
         return ItemTag.fromStringList(path, getSuffixes());
     }
 
-    public void readSuffixes(@Nullable ItemTag tag) {
-        if (tag == null) { return; }
-
-        for (String str : ItemTag.getStringListFromTag(tag)) {
-            if (str == null) { continue; }
-
-            addSuffix(str);
-        }
-    }
-
     @NotNull ArrayList<String> prefixes = new ArrayList<>();
     public void addPrefix(@NotNull String str) { prefixes.add(str); }
     public void clearPrefixes() { prefixes.clear(); }
@@ -108,21 +116,16 @@ public class NameData extends StringData implements Mergeable<NameData> {
 
     @Override
     public void mergeWith(NameData data) {
-        if (!data.getMainName().isEmpty()) setString(data.getMainName());
+        if (data.hasMainName()) setString(data.getString());
         for (String p : data.getPrefixes()) addPrefix(p);
         for (String p : data.getSuffixes()) addSuffix(p);
-     /*   } else if (data instanceof StringData) {
-            // Replace name if not empty
-            if (data.toString().isEmpty()) { return; }
-            setString(data.toString());
-        }*/
     }
 
     @NotNull
     @Override
     public NameData clone() {
 
-        NameData c = new NameData(getMainName());
+        NameData c = new NameData(getString());
         for (String p : getPrefixes()) { c.addPrefix(p);}
         for (String p : getSuffixes()) { c.addSuffix(p);}
 

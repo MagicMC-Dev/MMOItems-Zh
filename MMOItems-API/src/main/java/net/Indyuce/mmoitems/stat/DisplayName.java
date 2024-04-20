@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -162,26 +163,18 @@ public class DisplayName extends StringStat implements GemStoneStat {
      */
     @NotNull
     @Override
-    public ArrayList<ItemTag> getAppliedNBT(@NotNull StringData data) {
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull StringData stringData) {
+        Validate.isTrue(stringData instanceof NameData, "Data is not name data");
+        NameData data = (NameData) stringData;
 
-        if (data instanceof NameData) {
+        ArrayList<ItemTag> tags = new ArrayList<>();
 
-            ArrayList<ItemTag> tags = new ArrayList<>();
+        // Append those
+        tags.add(new ItemTag(getNBTPath(), data.getMainName()));
+        if (data.hasPrefixes()) tags.add(data.compressPrefixes(getNBTPath() + "_PRE"));
+        if (data.hasSuffixes()) tags.add(data.compressSuffixes(getNBTPath() + "_SUF"));
 
-            // Append those
-            tags.add(new ItemTag(getNBTPath(), ((NameData) data).getMainName()));
-            if (((NameData) data).hasPrefixes()) {
-                tags.add(((NameData) data).compressPrefixes(getNBTPath() + "_PRE"));
-            }
-            if (((NameData) data).hasSuffixes()) {
-                tags.add(((NameData) data).compressSuffixes(getNBTPath() + "_SUF"));
-            }
-
-            return tags;
-        }
-
-        // Thats it
-        return new ArrayList<>();
+        return tags;
     }
 
     @Override
@@ -323,7 +316,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
     @NotNull
     @Override
     public StringData getClearStatData() {
-        return new NameData("Item");
+        return new NameData(null);
     }
 
     @Override

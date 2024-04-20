@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
@@ -19,9 +20,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 public class ItemSkin extends UseItem {
@@ -171,14 +172,8 @@ public class ItemSkin extends UseItem {
             if (volSkin.hasData(ItemStats.SKULL_TEXTURE)
                     && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
                     && nbtSkin.getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial())
-                try {
-                    final Field profileField = meta.getClass().getDeclaredField("profile");
-                    profileField.setAccessible(true);
-                    profileField.set(meta,
-                            ((SkullTextureData) volSkin.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
-                } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-                    MMOItems.plugin.getLogger().warning("Could not read skull texture");
-                }
+                MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta) meta,
+                        ((SkullTextureData) volSkin.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
 
             item.setItemMeta(meta);
         }

@@ -29,8 +29,11 @@ import java.util.UUID;
 
 public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureData> {
     public SkullTextureStat() {
-        super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toMaterial(), "头颅纹理", new String[]{"头颅纹理 &nvalue&7 可以在头颅数据库中找到。",
-                "建议 1.20+ 用户使用头颅纹理&n URL&7"}, new String[]{"all"}, VersionMaterial.PLAYER_HEAD.toMaterial());
+        super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toMaterial(), "头颅纹理", new String[]{
+                "无法在数据库中找到头颅纹理 &nvalue",
+                "建议 1.20+ 用户使用头颅纹理",
+                "(开头为 https://...)."
+        }, new String[]{"all"}, VersionMaterial.PLAYER_HEAD.toMaterial());
     }
 
     @Override

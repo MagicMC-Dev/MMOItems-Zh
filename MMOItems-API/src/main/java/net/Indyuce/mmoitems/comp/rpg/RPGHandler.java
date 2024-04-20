@@ -38,8 +38,9 @@ public interface RPGHandler {
         BATTLELEVELS("BattleLevels", BattleLevelsHook.class),
         MCMMO("mcMMO", McMMOHook.class),
         MCRPG("McRPG", McRPGHook.class),
-        SKILLS("Skills", SkillsHook.class),
         AURELIUM_SKILLS("AureliumSkills", AureliumSkillsHook.class),
+        AURA_SKILLS("AuraSkills", AuraSkillsHook.class),
+        SKILLS("Skills", SkillsHook.class),
         SKILLSPRO("SkillsPro", SkillsProHook.class);
 
         private final Class<? extends RPGHandler> pluginClass;

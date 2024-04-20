@@ -25,7 +25,8 @@ locked-skins: true
 # - MCMMO (力量级别)
 # - MCRPG (力量级别)
 # - SKILLS 或 SKILLSPRO (职业、级别、法力值)
-# - AURELIUM_SKILLS (力量级别、法力值)
+# - AURELIUM_SKILLS (版本 1.X : 力量级别、法力值)
+# - AURA_SKILLS (版本 2.+ : 力量级别、法力值)
 preferred-rpg-provider: MMOCORE
 
 # 默认情况下，所有玩家库存将每10个刻度更新一次，相当于每秒2次库存更新。

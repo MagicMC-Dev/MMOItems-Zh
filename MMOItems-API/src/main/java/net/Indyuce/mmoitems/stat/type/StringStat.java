@@ -38,7 +38,7 @@ public class StringStat extends ItemStat<StringData, StringData> {
         item.addItemTag(getAppliedNBT(data));
 
         // Display in lore
-        item.getLore().insert(getPath(), data.toString());
+        item.getLore().insert(getPath(), getGeneralStatFormat().replace("{value}", data.toString()));
     }
 
     @NotNull
@@ -94,7 +94,7 @@ public class StringStat extends ItemStat<StringData, StringData> {
         }
     }
 
-	@Nullable
+    @Nullable
     @Override
     public StringData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 

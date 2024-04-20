@@ -3,21 +3,20 @@ package net.Indyuce.mmoitems.api.player.inventory;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.player.modifier.ModifierSource;
+import io.lumine.mythic.lib.util.Lazy;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 public abstract class EquippedItem {
     private final NBTItem item;
     private final EquipmentSlot slot;
 
-    private VolatileMMOItem cached;
+    private final Lazy<VolatileMMOItem> cached;
 
     /**
      * An item equipped by a player in a specific slot
@@ -38,15 +37,11 @@ public abstract class EquippedItem {
     public EquippedItem(NBTItem item, EquipmentSlot slot) {
         this.item = item;
         this.slot = slot;
+        cached = Lazy.of(() -> new VolatileMMOItem(item));
     }
 
     public VolatileMMOItem getCached() {
-        return Objects.requireNonNull(cached, "Item not cached yet");
-    }
-
-    public void cacheItem() {
-        Validate.isTrue(cached == null, "MMOItem has already been cached");
-        cached = new VolatileMMOItem(item);
+        return cached.get();
     }
 
     public NBTItem getNBT() {

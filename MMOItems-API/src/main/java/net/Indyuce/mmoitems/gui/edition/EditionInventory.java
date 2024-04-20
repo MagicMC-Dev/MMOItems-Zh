@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
+import net.Indyuce.mmoitems.api.item.template.ModifierNode;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.PluginInventory;
@@ -58,7 +58,7 @@ public abstract class EditionInventory extends PluginInventory {
      *         edit the base item data.
      */
     @Deprecated
-    private TemplateModifier editedModifier = null;
+    private ModifierNode editedModifier = null;
 
     private ItemStack cachedItem;
     private int previousPage;

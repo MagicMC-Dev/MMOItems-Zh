@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
+import io.lumine.mythic.lib.api.event.SynchronizedDataLoadEvent;
 import io.lumine.mythic.lib.api.event.armorequip.ArmorEquipEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
@@ -52,6 +53,14 @@ public class PlayerListener implements Listener {
 
         // See description of DelayedDeathDowngrade child class for full explanation
         new DelayedDeathDowngrade(event).runTaskLater(MMOItems.plugin, 3L);
+    }
+
+    @EventHandler
+    public void fullSync(SynchronizedDataLoadEvent event) {
+        if (event.syncIsFull()) {
+            final PlayerData playerData = PlayerData.get(event.getHolder().getUniqueId());
+            playerData.updateInventory();
+        }
     }
 
     /**

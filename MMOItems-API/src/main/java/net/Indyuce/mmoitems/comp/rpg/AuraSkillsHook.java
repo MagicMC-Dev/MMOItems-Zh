@@ -1,15 +1,19 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import com.archyx.aureliumskills.AureliumSkills;
-import com.archyx.aureliumskills.api.AureliumAPI;
-import com.archyx.aureliumskills.api.event.SkillLevelUpEvent;
-import com.archyx.aureliumskills.data.PlayerDataLoadEvent;
-import com.archyx.aureliumskills.skills.Skill;
-import com.archyx.aureliumskills.skills.Skills;
-import com.archyx.aureliumskills.stats.Stats;
+import dev.aurelium.auraskills.api.AuraSkillsApi;
+import dev.aurelium.auraskills.api.event.skill.SkillLevelUpEvent;
+import dev.aurelium.auraskills.api.event.user.UserLoadEvent;
+import dev.aurelium.auraskills.api.skill.Skill;
+import dev.aurelium.auraskills.api.stat.StatModifier;
+import dev.aurelium.auraskills.api.stat.Stats;
+import dev.aurelium.auraskills.api.skill.Skills;
+import dev.aurelium.auraskills.api.trait.TraitModifier;
+import dev.aurelium.auraskills.api.trait.Traits;
+import dev.aurelium.auraskills.api.user.SkillsUser;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.EmptyRPGPlayer;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -27,23 +31,20 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * @deprecated Old version of {@link AuraSkillsHook}
- */
-@Deprecated
-public class AureliumSkillsHook implements RPGHandler, Listener {
-    private final AureliumSkills aSkills;
+public class AuraSkillsHook implements RPGHandler, Listener {
+    private AuraSkillsApi aSkills;
 
     private final Map<Stats, ItemStat> statExtra = new HashMap<>();
 
-    public AureliumSkillsHook() {
-        aSkills = (AureliumSkills) Bukkit.getPluginManager().getPlugin("AureliumSkills");
+    public AuraSkillsHook() {
+
+        aSkills = AuraSkillsApi.get();
 
         for (Stats stat : Stats.values()) {
             final String statName = UtilityMethods.caseOnWords(stat.name().toLowerCase());
             final ItemStat miStat = new DoubleStat("ADDITIONAL_" + stat.name(), Material.BOOK,
                     "Additional " + statName,
-                    new String[]{"Additional " + statName + " (AureliumSkills)"},
+                    new String[]{"Additional " + statName + " (AuraSkills)"},
                     new String[]{"!miscellaneous", "!block", "all"});
 
             statExtra.put(stat, miStat);
@@ -63,7 +64,7 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
     }
 
     /**
-     * AureliumSkills stores modifiers using ONE hash map for every stat
+     * AuraSkills stores modifiers using ONE hash map for every stat
      * unlike MythicLib which has several stat instances. Therefore, a
      * valid key for a stat modifier is "mmoitems_<stat_name>".
      * <p>
@@ -73,14 +74,25 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
     @Override
     public void refreshStats(PlayerData data) {
-        statExtra.forEach((stat, miStat) -> AureliumAPI.addStatModifier(data.getPlayer(), MODIFIER_KEY_PREFIX + stat.name(), stat, data.getStats().getStat(miStat)));
+        SkillsUser user = aSkills.getUser(data.getPlayer().getUniqueId());
+
+        user.addTraitModifier(
+                new TraitModifier(MODIFIER_KEY_PREFIX + "max_mana", Traits.MAX_MANA, data.getStats().getStat(ItemStats.MAX_MANA)));
+
+        double currentMaxMana = user.getMaxMana();
+
+        if(user.getMana() > currentMaxMana) {
+            user.setMana(currentMaxMana);
+        }
+
+        statExtra.forEach((stat, miStat) -> aSkills.getUser(data.getPlayer().getUniqueId()).addStatModifier(new StatModifier(MODIFIER_KEY_PREFIX + stat.name(), stat, data.getStats().getStat(miStat))));
     }
 
     @Override
     public RPGPlayer getInfo(PlayerData data) {
 
         /**
-         * AureliumSkills does not load player data directly on startup, instead we have to
+         * AuraSkills does not load player data directly on startup, instead we have to
          * listen to the PlayerDataLoadEvent before caching the rpg player data instance.
          *
          * See PlayerDataLoadEvent event handler below.
@@ -89,23 +101,19 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
     }
 
     @EventHandler
-    public void a(PlayerDataLoadEvent event) {
-        Player player = event.getPlayerData().getPlayer();
+    public void a(UserLoadEvent event) {
+        Player player = event.getPlayer();
         PlayerData playerData = PlayerData.get(player);
-        playerData.setRPGPlayer(new AureliumSkillsPlayer(playerData, event.getPlayerData()));
+        playerData.setRPGPlayer(new AuraSkillsPlayer(playerData, event.getUser()));
     }
 
-    public class AureliumSkillsPlayer extends RPGPlayer {
-        private final com.archyx.aureliumskills.data.PlayerData info;
+    public static class AuraSkillsPlayer extends RPGPlayer {
+        private final SkillsUser info;
 
-        public AureliumSkillsPlayer(PlayerData playerData, com.archyx.aureliumskills.data.PlayerData rpgPlayerData) {
+        public AuraSkillsPlayer(PlayerData playerData, SkillsUser rpgPlayerData) {
             super(playerData);
 
             info = rpgPlayerData;
-        }
-
-        public com.archyx.aureliumskills.data.PlayerData getAureliumSkillsPlayerData() {
-            return info;
         }
 
         @Override
@@ -144,15 +152,15 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
         public RequiredProfessionStat(Skills skill) {
             super(skill.name(), VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), skill.getDisplayName(Locale.getDefault()),
-                    new String[]{"Amount of " + skill.getDisplayName(Locale.getDefault()) + " levels the", "player needs to use the item.", "(AureliumSkills)"});
+                    new String[]{"Amount of " + skill.getDisplayName(Locale.getDefault()) + " levels the", "player needs to use the item.", "(AuraSkills)"});
 
-            this.skill = aSkills.getSkillRegistry().getSkill(skill.name());
+            this.skill = aSkills.getGlobalRegistry().getSkill(skill.getId());
         }
 
         @Override
         public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
 
-            final int skillLevel = AureliumAPI.getSkillLevel(player.getPlayer(), skill);
+            final int skillLevel = aSkills.getUser(player.getPlayer().getUniqueId()).getSkillLevel(skill);
             final int required = item.getInteger("MMOITEMS_REQUIRED_" + skill.name());
 
             if (skillLevel < required && !player.getPlayer().hasPermission("mmoitems.bypass.level")) {

@@ -41,7 +41,7 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
     private NumericStatFormula modifierCapacity;
 
     @Nullable
-    private ModifierGroup modifierGroup;
+    private ModifierNode modifierGroup;
     private final Set<TemplateOption> options = new HashSet<>();
 
     private final PostLoadAction postLoadAction = new PostLoadAction(config -> {
@@ -64,7 +64,7 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
 
         // Read modifiers
         try {
-            modifierGroup = config.contains("modifiers") ? new ModifierGroup(getId(), config) : null;
+            modifierGroup = config.contains("modifiers") ? new ModifierNode(getId(), config) : null;
             if (modifierGroup != null) modifierGroup.getPostLoadAction().performAction();
         } catch (Exception exception) {
             ffp.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier group: {0}", exception.getMessage());
@@ -133,7 +133,7 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
     }
 
     @Nullable
-    public ModifierGroup getModifierGroup() {
+    public ModifierNode getModifierGroup() {
         return modifierGroup;
     }
 
@@ -152,16 +152,15 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
 
     @NotNull
     @Deprecated
-    public Map<String, TemplateModifier> getModifiers() {
-        Map<String, TemplateModifier> built = new HashMap<>();
-        exploreMap(built, modifierGroup);
+    public Map<String, ModifierNode> getModifiers() {
+        Map<String, ModifierNode> built = new HashMap<>();
+        if (modifierGroup != null) exploreMap(built, modifierGroup);
         return built;
     }
 
-    private void exploreMap(Map<String, TemplateModifier> built, ModifierNode node) {
-        if (node instanceof ModifierGroup)
-            ((ModifierGroup) node).getChildren().forEach(child -> exploreMap(built, child));
-        else if (node instanceof TemplateModifier) built.put(node.getId(), (TemplateModifier) node);
+    private void exploreMap(Map<String, ModifierNode> built, ModifierNode node) {
+        node.getChildren().forEach(child -> exploreMap(built, child));
+        built.put(node.getId(), node);
     }
 
     @Deprecated
@@ -171,7 +170,7 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
 
     @Nullable
     @Deprecated
-    public TemplateModifier getModifier(String id) {
+    public ModifierNode getModifier(String id) {
         return getModifiers().get(id);
     }
 

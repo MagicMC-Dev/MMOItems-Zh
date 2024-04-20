@@ -5,6 +5,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 /**
@@ -20,7 +21,7 @@ public class LanguageFile extends ConfigFile {
     }
 
     @NotNull
-    public String computeTranslation(String path, Provider<String> defaultTranslation) {
+    public String computeTranslation(String path, Supplier<String> defaultTranslation) {
         @Nullable String found = getConfig().getString(path);
         if (found == null) {
             change = true;

@@ -119,7 +119,9 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
     }
 
     public void updateInventory() {
-        if (!isOnline()) return;
+
+        // Cannot update inventory unless online and fully sync
+        if (!isOnline() || !getMMOPlayerData().hasFullySynchronized()) return;
 
         /*
          * Very important, clear particle data AFTER canceling the runnable
@@ -160,7 +162,6 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
             if (!item.isPlacementLegal() || !getRPG().canUse(nbtItem, false, false))
                 continue;
 
-            item.cacheItem();
             inventory.getEquipped().add(item);
         }
 
@@ -168,20 +169,18 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
         Bukkit.getPluginManager().callEvent(new RefreshInventoryEvent(inventory.getEquipped(), getPlayer(), this));
 
         for (EquippedItem equipped : inventory.getEquipped()) {
-            final VolatileMMOItem item = equipped.getCached();
-
-            // Abilities
-            if (item.hasData(ItemStats.ABILITIES))
-                for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
-                    ModifierSource modSource = equipped.getCached().getType().getModifierSource();
-                    getMMOPlayerData().getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipped.getSlot(), modSource));
-                }
 
             // Modifier application rules
+            final VolatileMMOItem item = equipped.getCached();
             final ModifierSource source = item.getType().getModifierSource();
             final EquipmentSlot equipmentSlot = equipped.getSlot();
             if (!EquipmentSlot.MAIN_HAND.isCompatible(source, equipmentSlot))
                 continue;
+
+            // Abilities
+            if (item.hasData(ItemStats.ABILITIES))
+                for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities())
+                    getMMOPlayerData().getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipmentSlot, source));
 
             // Apply permanent potion effects
             if (item.hasData(ItemStats.PERM_EFFECTS))

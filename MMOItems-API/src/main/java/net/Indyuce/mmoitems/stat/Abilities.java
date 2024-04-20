@@ -51,8 +51,8 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
         return list;
     }
 
-    private String generalFormat, modifierIfAny, modifierForEach, modifierSplitter, abilitySplitter;
-    private boolean legacyFormat, useAbilitySplitter;
+    private String generalFormat, modifierIfAny, modifierForEach, modifierSplitter, abilitySplitter, modifierNewLine;
+    private boolean useAbilitySplitter;
     private int modifiersPerLine;
 
     @BackwardsCompatibility(version = "6.10")
@@ -61,17 +61,21 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
         // COMPATIBILITY CODE FOR MI <6.10
         if (!(configObject instanceof ConfigurationSection)) {
-            legacyFormat = true;
             generalFormat = legacyLanguageFile.getString("ability-format");
+            modifierIfAny = "\n";
+            modifierNewLine = "\n";
             modifierForEach = legacyLanguageFile.getString("ability-modifier");
+            modifierSplitter = "";
             abilitySplitter = legacyLanguageFile.getString("ability-splitter");
             useAbilitySplitter = abilitySplitter != null && !abilitySplitter.isEmpty();
+            modifiersPerLine = 1;
             return;
         }
 
         final ConfigurationSection config = (ConfigurationSection) configObject;
         generalFormat = config.getString("general-format");
-        modifierIfAny = config.getString("modifier-if-any");
+        modifierIfAny = config.getString("modifier-if-any", ""); // Backwards compatibility
+        modifierNewLine = "\n" + config.getString("modifier-new-line", ""); // Backwards compatibility
         modifierForEach = config.getString("modifier-foreach");
         modifierSplitter = config.getString("modifier-splitter");
         abilitySplitter = config.getString("ability-splitter.format");
@@ -81,65 +85,40 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull AbilityListData data) {
+        final List<String> abilityLore = new ArrayList<>();
 
-        // Modify Lore
-        List<String> abilityLore = new ArrayList<>();
+        data.getAbilities().forEach(ability -> {
+            final StringBuilder builder = new StringBuilder(generalFormat
+                    .replace("{trigger}", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger()))
+                    .replace("{ability}", ability.getAbility().getName()));
 
-        // DEPRECATED CODE which supports old versions of the stats.yml config
-        if (legacyFormat) {
-            data.getAbilities().forEach(ability -> {
-                abilityLore.add(generalFormat
-                        .replace("{trigger}", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger()))
-                        .replace("{ability}", ability.getAbility().getName()));
+            if (!ability.getModifiers().isEmpty()) builder.append(modifierIfAny);
 
-                for (String modifier : ability.getModifiers()) {
-                    item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier,
-                            MythicLib.plugin.getMMOConfig().decimals.format(ability.getParameter(modifier)));
-                    abilityLore.add(modifierForEach.replace("{modifier}", ability.getAbility().getParameterName(modifier)).replace("{value}",
-                            MythicLib.plugin.getMMOConfig().decimals.format(ability.getParameter(modifier))));
+            boolean newLine = false;
+            int lineCounter = 0;
+            for (String modifier : ability.getModifiers()) {
+                final String formattedValue = MythicLib.plugin.getMMOConfig().decimals.format(ability.getParameter(modifier));
+                item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier, formattedValue);
+                builder.append(newLine ? modifierNewLine : modifierSplitter);
+                builder.append(modifierForEach
+                        .replace("{modifier}", ability.getAbility().getParameterName(modifier))
+                        .replace("{value}", formattedValue));
+                newLine = false;
+                lineCounter++;
+
+                if (modifiersPerLine > 0 && lineCounter >= modifiersPerLine) {
+                    lineCounter = 0;
+                    newLine = true;
                 }
+            }
 
-                if (useAbilitySplitter)
-                    abilityLore.add(abilitySplitter);
-            });
-        }
+            abilityLore.add(builder.toString());
 
-        // Up to date code
-        else {
-            data.getAbilities().forEach(ability -> {
-                final StringBuilder builder = new StringBuilder(generalFormat
-                        .replace("{trigger}", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger()))
-                        .replace("{ability}", ability.getAbility().getName()));
+            if (useAbilitySplitter)
+                abilityLore.add(abilitySplitter);
+        });
 
-                if (!ability.getModifiers().isEmpty()) builder.append(modifierIfAny);
-
-                boolean modifierAppened = false;
-                int lineCounter = 0;
-                for (String modifier : ability.getModifiers()) {
-                    final String formattedValue = MythicLib.plugin.getMMOConfig().decimals.format(ability.getParameter(modifier));
-                    item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier, formattedValue);
-                    if (modifierAppened) builder.append(modifierSplitter);
-                    builder.append(modifierForEach
-                            .replace("{modifier}", ability.getAbility().getParameterName(modifier))
-                            .replace("{value}", formattedValue));
-                    modifierAppened = true;
-                    lineCounter++;
-
-                    if (modifiersPerLine > 0 && lineCounter >= modifiersPerLine) {
-                        lineCounter = 0;
-                        modifierAppened = false;
-                        builder.append("\n"); // Will be processed later on by MMOItems
-                    }
-                }
-
-                abilityLore.add(builder.toString());
-
-                if (useAbilitySplitter)
-                    abilityLore.add(abilitySplitter);
-            });
-        }
-
-        if (useAbilitySplitter && abilityLore.size() > 0)
+        if (useAbilitySplitter && !abilityLore.isEmpty())
             abilityLore.remove(abilityLore.size() - 1);
 
         // Modify tags
@@ -185,7 +164,7 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
         if (edited.equals("ability")) {
             Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(format),
-                    "格式不是有效的技能！您可以使用 /mi list ability 检查技能列表。");
+                    format + " 格式不是有效的技能！您可以使用 /mi list ability 检查技能列表。");
             RegisteredSkill ability = MMOItems.plugin.getSkills().getSkill(format);
 
             inv.getEditedSection().set("ability." + configKey, null);
@@ -197,7 +176,6 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
         }
 
         if (edited.equals("mode")) {
-
             TriggerType castMode = TriggerType.valueOf(format);
 
             inv.getEditedSection().set("ability." + configKey + ".mode", castMode.name());

@@ -48,7 +48,6 @@ public class ItemStats {
     //   Disable Interaction Stats
     DISABLE_INTERACTION = new DisableStat("INTERACTION", VersionMaterial.GRASS_BLOCK.toMaterial(), "禁用交互", new String[]{"!block", "all"}, "禁止任何不必要的交互:", "方块放置、物品使用..."),
             DISABLE_CRAFTING = new DisableStat("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "禁用合成", "玩家无法在合成时使用此物品。"), 
-            DISABLE_SMELTING = new DisableStat("SMELTING", Material.FURNACE, "禁用熔炼", "玩家无法在熔炼炉中使用此物品。"),
             DISABLE_SMITHING = new DisableStat("SMITHING", Material.DAMAGED_ANVIL, "禁用锻造", "玩家无法在锻造台中锻造此物品。"),
             DISABLE_ENCHANTING = new DisableStat("ENCHANTING", VersionMaterial.ENCHANTING_TABLE.toMaterial(), "禁用附魔", new String[]{"!block", "all"}, "玩家无法对此物品进行附魔。"),
             DISABLE_REPAIRING = new DisableStat("REPAIRING", Material.ANVIL, "禁用修复", new String[]{"!block", "all"}, "玩家无法在铁砧中使用此物品进行修复。"),

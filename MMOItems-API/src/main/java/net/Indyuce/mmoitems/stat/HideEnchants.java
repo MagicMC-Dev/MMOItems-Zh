@@ -20,7 +20,7 @@ import java.util.ArrayList;
 @Deprecated
 public class HideEnchants extends BooleanStat {
 	public HideEnchants() {
-		super("HIDE_ENCHANTS", Material.BOOK, "隐藏附魔", new String[] { "启用以完全隐藏您的物品附魔", "您仍然可以看到发光效果" }, new String[] { "all" });
+		super("HIDE_ENCHANTS", Material.BOOK, "隐藏附魔", new String[] { "启用以完全隐藏您的物品附魔", "您仍然可以看到发光效果" }, new String[0]);
 	}
 
 	@Override

@@ -36,7 +36,7 @@ import scala.math.Numeric;
 public class RevisionID extends ItemStat<NumericStatFormula, DoubleData> implements GemStoneStat {
 	public RevisionID() {
 		super("REVISION_ID", Material.ITEM_FRAME, "修改 ID", new String[] { "修改版 ID 用于确定项目是否是旧版", "每当对物品进行更改时", "都应该增加此值！", "(同装备高ID会自动更新低ID的属性效果等等)!", "", "§6更新程序很智能", "§6会对物品的基本属性进行更改,", "§6(例如)保持宝石完好无损 ."},
-				new String[] { "all" });
+		        new String[0]);
 	}
 
 	@Override

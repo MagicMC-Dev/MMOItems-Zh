@@ -44,17 +44,13 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
      *
      * @param id        The item stat ID, used internally. Also determines the
      *                  lower case path for config files
-     * @param material  The material used to display the stat in the item
-     *                  edition GUI
-     * @param name      The stat name which has a translation in the language
-     *                  files
+     * @param material  The material used to display the stat in the item edition GUI
+     * @param name      The stat name which has a translation in the language files
      * @param lore      The stat description used in the edition GUI
-     * @param types     Compatible types. Use 'all' to support all item types or
-     *                  !{type-name} to blacklist an item type
-     * @param materials Materials compatible with the item stat (eg Shield
-     *                  Pattern), any if empty
+     * @param types     Compatible types. See {@link #isCompatible(Type)}
+     * @param materials Materials compatible with the item stat (e.g Shield Pattern), any if empty
      */
-    public ItemStat(@NotNull String id, @NotNull Material material, @NotNull String name, String[] lore, String[] types, Material... materials) {
+    public ItemStat(@NotNull String id, @NotNull Material material, @NotNull String name, @Nullable String[] lore, @Nullable String[] types, Material... materials) {
         this.id = id;
         this.material = material;
         this.lore = lore == null ? new String[0] : lore;
@@ -268,19 +264,20 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
      */
     public boolean isCompatible(@NotNull Type type) {
 
-        // Special rule for weapons
-        if (type.isWeapon() && compatibleTypes.contains("weapon")) return true;
+        if (compatibleTypes.isEmpty()) return true;
 
-        // Recursive call with root types
-        if (type.isSubtype()) return isCompatible(type.getParent());
+        // Main rules
+        if (type.getModifierSource().isWeapon() && compatibleTypes.contains("weapon")) return true;
+        if (type.getModifierSource().isEquipment() && compatibleTypes.contains("equipment")) return true;
+        if (type.getModifierSource().isHandheld() && compatibleTypes.contains("handheld")) return true;
 
-        // Parent item types
-        final String lower = type.getId().toLowerCase();
+        // Supertype/parent/root type
+        final String lower = type.getSupertype().getId().toLowerCase();
         return !compatibleTypes.contains("!" + lower) && (compatibleTypes.contains("all") || compatibleTypes.contains(lower));
     }
 
     public boolean hasValidMaterial(ItemStack item) {
-        return compatibleMaterials.size() == 0 || compatibleMaterials.contains(item.getType());
+        return compatibleMaterials.isEmpty() || compatibleMaterials.contains(item.getType());
     }
 
     public void disable() {

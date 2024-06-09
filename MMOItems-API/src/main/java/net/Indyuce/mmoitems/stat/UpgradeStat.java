@@ -43,12 +43,12 @@ import java.util.Optional;
 import java.util.Random;
 
 public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements ConsumableItemInteraction {
-	private static final Random random = new Random();
+	private static final Random RANDOM = new Random();
 
 	public UpgradeStat() {
 		super("UPGRADE", Material.FLINT, "升级物品",
 				new String[] { "升级物品可以", "提高其当前属性.", "升级需要消耗品或特定的制作站 ", "升级有时可能会&c失败&7..." },
-				new String[] { "weapon", "catalyst", "tool", "armor", "consumable", "accessory" });
+				new String[] {"equipment"});
 	}
 
 	@Override
@@ -233,7 +233,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 				return false;
 			}
 
-			if (random.nextDouble() > consumableSharpening.getSuccess() * targetSharpening.getSuccess()) {
+			if (RANDOM.nextDouble() > consumableSharpening.getSuccess() * targetSharpening.getSuccess()) {
 				Message.UPGRADE_FAIL.format(ChatColor.RED).send(player);
 				if (targetSharpening.destroysOnFail())
 					event.getCurrentItem().setAmount(0);

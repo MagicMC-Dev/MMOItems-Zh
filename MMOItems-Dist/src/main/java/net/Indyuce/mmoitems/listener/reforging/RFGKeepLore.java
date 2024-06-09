@@ -38,7 +38,7 @@ public class RFGKeepLore  implements Listener {
         if (extraLore.size() == 0) { return; }
 
         // All right set it as the original in the Stat History
-        StatHistory hist = StatHistory.from(event.getNewMMOItem(), ItemStats.LORE);
+        StatHistory hist = event.getNewMMOItem().computeStatHistory(ItemStats.LORE);
 
         // UUH just add it to the original I guess bruh
         StringListData original = (StringListData) hist.getOriginalData();

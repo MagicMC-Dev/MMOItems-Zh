@@ -28,10 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class ItemStackBuilder {
@@ -82,10 +79,10 @@ public class ItemStackBuilder {
 
     /**
      * @return Does NOT return the built item stack. It returns only returns the
-     *         default item stack with material applied. Built item stack is given
-     *         by build(). This method should only be used to check if the item is
-     *         of a specific material (like the Shield Pattern stat which checks if
-     *         the item is a shield)
+     * default item stack with material applied. Built item stack is given
+     * by build(). This method should only be used to check if the item is
+     * of a specific material (like the Shield Pattern stat which checks if
+     * the item is a shield)
      */
     @NotNull
     public ItemStack getItemStack() {
@@ -140,12 +137,9 @@ public class ItemStackBuilder {
          * through non-MMOItems supported sources, the name can be changed in
          * an anvil, so the very original name must be saved.
          */
-        if (!builtMMOItem.hasData(ItemStats.NAME)) {
+        if (!builtMMOItem.hasData(ItemStats.NAME))
             builtMMOItem.setData(ItemStats.NAME, ItemStats.NAME.getClearStatData());
-        }
-        if (builtMMOItem.getStatHistory(ItemStats.NAME) == null) {
-            StatHistory.from(builtMMOItem, ItemStats.NAME);
-        }
+        builtMMOItem.computeStatHistory(ItemStats.NAME); // Ignore result
 
         // For every stat within this item
         for (ItemStat stat : builtMMOItem.getStats())
@@ -156,10 +150,10 @@ public class ItemStackBuilder {
 
                 // Does the item have any stat history regarding thay?
                 StatHistory s = builtMMOItem.getStatHistory(stat);
-                int l = mmoitem.getUpgradeLevel();
 
                 // Found it?
                 if (s != null) {
+                    int l = mmoitem.getUpgradeLevel();
                     //GEM//MMOItems.log("\u00a7a -+- \u00a77History exists...");
                     //GEM//s.log();
 

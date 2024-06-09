@@ -127,7 +127,7 @@ public class MMOItems extends MMOPlugin {
         saveDefaultConfig();
         configManager = new ConfigManager();
 
-        statManager.load();
+        statManager.loadInternalStats();
         typeManager.reload(false);
         templateManager.preloadObjects();
 
@@ -168,13 +168,14 @@ public class MMOItems extends MMOPlugin {
         });
         PluginUtils.hookDependencyIfPresent("MMOInventory", unused -> new MMOInventorySupport());
 
+        // This needs to be before modifier registration (MMOCore)
         findRpgPlugins();
 
         /*
          * After tiers, sets and upgrade templates are loaded, MI template data
          * can be fully loaded
          */
-        statManager.loadElements();
+        statManager.loadElements(); // Why is this call made there?
         loreManager.reload();
         tierManager = new TierManager();
         setManager = new SetManager();
@@ -238,7 +239,7 @@ public class MMOItems extends MMOPlugin {
                     try {
                         new MMOItemsRewardTypes().register();
                     } catch (NullPointerException ignored) {
-                        getLogger().log(Level.INFO, "无法挂勾到 BossShopPro");
+                        getLogger().log(Level.WARNING, "无法挂勾到 BossShopPro");
                     }
                 }
             }).runTaskLater(this, 1L);

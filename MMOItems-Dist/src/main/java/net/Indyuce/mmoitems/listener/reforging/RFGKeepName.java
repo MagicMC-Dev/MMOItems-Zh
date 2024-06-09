@@ -50,7 +50,7 @@ public class RFGKeepName implements Listener {
         }
 
         // All right set it as the original in the Stat History
-        StatHistory hist = StatHistory.from(event.getNewMMOItem(), ItemStats.NAME);
+        StatHistory hist = event.getNewMMOItem().computeStatHistory(ItemStats.NAME);
 
         // Put it there
         ((NameData) hist.getOriginalData()).setString(transfer.getMainName());

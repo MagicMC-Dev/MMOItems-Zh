@@ -18,7 +18,10 @@ SWORD:
     display: IRON_SWORD:0
     
     # 物品lore中显示的名称。
-    name: '剑'
+    name: 'Sword'
+
+    # 此类型是否应该显示在项目浏览器中？
+    hide-in-game: false
     
     # 未鉴定物品的模板。
     unident-item:

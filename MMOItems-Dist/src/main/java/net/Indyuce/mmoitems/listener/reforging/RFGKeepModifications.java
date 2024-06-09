@@ -33,7 +33,7 @@ public class RFGKeepModifications implements Listener {
         for (StatHistory oldHist : event.getOldMMOItem().getStatHistories()) {
 
             // Get newer
-            StatHistory newHist = StatHistory.from(event.getNewMMOItem(), oldHist.getItemStat());
+            StatHistory newHist = event.getNewMMOItem().computeStatHistory(oldHist.getItemStat());
 
             // Through all EXSH
             for (UUID mod : oldHist.getAllModifiers()) {

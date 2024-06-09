@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public class ItemLevel extends ItemStat<NumericStatFormula, DoubleData> implements InternalStat {
 	public ItemLevel() {
-		super("ITEM_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "物品等级", new String[] { "你的物品等级" }, new String[] { "all" });
+		super("ITEM_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "物品等级", new String[] { "你的物品等级" }, new String[0]);
 	}
 
 	@Override

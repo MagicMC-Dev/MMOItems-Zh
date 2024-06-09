@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
@@ -11,7 +12,6 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
-//import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import net.Indyuce.mmoitems.util.LanguageFile;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -54,7 +54,12 @@ public class ConfigManager implements Reloadable {
         mkdir("item");
         mkdir("language");
         mkdir("language/lore-formats");
-        mkdir("modifiers");
+
+        final File modifiersFolder = new File(MMOItems.plugin.getDataFolder() + "/modifiers");
+        if (!modifiersFolder.exists()) {
+            mkdir("modifiers");
+            DefaultFile.EXAMPLE_MODIFIERS.checkFile();
+        }
 
         File craftingStationsFolder = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");
         if (!craftingStationsFolder.exists()) {
@@ -204,7 +209,7 @@ public class ConfigManager implements Reloadable {
             defaultItemCapacity = new NumericStatFormula(MMOItems.plugin.getConfig().getConfigurationSection("default-item-capacity"));
         } catch (IllegalArgumentException exception) {
             defaultItemCapacity = new NumericStatFormula(5, .05, .1, .3);
-            MMOItems.plugin.getLogger().log(Level.INFO,
+            MMOItems.plugin.getLogger().log(Level.WARNING,
                     "An error occurred while trying to load default capacity formula for the item generator, using default: "
                             + exception.getMessage());
         }
@@ -216,7 +221,7 @@ public class ConfigManager implements Reloadable {
 
     /**
      * @return Can this block material be broken by tool mechanics
-     *         like 'Bouncing Crack'
+     * like 'Bouncing Crack'
      */
     public boolean isBlacklisted(@NotNull Material material) {
         return MMOItems.plugin.getConfig().getStringList("block-blacklist").contains(material.name());
@@ -303,7 +308,7 @@ public class ConfigManager implements Reloadable {
         ITEM_SETS("", "item-sets"),
         GEN_TEMPLATES("", "gen-templates"),
         UPGRADE_TEMPLATES("", "upgrade-templates"),
-        EXAMPLE_MODIFIERS("modifiers", "example-modifiers"),
+        EXAMPLE_MODIFIERS("modifiers", "example_modifiers", true),
         CUSTOM_STATS("", "custom-stats"),
 
         // Default EN language files

@@ -113,7 +113,7 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
         if (!nameModifiers.isEmpty()) {
 
             // Get name data
-            StatHistory hist = StatHistory.from(mmoitem, ItemStats.NAME);
+            StatHistory hist = mmoitem.computeStatHistory(ItemStats.NAME);
 
             nameModifiers.forEach((obs, mod) -> {
 
@@ -156,7 +156,7 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
      */
     public void addModifierData(@NotNull ItemStat stat, @NotNull StatData data, @NotNull UUID uuid) {
         if (stat.getClearStatData() instanceof Mergeable)
-            StatHistory.from(mmoitem, stat).registerModifierBonus(uuid, data);
+            mmoitem.computeStatHistory(stat).registerModifierBonus(uuid, data);
         else mmoitem.setData(stat, data);
     }
 

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class NBTTags extends StringListStat {
 	public NBTTags() {
-		super("CUSTOM_NBT", Material.NAME_TAG, "NBT 标签", new String[] { "自定义 NBT 标签" }, new String[] { "all" });
+		super("CUSTOM_NBT", Material.NAME_TAG, "NBT 标签", new String[] { "自定义 NBT 标签" }, new String[0]);
 	}
 
 	@Override

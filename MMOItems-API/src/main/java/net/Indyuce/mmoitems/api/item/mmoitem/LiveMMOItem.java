@@ -45,7 +45,7 @@ public class LiveMMOItem extends ReadMMOItem {
                 stat.whenLoaded(this);
 
                 // History not prematurely loaded?
-                if (getStatHistory(stat) == null) {
+                if (!hasStatHistory(stat)) {
 
                     // Also load history :think ing:
                     ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.history_keyword + stat.getId(), getNBT(), SupportedNBTTagValues.STRING);

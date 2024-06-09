@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.listener.reforging;
 
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.MMOItemReforgeEvent;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
@@ -28,7 +27,7 @@ public class RFGKeepExternalSH implements Listener {
             if (oldHist.getItemStat() == ItemStats.ENCHANTS) { continue; }
 
             // Get newer
-            StatHistory newHist = StatHistory.from(event.getNewMMOItem(), oldHist.getItemStat());
+            StatHistory newHist = event.getNewMMOItem().computeStatHistory(oldHist.getItemStat());
 
             // Through all EXSH
             for (StatData exSH : oldHist.getExternalData()) {

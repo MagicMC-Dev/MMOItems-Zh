@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.common.collect.Lists;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.util.formula.NumericalExpression;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -53,6 +54,17 @@ public class LoreBuilder extends Buildable<List<String>> {
      */
     public void insert(int index, @NotNull String element) {
         lore.add(index, element);
+    }
+
+    /**
+     * Inserts specific lines at a specific index in the item lore.
+     * Used by custom enchantment plugins to add enchant display to item lore.
+     *
+     * @param index    Index of insertion
+     * @param elements Strings to insert
+     */
+    public void insert(int index, @NotNull Collection<String> elements) {
+        lore.addAll(index, elements);
     }
 
     /**
@@ -283,7 +295,7 @@ public class LoreBuilder extends Buildable<List<String>> {
     @Deprecated
     private String evaluate(String formula) {
         try {
-            return MythicLib.plugin.getMMOConfig().decimals.format((double) MythicLib.plugin.getFormulaParser().eval(formula));
+            return MythicLib.plugin.getMMOConfig().decimals.format(NumericalExpression.eval(formula));
         } catch (Throwable throwable) {
             return "<ParsingError>";
         }

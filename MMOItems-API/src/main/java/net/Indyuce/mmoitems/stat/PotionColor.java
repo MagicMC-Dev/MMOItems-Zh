@@ -28,7 +28,7 @@ import java.util.Optional;
 public class PotionColor extends ItemStat<ColorData, ColorData> {
 	public PotionColor() {
 		super("POTION_COLOR", Material.POTION, "药水颜色",
-				new String[] { "你的药水的颜色", " (不影响效果) " }, new String[] { "all" }, Material.POTION,
+				new String[] { "你的药水的颜色", " (不影响效果) " }, new String[0], Material.POTION,
 				Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}
 

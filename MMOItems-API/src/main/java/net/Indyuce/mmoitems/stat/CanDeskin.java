@@ -25,11 +25,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -72,6 +70,8 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
             ItemMeta targetItemMeta = targetItem.getItemMeta();
             ItemMeta originalItemMeta = originalItem.getItemMeta();
 
+            // TODO SkinStat
+
             if (targetItemMeta.isUnbreakable()) {
                 targetItemMeta.setUnbreakable(originalItemMeta.isUnbreakable());
                 if (targetItemMeta instanceof Damageable && originalItemMeta instanceof Damageable)
@@ -81,12 +81,18 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
             if (targetItemMeta instanceof LeatherArmorMeta && originalItemMeta instanceof LeatherArmorMeta)
                 ((LeatherArmorMeta) targetItemMeta).setColor(((LeatherArmorMeta) originalItemMeta).getColor());
 
+            if (targetItemMeta instanceof ArmorMeta && originalItemMeta instanceof ArmorMeta) {
+                ((ArmorMeta) targetItemMeta).setTrim(((ArmorMeta) originalItemMeta).getTrim());
+                if (originalItemMeta.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) targetItemMeta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+                else targetItemMeta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+            }
+
             if (target.hasTag("SkullOwner") && (targetItem.getType() == VersionMaterial.PLAYER_HEAD.toMaterial())
                     && (originalItem.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()))
                 MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta) targetItemMeta,
                         ((SkullTextureData) originalMmoitem.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
 
-            // Update deskined item
+            // Update un-skined item
             final ItemStack updated = target.getItem();
             updated.setItemMeta(targetItemMeta);
             updated.setType(originalItem.getType());
@@ -94,20 +100,21 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
             // Give back the skin item
             try {
 
-                // Try to find the skin item.
-                // This is for backwards compatibility as cases with SKIN subtypes were not handled
-                // in the past, inducing an unfixable data loss for item skins applied onto items
+                /*
+                 * Try to find the skin item. This code is for backwards compatibility as
+                 * cases with SKIN subtypes were not handled in the past, inducing an
+                 * unfixable data loss for item skins applied onto items
+                 */
                 @Deprecated final String skinTypeId = target.getString(ItemSkin.SKIN_TYPE_TAG);
                 final Type type = Objects.requireNonNullElse(Type.get(skinTypeId), Type.SKIN);
-                Validate.notNull(type, "找不到应用皮肤的物品类型");
-                final MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(Type.SKIN, skinId);
-                Validate.notNull(template, "找不到应用皮肤的物品模板");
+                final MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, skinId);
+                Validate.notNull(template, "找不到应用皮肤的物品模板, 使用类型 " + type.getName());
 
                 // Item found, giving it to the player
                 final MMOItem mmoitem = template.newBuilder(playerData.getRPG()).build();
                 new SmartGive(player).give(mmoitem.newBuilder().build());
             } catch (Exception exception) {
-                MMOItems.plugin.getLogger().log(Level.INFO, "无法检索玩家 ID 为 '" + skinId + "' 的物品皮肤" + playerData.getUniqueId());
+                MMOItems.plugin.getLogger().log(Level.WARNING, "无法检索玩家 ID 为 '" + skinId + "' 的物品皮肤 " + playerData.getUniqueId());
                 // No luck :(
             }
 

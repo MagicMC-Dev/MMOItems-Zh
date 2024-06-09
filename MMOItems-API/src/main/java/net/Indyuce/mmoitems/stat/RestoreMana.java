@@ -22,16 +22,9 @@ public class RestoreMana extends DoubleStat implements PlayerConsumable {
 
     @Override
     public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player, boolean vanillaEating) {
+        if (!mmo.hasData(ItemStats.RESTORE_MANA)) return;
 
-        // No data no service
-        if (!mmo.hasData(ItemStats.RESTORE_MANA))
-            return;
-
-        // Get value
-        DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_MANA);
-
-        // Any mana being provided?
-        if (d.getValue() != 0)
-            PlayerData.get(player).getRPG().giveMana(d.getValue());
+        final DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_MANA);
+        if (d.getValue() != 0) PlayerData.get(player).getRPG().giveMana(d.getValue());
     }
 }

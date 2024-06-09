@@ -29,7 +29,7 @@ public class CrazyEnchantsStat extends ItemStat<RandomStatData<CrazyEnchantsData
      * are loaded and added back to the item when building it again.
      */
     public CrazyEnchantsStat() {
-        super("CRAZY_ENCHANTS", Material.BOOK, "Advanced Enchants", new String[0], new String[]{"all"});
+        super("CRAZY_ENCHANTS", Material.BOOK, "Advanced Enchants", new String[0], new String[0]);
     }
 
     /**

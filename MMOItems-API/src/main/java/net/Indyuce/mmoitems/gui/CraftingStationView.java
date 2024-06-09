@@ -29,6 +29,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -101,11 +103,11 @@ public class CraftingStationView extends PluginInventory {
             public void run() {
 
                 /*
-                 * easier than caching a boolean and changing its state when
+                 * Easier than caching a boolean and changing its state when
                  * closing or opening inventories which is glitchy when just
                  * updating them.
                  */
-                if (inv.getViewers().size() < 1) {
+                if (inv.getViewers().isEmpty()) {
                     cancel();
                     return;
                 }
@@ -162,19 +164,23 @@ public class CraftingStationView extends PluginInventory {
             return;
         }
 
-        NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+        final NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
         String tag = item.getString("recipeId");
         if (!tag.isEmpty()) {
-            CheckedRecipe recipe = getRecipe(tag);
-            if (event.isRightClick())
-                new CraftingStationPreview(this, recipe).open();
+
+            // First re-update the player's inventory
+            // to avoid duplication glitches
+            updateData();
+
+            final CheckedRecipe recipe = getRecipe(tag);
+            if (event.isRightClick()) new CraftingStationPreview(this, recipe).open();
             else {
                 processRecipe(recipe);
                 open();
             }
         }
 
-        if (!(tag = item.getString("queueId")).isEmpty()) {
+        else if (!(tag = item.getString("queueId")).isEmpty()) {
             QueueItem recipeInfo = playerData.getCrafting().getQueue(station).getCraft(UUID.fromString(tag));
             CraftingRecipe recipe = recipeInfo.getRecipe();
 
@@ -264,7 +270,8 @@ public class CraftingStationView extends PluginInventory {
         }
     }
 
-    private CheckedRecipe getRecipe(String id) {
+    @Nullable
+    private CheckedRecipe getRecipe(@NotNull String id) {
         for (CheckedRecipe info : recipes)
             if (info.getRecipe().getId().equals(id))
                 return info;

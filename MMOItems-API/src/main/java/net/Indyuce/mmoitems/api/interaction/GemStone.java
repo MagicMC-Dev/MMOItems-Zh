@@ -102,7 +102,7 @@ public class GemStone extends UseItem {
          * Now must apply the gem sockets data to the Stat History and then recalculate.
          * Gotta, however, find the correct StatData to which apply it to.
          */
-        StatHistory gemStory = StatHistory.from(targetMMO, ItemStats.GEM_SOCKETS);
+        StatHistory gemStory = targetMMO.computeStatHistory(ItemStats.GEM_SOCKETS);
         findEmptySocket(gemStory, gemType, gemData);
         targetMMO.setData(ItemStats.GEM_SOCKETS, gemStory.recalculate(targetMMO.getUpgradeLevel()));
 

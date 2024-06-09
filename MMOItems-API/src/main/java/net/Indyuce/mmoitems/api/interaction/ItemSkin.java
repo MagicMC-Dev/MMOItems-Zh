@@ -16,11 +16,9 @@ import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -167,6 +165,13 @@ public class ItemSkin extends UseItem {
             // Leather armor
             if (skinMeta instanceof LeatherArmorMeta && meta instanceof LeatherArmorMeta)
                 ((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) skinMeta).getColor());
+
+            // Armor trim
+            if (skinMeta instanceof ArmorMeta && meta instanceof ArmorMeta) {
+                ((ArmorMeta) meta).setTrim(((ArmorMeta) skinMeta).getTrim());
+                if (skinMeta.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+                else meta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+            }
 
             // Skull texture
             if (volSkin.hasData(ItemStats.SKULL_TEXTURE)

@@ -26,7 +26,7 @@ public class LanguageFile extends ConfigFile {
         if (found == null) {
             change = true;
             getConfig().set(path, found = defaultTranslation.get());
-            MMOItems.plugin.getLogger().log(Level.INFO, "找不到 '" + path + "' 的翻译, 生成它");
+            MMOItems.plugin.getLogger().log(Level.WARNING, "找不到 '" + path + "' 的翻译, 生成它");
         }
 
         return found;

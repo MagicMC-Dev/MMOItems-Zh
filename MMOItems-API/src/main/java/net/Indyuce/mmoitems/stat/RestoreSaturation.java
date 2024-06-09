@@ -25,21 +25,12 @@ public class RestoreSaturation extends DoubleStat implements PlayerConsumable {
     @Override
     public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player, boolean vanillaEating) {
 
-        /*
-         * For some reason, it was in the earlier code that the default value
-         * of restored saturation is 6... I am all for backwards compatibility
-         * such that this must be respected.
-         *
-         * 6 is the saturation for a cooked beef. Since 6.7 it now uses the item
-         * default saturation modifier using NMS code
-         */
-        double defSaturation = getSaturationRestored(mmo.getNBT().getItem());
-        double saturation = mmo.hasData(ItemStats.RESTORE_SATURATION) ? ((DoubleData) mmo.getData(ItemStats.RESTORE_SATURATION)).getValue() : defSaturation;
-        saturation = saturation - (vanillaEating ? defSaturation : 0);
+        final double vanillaSaturation = getSaturationRestored(mmo.getNBT().getItem());
+        double saturation = mmo.hasData(ItemStats.RESTORE_SATURATION) ? ((DoubleData) mmo.getData(ItemStats.RESTORE_SATURATION)).getValue() : vanillaSaturation;
+        if (vanillaEating) saturation -= vanillaSaturation;
 
         // Any saturation being provided?
-        if (saturation != 0)
-            MMOUtils.saturate(player, saturation);
+        if (saturation != 0) MMOUtils.saturate(player, saturation);
     }
 
     private float getSaturationRestored(ItemStack item) {

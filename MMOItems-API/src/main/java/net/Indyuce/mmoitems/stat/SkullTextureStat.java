@@ -33,7 +33,7 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
                 "无法在数据库中找到头颅纹理 &nvalue",
                 "建议 1.20+ 用户使用头颅纹理",
                 "(开头为 https://...)."
-        }, new String[]{"all"}, VersionMaterial.PLAYER_HEAD.toMaterial());
+        }, new String[0], VersionMaterial.PLAYER_HEAD.toMaterial());
     }
 
     @Override
@@ -98,8 +98,9 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
     @Override
     public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
         try {
+            // TODO better exception handling
             final ItemMeta meta = mmoitem.getNBT().getItem().getItemMeta();
-            Validate.isTrue(meta instanceof SkullMeta);
+            Validate.isTrue(meta instanceof SkullMeta, "Item is not a skull");
             final Object profile = MythicLib.plugin.getVersion().getWrapper().getProfile((SkullMeta) meta);
             mmoitem.setData(ItemStats.SKULL_TEXTURE, new SkullTextureData(profile));
         } catch (RuntimeException ignored) {

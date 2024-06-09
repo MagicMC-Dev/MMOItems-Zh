@@ -22,7 +22,7 @@ import java.util.ArrayList;
 @VersionDependant(minor = 16, patch = 3)
 public class HideDye extends BooleanStat {
 	public HideDye() {
-		super("HIDE_DYE", Material.CYAN_DYE, "皮革染色", new String[] { "启用以隐藏项目中的 '染色' 标签" }, new String[] { "all" },
+		super("HIDE_DYE", Material.CYAN_DYE, "皮革染色", new String[] { "启用以隐藏项目中的 '染色' 标签" }, new String[0],
 			Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, VersionMaterial.LEATHER_HORSE_ARMOR.toMaterial());
 	}
 

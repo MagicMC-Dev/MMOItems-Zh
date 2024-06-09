@@ -3,14 +3,17 @@ package net.Indyuce.mmoitems.comp.mmocore.stat;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.experience.Profession;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.jetbrains.annotations.NotNull;
 
 public class RequiredProfession extends DoubleStat implements ItemRestriction, GemStoneStat {
     private final Profession profession;
@@ -34,5 +37,17 @@ public class RequiredProfession extends DoubleStat implements ItemRestriction, G
             return false;
         }
         return true;
+    }
+
+    @Override
+    @Deprecated
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
+
+        // Lore Management
+        int lvl = (int) Math.round(data.getValue());
+        item.getLore().insert(getPath(), DoubleStat.formatPath(getPath(), getGeneralStatFormat(), false, false, lvl));
+
+        // Insert NBT
+        item.addItemTag(getAppliedNBT(data));
     }
 }

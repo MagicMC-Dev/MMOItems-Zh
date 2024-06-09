@@ -4,12 +4,18 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.flags.CustomFlag;
+import io.lumine.mythic.lib.math3.geometry.euclidean.threed.Line;
+import io.lumine.mythic.lib.math3.geometry.euclidean.threed.Vector3D;
 import io.lumine.mythic.lib.version.OreDrops;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.BouncingCrackBlockBreakEvent;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -27,11 +33,13 @@ public class Tool extends UseItem {
         return MythicLib.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_TOOLS) && playerData.getRPG().canUse(getNBTItem(), true);
     }
 
+    private static final BlockFace[] NEIGHBORS = {BlockFace.NORTH, BlockFace.DOWN, BlockFace.EAST, BlockFace.UP, BlockFace.WEST, BlockFace.SOUTH};
+
     /**
      * @param block Block being broken
      * @return If the mining event should be canceled
      */
-    public boolean miningEffects(@NotNull Block block) {
+    public boolean miningEffects(@NotNull final Block block) {
         boolean cancel = false;
 
         if (getNBTItem().getBoolean("MMOITEMS_AUTOSMELT")) {
@@ -47,29 +55,62 @@ public class Tool extends UseItem {
         if (getNBTItem().getBoolean("MMOITEMS_BOUNCING_CRACK") && !getPlayerData().isOnCooldown(PlayerData.CooldownType.BOUNCING_CRACK)) {
             getPlayerData().applyCooldown(PlayerData.CooldownType.BOUNCING_CRACK, 1);
             new BukkitRunnable() {
-                final Vector v = player.getEyeLocation().getDirection().multiply(.5);
-                final Location loc = block.getLocation().clone().add(.5, .5, .5);
+                final Vector globalDirection = player.getEyeLocation().getDirection();
+                final Vector3D sourcePoint = toJava(block.getLocation().add(.5, .5, .5).toVector());
+                final Line line = new Line(sourcePoint, sourcePoint.add(toJava(globalDirection)), 1e-10);
+                final double[] products = new double[NEIGHBORS.length];
+
+                {
+                    for (BlockFace face : NEIGHBORS)
+                        products[face.ordinal()] = face.getDirection().dot(globalDirection);
+                }
+
+                Block curr = block;
                 int j = 0;
 
-                public void run() {
-                    if (j++ > 10)
-                        cancel();
+                private static final int BLOCKS_BROKEN = 4;
 
-                    loc.add(v);
-                    Block block = loc.getBlock();
-                    if (block.getType() == Material.AIR || MMOItems.plugin.getLanguage().isBlacklisted(block.getType()))
+                public void run() {
+                    if (++j >= BLOCKS_BROKEN) cancel();
+
+                    curr = findBestBlock();
+                    if (curr.getType() == Material.AIR || MMOItems.plugin.getLanguage().isBlacklisted(curr.getType()))
                         return;
 
-                    BlockBreakEvent breakEvent = new BouncingCrackBlockBreakEvent(block, player);
+                    BlockBreakEvent breakEvent = new BouncingCrackBlockBreakEvent(curr, player);
                     Bukkit.getPluginManager().callEvent(breakEvent);
                     if (breakEvent.isCancelled()) {
                         cancel();
                         return;
                     }
 
-                    block.breakNaturally(getItem());
-                    loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1, 1);
+                    curr.breakNaturally(getItem());
+                    curr.getWorld().playSound(curr.getLocation(), Sound.BLOCK_GRAVEL_BREAK, 1, 1);
                 }
+
+                @NotNull
+                private Block findBestBlock() {
+                    Block block = null;
+                    double cost = Double.MAX_VALUE;
+
+                    for (BlockFace candidate : NEIGHBORS) {
+                        final Block candidateBlock = curr.getRelative(candidate);
+                        final double candidateCost = findCost(candidate, candidateBlock);
+
+                        if (candidateCost < cost) {
+                            cost = candidateCost;
+                            block = candidateBlock;
+                        }
+                    }
+
+                    return block;
+                }
+
+                private double findCost(BlockFace candidate, Block candidateBlock) {
+                    final Vector3D center = toJava(candidateBlock.getLocation().add(.5, .5, .5).toVector());
+                    return line.distance(center) - products[candidate.ordinal()];
+                }
+
             }.runTaskTimer(MMOItems.plugin, 0, 1);
         }
 
@@ -79,5 +120,9 @@ public class Tool extends UseItem {
     private int getFortuneLevel() {
         if (!getItem().hasItemMeta()) return 0;
         return getItem().getItemMeta().getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS);
+    }
+
+    private Vector3D toJava(Vector vector) {
+        return new Vector3D(vector.getX(), vector.getY(), vector.getZ());
     }
 }

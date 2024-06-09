@@ -300,7 +300,7 @@ public class MMOUtils {
      *                   Negative values are just ignored
      */
     public static void saturate(@NotNull Player player, double saturation) {
-        saturate(player, saturation, false);
+        saturate(player, saturation, true);
     }
 
     /**
@@ -322,7 +322,7 @@ public class MMOUtils {
      *               Negative values are just ignored
      */
     public static void feed(@NotNull Player player, int feed) {
-        feed(player, feed, false);
+        feed(player, feed, true);
     }
 
     /**
@@ -343,7 +343,7 @@ public class MMOUtils {
      *               Negative values are just ignored
      */
     public static void heal(@NotNull LivingEntity player, double heal) {
-        heal(player, heal, false);
+        heal(player, heal, true);
     }
 
     /**

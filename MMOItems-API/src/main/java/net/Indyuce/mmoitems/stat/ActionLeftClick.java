@@ -41,7 +41,6 @@ public class ActionLeftClick extends StringStat {
     public static final String LEGACY_ID = "STAFF_SPIRIT";
     public static final String LEGACY_PATH = "MMOITEMS_" + LEGACY_ID;
 
-    // TODO refactor with stat categories
     @Override
     @Deprecated
     public void whenLoaded(@NotNull ReadMMOItem mmoitem) {

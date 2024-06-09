@@ -36,7 +36,7 @@ import java.util.Optional;
 public class CustomSounds extends ItemStat<SoundListData, SoundListData> implements GemStoneStat, PlayerConsumable {
 	public CustomSounds() {
 		super("SOUNDS", Material.JUKEBOX, "自定义声音", new String[]{"您的物品将使用的自定义声音"},
-				new String[]{"all"});
+		        new String[0]);
 	}
 
 	@Override

@@ -37,7 +37,7 @@ import java.util.Set;
 public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
 	public PotionEffects() {
 		super("POTION_EFFECT", Material.POTION, "药水效果", new String[] { "你的药水的效果", " (可能对颜色有影响) ", "不支持尖箭头" },
-				new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION);
+		        new String[0], Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION);
 	}
 
 	@Override

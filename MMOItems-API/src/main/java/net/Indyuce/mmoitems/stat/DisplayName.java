@@ -25,11 +25,15 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
     public DisplayName() {
         super("NAME", VersionMaterial.OAK_SIGN.toMaterial(), "显示名称", new String[]{"物品显示名称"},
-                new String[]{"all"});
+                new String[0]);
     }
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
+
+        // Make sure stat history exists
+        item.getMMOItem().computeStatHistory(this);
+
         final ItemTier tier = item.getMMOItem().getTier();
         final AdventureParser parser = MythicLib.plugin.getAdventureParser();
         String format = data.toString();
@@ -46,9 +50,6 @@ public class DisplayName extends StringStat implements GemStoneStat {
             format = appendUpgradeLevel(format, item.getMMOItem().getUpgradeLevel());
 
         item.getMeta().setDisplayName(format);
-
-        // Force Stat History generation
-        StatHistory.from(item.getMMOItem(), this);
 
         // Add NBT
         item.addItemTag(getAppliedNBT(data));
@@ -256,7 +257,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
             if (stored && itemName != null) {
 
                 // History not prematurely loaded?
-                if (mmoitem.getStatHistory(this) == null) {
+                if (!mmoitem.hasStatHistory(this)) {
 
                     // Also load history :think ing:
                     ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.history_keyword + getId(), mmoitem.getNBT(), SupportedNBTTagValues.STRING);

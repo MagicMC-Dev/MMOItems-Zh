@@ -42,7 +42,7 @@ public class StatHistory {
     private ArrayList<StatData> perExternalData = new ArrayList<>();
     private HashMap<UUID, StatData> perGemstoneData = new HashMap<>();
 
-    private StatHistory(@NotNull MMOItem parentItem, @NotNull ItemStat parentStat, @NotNull StatData parentData) {
+    public StatHistory(@NotNull MMOItem parentItem, @NotNull ItemStat parentStat, @NotNull StatData parentData) {
         itemStat = parentStat;
         originalData = parentData;
         parent = parentItem;
@@ -109,8 +109,10 @@ public class StatHistory {
         return getOriginalData().equals(getMMOItem().getData(getItemStat()));
     }
 
-    public void setParent(@NotNull MMOItem parent) {
+    @NotNull
+    public StatHistory setParent(@NotNull MMOItem parent) {
         this.parent = parent;
+        return this;
     }
 
     /**
@@ -264,73 +266,6 @@ public class StatHistory {
     }
 
     /**
-     * Gets the stat history of this item. <b>The stat must be <code>Mergeable</code></b>
-     * <p></p>
-     * If the item has no stat history, it will be created anew and appended; the current stat values will become the 'Original' ones,
-     * and will be forever unchangeable.
-     * <p></p>
-     * <b>Make sure the item has the stat present</b>
-     *
-     * @param ofItem MMOItem to extract stat history from
-     * @param ofStat Stat of which to make history
-     */
-    @NotNull
-    public static StatHistory from(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat) {
-        return from(ofItem, ofStat, false);
-    }
-
-    /**
-     * Gets the stat history of this item. <b>The stat must be <code>Mergeable</code></b>
-     * <p></p>
-     * If the item has no stat history, it will be created anew and appended; the current stat values will become the 'Original' ones,
-     * and will be forever unchangeable.
-     * <p></p>
-     * <b>Make sure the item has the stat present</b>
-     *
-     * @param parentItem MMOItem to extract stat history from
-     * @param stat       Stat of which to make history
-     * @param forceNew   <b>Only if you know what you are doing</b>, set to true to not check if the item already has stat history of this stat.
-     */
-    @NotNull
-    public static StatHistory from(@NotNull MMOItem parentItem, @NotNull ItemStat stat, boolean forceNew) {
-        //LVL//MMOItems.log(" \u00a7d*\u00a77-\u00a7a-\u00a761? \u00a77Lvl: \u00a7b" + parentItem.getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
-        // Get history :B
-        StatHistory hist;
-        if (!forceNew) {
-            hist = parentItem.getStatHistory(stat);
-
-            // Found? Thats it
-            if (hist != null) {
-                //UPGRD//MMOItems.log("Found Stat History of \u00a76" + stat.getNBTPath() + "\u00a77 in this \u00a7c" + parentItem.getType().getName() + " " + parentItem.getId());
-                //UPGRD//hist.log();
-                return hist;
-            }
-        }
-
-        // That is Mergeable right...
-        //UPGRD//MMOItems.log("\u00a7aCreated Hisotry of \u00a76" + stat.getNBTPath() + "\u00a7a of this \u00a7c" + parentItem.getType().getName() + " " + parentItem.getId());
-        Validate.isTrue(stat.getClearStatData() instanceof Mergeable, "不可合并的统计数据不会有统计历史记录；它们一开始就不能动态修改");
-
-        // Get original data
-        StatData original = parentItem.getData(stat);
-        //LVL//MMOItems.log(" \u00a7d*\u00a77-\u00a7a-\u00a762? \u00a77Lvl: \u00a7b" + parentItem.getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
-        if (original == null) {
-            original = stat.getClearStatData();
-            parentItem.setData(stat, original);
-            //UPGRD//MMOItems.log("\u00a7e   +\u00a77 Item didnt have this stat, original set as blanc.");
-
-        } else {
-            original = ((Mergeable) original).clone();
-            //UPGRD//MMOItems.log("\u00a7a   +\u00a77 Found original data\u00a7f " + original);
-        }
-
-        // Create and register new
-        hist = new StatHistory(parentItem, stat, original);
-        parentItem.setStatHistory(stat, hist);
-        return hist;
-    }
-
-    /**
      * Checks the item and makes sure that the UUIDs attributed to gemstones
      * link to existing gemstones. Removes them if no such gemstone exists.
      */
@@ -403,7 +338,7 @@ public class StatHistory {
         Mergeable finalData = ((Mergeable) originalData).clone();
 
         // Add modifiers (affected by upgrades as if they were base item data)
-        for (UUID modifierId : perModifierBonus.keySet()) finalData.mergeWith((Mergeable) getModifiersBonus(modifierId));
+        for (StatData data : perModifierBonus.values()) finalData.mergeWith((Mergeable) data);
 
         // Level up
         if (upgradeInfo != null)
@@ -497,7 +432,7 @@ public class StatHistory {
         }
 
         // Include
-        if (externals.size() > 0) {
+        if (!externals.isEmpty()) {
             object.add(ENC_EXS, externals);
         }
 
@@ -543,6 +478,10 @@ public class StatHistory {
 
         // Just convert to string :thinking:
         return toJson().toString();
+    }
+
+    public boolean isUpgradeable() {
+        return getMMOItem().hasUpgradeTemplate() && getMMOItem().getUpgradeTemplate().getUpgradeInfo(getItemStat()) != null;
     }
 
     /**
@@ -813,6 +752,28 @@ public class StatHistory {
         return his;
     }
 
+    /**
+     * @deprecated See {@link MMOItem#computeStatHistory(ItemStat)} (ItemStat)}
+     */
+    @NotNull
+    @Deprecated
+    public static StatHistory from(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat) {
+        return ofItem.computeStatHistory(ofStat);
+    }
+
+    @NotNull
+    @Deprecated
+    public static StatHistory from(@NotNull MMOItem parentItem, @NotNull ItemStat stat, boolean forceNew) {
+
+        if (forceNew) {
+            StatHistory newHist = new StatHistory(parentItem, stat, Objects.requireNonNull(parentItem.getData(stat)));
+            parentItem.setStatHistory(stat, newHist);
+            return newHist;
+        }
+
+        return parentItem.computeStatHistory((ItemStat<?, ?>) stat);
+    }
+
     @NotNull
     @Deprecated
     public StatData recalculateUnupgraded(boolean withPurge) {
@@ -833,10 +794,6 @@ public class StatHistory {
     @Deprecated
     public void consolidateEXSH() {
         fuseExternalData();
-    }
-
-    public boolean isUpgradeable() {
-        return getMMOItem().hasUpgradeTemplate() && getMMOItem().getUpgradeTemplate().getUpgradeInfo(getItemStat()) != null;
     }
     //endregion
 }

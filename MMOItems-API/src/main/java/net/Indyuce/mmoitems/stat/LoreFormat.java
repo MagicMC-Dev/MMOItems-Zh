@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class LoreFormat extends StringStat implements GemStoneStat {
 	public LoreFormat() {
 		super("LORE_FORMAT", Material.MAP, "Lore 标注格式", new String[] { "Lore格式决定", "每个属性数据排版显示效果.", "&9在 language/lore-formats ", "&9中" },
-				new String[] { "all" });
+		        new String[0]);
 	}
 
 	@Override

@@ -50,7 +50,7 @@ public class TypeManager {
 
             try {
                 ConfigurationSection section = config.getConfigurationSection(type.getId());
-                Validate.notNull(section, "Could not find config section for type '" + type.getId() + "'");
+                Validate.notNull(section, "Could not find config section");
                 type.load(section);
                 if (clearBefore) type.getPostLoadAction().performAction();
             } catch (RuntimeException exception) {

@@ -47,7 +47,7 @@ public class ItemStats {
 
     //   Disable Interaction Stats
     DISABLE_INTERACTION = new DisableStat("INTERACTION", VersionMaterial.GRASS_BLOCK.toMaterial(), "禁用交互", new String[]{"!block", "all"}, "禁止任何不必要的交互:", "方块放置、物品使用..."),
-            DISABLE_CRAFTING = new DisableStat("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "禁用合成", "玩家无法在合成时使用此物品。"), 
+            DISABLE_CRAFTING = new DisableStat("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "禁用合成", "玩家无法在合成时使用此物品。"), DISABLE_SMELTING = new DisableStat("SMELTING", Material.FURNACE, "禁用熔炼", "玩家不能在熔炉中使用该物品。"),
             DISABLE_SMITHING = new DisableStat("SMITHING", Material.DAMAGED_ANVIL, "禁用锻造", "玩家无法在锻造台中锻造此物品。"),
             DISABLE_ENCHANTING = new DisableStat("ENCHANTING", VersionMaterial.ENCHANTING_TABLE.toMaterial(), "禁用附魔", new String[]{"!block", "all"}, "玩家无法对此物品进行附魔。"),
             DISABLE_REPAIRING = new DisableStat("REPAIRING", Material.ANVIL, "禁用修复", new String[]{"!block", "all"}, "玩家无法在铁砧中使用此物品进行修复。"),
@@ -82,8 +82,8 @@ public class ItemStats {
             STAMINA_COST = new DoubleStat("STAMINA_COST", VersionMaterial.LIGHT_GRAY_DYE.toMaterial(), "耐力消耗", new String[]{"武器使用时消耗的耐力。"}, new String[]{"weapon"}),
             ARROW_VELOCITY = new DoubleStat("ARROW_VELOCITY", Material.ARROW, "箭矢速度", new String[]{"决定你的武器可以射击的距离。", "默认：1.0"}, new String[]{"gem_stone", "bow", "crossbow"}),
             ARROW_POTION_EFFECTS = new ArrowPotionEffects(),
-            PVE_DAMAGE = new DoubleStat("PVE_DAMAGE", VersionMaterial.PORKCHOP.toMaterial(), "PvE 伤害", new String[]{"对非人类实体造成的额外伤害。"}, new String[]{"weapon", "catalyst", "off_catalyst", "main_catalyst", "tool", "armor", "gem_stone", "accessory"}),
-            PVP_DAMAGE = new DoubleStat("PVP_DAMAGE", VersionMaterial.SKELETON_SKULL.toMaterial(), "PvP 伤害", new String[]{"对玩家造成的额外伤害。"}, new String[]{"weapon", "catalyst", "off_catalyst", "main_catalyst", "tool", "armor", "gem_stone", "accessory"}),
+            PVE_DAMAGE = new DoubleStat("PVE_DAMAGE", VersionMaterial.PORKCHOP.toMaterial(), "PvE 伤害", new String[]{"对非人类实体造成的额外伤害。"}, new String[]{"equipment", "gem_stone"}),
+            PVP_DAMAGE = new DoubleStat("PVP_DAMAGE", VersionMaterial.SKELETON_SKULL.toMaterial(), "PvP 伤害", new String[]{"对玩家造成的额外伤害。"}, new String[]{"equipment", "gem_stone"}),
             BLUNT_POWER = new DoubleStat("BLUNT_POWER", Material.IRON_AXE, "钝击强度", new String[]{"范围攻击的半径。", "若设置为2.0，目标周围2格内的敌人将受到伤害。", "&9这个属性只适用于钝器。"}, new String[]{"weapon", "gem_stone"}),
             BLUNT_RATING = new DoubleStat("BLUNT_RATING", Material.BRICK, "钝击力量", new String[]{"钝击攻击的力量。", "若设置为50%，受到攻击的敌人", "将受到初始伤害的50%。", "&9这个属性只适用于钝器。"}, new String[]{"weapon", "gem_stone"}),
             WEAPON_DAMAGE = new DoubleStat("WEAPON_DAMAGE", Material.IRON_SWORD, "武器伤害", new String[]{"额外的击中武器伤害（以百分比计算）。"}),
@@ -115,7 +115,7 @@ public class ItemStats {
             MAX_MANA = new DoubleStat("MAX_MANA", VersionMaterial.LAPIS_LAZULI.toMaterial(), "最大法力值", new String[]{"增加最大法力值的魔力"}),
             KNOCKBACK_RESISTANCE = new KnockbackResistance(),
             MOVEMENT_SPEED = new MovementSpeed(),
-            TWO_HANDED = new BooleanStat("TWO_HANDED", Material.IRON_INGOT, "双手持握", new String[]{"若设为true, 则玩家持有两个物品时", "其中一个为双手武器时会显著降低速度"}, new String[]{"weapon", "catalyst", "off_catalyst", "main_catalyst", "tool"}),
+            TWO_HANDED = new BooleanStat("TWO_HANDED", Material.IRON_INGOT, "双手持握", new String[]{"若设为true, 则玩家持有两个物品时", "其中一个为双手武器时会显著降低速度"}, new String[]{"handheld"}),
             REQUIRED_BIOMES = new RequiredBiomes(),
             DROP_ON_DEATH = new DisableDeathDrop(),
             DURABILITY_BAR = new DurabilityBar(),
@@ -150,7 +150,7 @@ public class ItemStats {
     // Crafting Stats
     CRAFTING = new Crafting(),
             CRAFT_PERMISSION = new CraftingPermission(),
-    //CRAFT_AMOUNT = new DoubleStat("CRAFTED_AMOUNT", Material.WOODEN_AXE, "Crafted Amount", new String[]{"The stack count for", "this item when crafted."}, new String[]{"all"}),
+    //CRAFT_AMOUNT = new DoubleStat("CRAFTED_AMOUNT", Material.WOODEN_AXE, "Crafted Amount", new String[]{"The stack count for", "this item when crafted."}, new String[0]),
 
     // Unique Stats
     AUTOSMELT = new BooleanStat("AUTOSMELT", Material.COAL, "自动熔炼", new String[]{"如果设置为true, 你的工具将会", "自动熔炼挖掘到的矿石"}, new String[]{"tool"}),
@@ -163,7 +163,7 @@ public class ItemStats {
     LUTE_ATTACK_SOUND = new LuteAttackSoundStat(),
             LUTE_ATTACK_EFFECT = new LuteAttackEffectStat(),
             NOTE_WEIGHT = new DoubleStat("NOTE_WEIGHT", VersionMaterial.MUSIC_DISC_MALL.toMaterial(), "音符重量", new String[]{"定义你的琴产生的投射物", "向下倾斜的程度"}, new String[]{"lute"}),
-            REMOVE_ON_CRAFT = new BooleanStat("REMOVE_ON_CRAFT", Material.GLASS_BOTTLE, "合成时移除", new String[]{"如果物品在合成时应该完全", "移除, 或者变成一个空瓶子或空桶"}, new String[]{"all"}, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET),
+            REMOVE_ON_CRAFT = new BooleanStat("REMOVE_ON_CRAFT", Material.GLASS_BOTTLE, "合成时移除", new String[]{"如果物品在合成时应该完全", "移除, 或者变成一个空瓶子或空桶"}, new String[0], Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET),
             COMPATIBLE_TYPES = new CompatibleTypes(),
             COMPATIBLE_IDS = new CompatibleIds(),
             COMPATIBLE_MATERIALS = new CompatibleMaterials(),
@@ -183,9 +183,9 @@ public class ItemStats {
     // Abilities & Upgrading
     ABILITIES = new Abilities(),
             UPGRADE = new UpgradeStat(),
-            DOWNGRADE_ON_BREAK = new BooleanStat("BREAK_DOWNGRADE", Material.DAMAGED_ANVIL, "损坏时降级", new String[]{"如果此物品耐久度达到0，", "它将被完全修复，但也会", "降级一级。", "", "&c仅当无法进一步降级时才会损坏", "", "需要定义一个 &6升级模板", "需要定义 &6自定义耐久度"}, new String[]{"weapon", "catalyst", "off_catalyst", "main_catalyst", "tool", "armor", "consumable", "accessory"}),
-            DOWNGRADE_ON_DEATH = new BooleanStat("DEATH_DOWNGRADE", Material.DAMAGED_ANVIL, "死亡时降级", new String[]{"如果装备此物品的玩家死亡，", "它可能会降级（基于 &6死亡降级", "&6几率 &7属性）", "", "需要定义一个 &6升级模板", "需要启用 &6保留物品 (keep-inventory) 规则。"}, new String[]{"weapon", "catalyst", "off_catalyst", "main_catalyst", "tool", "armor", "consumable", "accessory"}),
-            DOWNGRADE_ON_DEATH_CHANCE = new DoubleStat("DEATH_DOWNGRADE_CHANCE", Material.SKELETON_SKULL, "死亡降级几率", new String[]{"物品在玩家死亡时降级的概率。", "", "超过100%将确定降级一件物品，", "并再次投掷以降级另一件（使用多余的概率）。", "&6相同的物品不会降级两次。"}, new String[]{"!miscellaneous", "!block", "all"}, false),
+            DOWNGRADE_ON_BREAK = new BooleanStat("BREAK_DOWNGRADE", Material.DAMAGED_ANVIL, "损坏时降级", new String[]{"如果此物品耐久度达到0，", "它将被完全修复，但也会", "降级一级。", "", "&c仅当无法进一步降级时才会损坏", "", "需要定义一个 &6升级模板", "需要定义 &6自定义耐久度"}, new String[]{"equipment"}),
+            DOWNGRADE_ON_DEATH = new BooleanStat("DEATH_DOWNGRADE", Material.DAMAGED_ANVIL, "死亡时降级", new String[]{"如果装备此物品的玩家死亡，", "它可能会降级（基于 &6死亡降级", "&6几率 &7属性）", "", "需要定义一个 &6升级模板", "需要启用 &6保留物品 (keep-inventory) 规则。"}, new String[]{"equipment"}),
+            DOWNGRADE_ON_DEATH_CHANCE = new DoubleStat("DEATH_DOWNGRADE_CHANCE", Material.SKELETON_SKULL, "死亡降级几率", new String[]{"物品在玩家死亡时降级的概率。", "", "超过100%将确定降级一件物品，", "并再次投掷以降级另一件（使用多余的概率）。", "&6相同的物品不会降级两次。"}, new String[]{"equipment"}, false),
 
     // Unique Item Stats
             DYE_COLOR = new DyeColor(),

@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	public GrantedPermissions() {
 		super("GRANTED_PERMISSIONS", Material.NAME_TAG, "授予的权限",
-				new String[] { "持有物品将授予的权限列表" }, new String[] { "all" });
+				new String[] { "持有物品将授予的权限列表" }, new String[0]);
 	}
 
 	@Override

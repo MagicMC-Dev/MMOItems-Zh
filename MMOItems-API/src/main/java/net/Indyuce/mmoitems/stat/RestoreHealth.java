@@ -23,16 +23,9 @@ public class RestoreHealth extends DoubleStat implements PlayerConsumable {
 
     @Override
     public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player, boolean vanillaEating) {
+        if (!mmo.hasData(ItemStats.RESTORE_HEALTH)) return;
 
-        // No data no service
-        if (!mmo.hasData(ItemStats.RESTORE_HEALTH))
-            return;
-
-        // Get value
-        DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_HEALTH);
-
-        // Any health being provided?
-        if (d.getValue() != 0)
-            MMOUtils.heal(player, d.getValue());
+        final DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_HEALTH);
+        if (d.getValue() != 0) MMOUtils.heal(player, d.getValue());
     }
 }

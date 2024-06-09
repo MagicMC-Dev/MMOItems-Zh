@@ -73,7 +73,7 @@ public class PluginUpdateManager {
 											if (split.length > 4) format += ",display=\"" + split[4].replace("_", " ") + "\"";
 											newest.add(format + "}");
 										} else {
-											MMOItems.plugin.getLogger().log(Level.INFO,
+											MMOItems.plugin.getLogger().log(Level.WARNING,
 													"Config Update 3: Could not match ingredient from '" + ingredient + "' from recipe '" + key + "', added it anyway.");
 											newest.add(ingredient);
 										}
@@ -98,7 +98,7 @@ public class PluginUpdateManager {
 										else if (split[0].equalsIgnoreCase("exp"))
 											newest.add("exp{profession=" + split[1] + ",amount=" + split[2] + "}");
 										else {
-											MMOItems.plugin.getLogger().log(Level.INFO,
+											MMOItems.plugin.getLogger().log(Level.WARNING,
 													"Config Update 3: Could not match condition from '" + condition + "' from recipe '" + key + "', added it anyway.");
 											newest.add(condition);
 										}
@@ -106,14 +106,14 @@ public class PluginUpdateManager {
 
 									config.set("recipes." + key + ".conditions", newest);
 								} catch (Exception exception) {
-									MMOItems.plugin.getLogger().log(Level.INFO,
+									MMOItems.plugin.getLogger().log(Level.WARNING,
 											"Config Update 3: Could not convert recipe with key '" + key + "': " + exception.getMessage());
 								}
 
 							try {
 								config.save(file);
 							} catch (IOException exception) {
-								MMOItems.plugin.getLogger().log(Level.INFO,
+								MMOItems.plugin.getLogger().log(Level.WARNING,
 										"Config Update 3: Could not save config '" + file.getName() + "': " + exception.getMessage());
 							}
 						}

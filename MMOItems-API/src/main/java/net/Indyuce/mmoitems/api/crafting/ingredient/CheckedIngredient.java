@@ -6,13 +6,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 public class CheckedIngredient {
     @NotNull
     private final Ingredient ingredient;
     @Nullable
-    private final Set<PlayerIngredient> found;
+    private final List<PlayerIngredient> found;
     private final boolean isHad;
 
     /**
@@ -25,7 +25,7 @@ public class CheckedIngredient {
      * @param found      The corresponding ingredient found in the player's
      *                   ingredient
      */
-    public CheckedIngredient(@NotNull Ingredient ingredient, @Nullable Set<PlayerIngredient> found) {
+    public CheckedIngredient(@NotNull Ingredient ingredient, @NotNull List<PlayerIngredient> found) {
         this.ingredient = ingredient;
         this.found = found;
         this.isHad = getTotalAmount() >= ingredient.getAmount();
@@ -84,7 +84,7 @@ public class CheckedIngredient {
     }
 
     @Nullable
-    public Set<PlayerIngredient> getFound() {
+    public List<PlayerIngredient> getFound() {
         return found;
     }
 

@@ -23,7 +23,7 @@ import java.util.Optional;
 
 public class Lore extends StringListStat implements GemStoneStat {
     public Lore() {
-        super("LORE", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Lore", new String[]{"物品 Lore 标注"}, new String[]{"all"});
+        super("LORE", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Lore", new String[]{"物品 Lore 标注"}, new String[0]);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class CraftingStation implements PreloadedObject {
             try {
                 registerRecipe(loadRecipe(config.getConfigurationSection("recipes." + key)));
             } catch (IllegalArgumentException exception) {
-                MMOItems.plugin.getLogger().log(Level.INFO,
+                MMOItems.plugin.getLogger().log(Level.WARNING,
                         "An issue occurred registering recipe '" + key + "' from crafting station '" + id + "': " + exception.getMessage());
             }
 

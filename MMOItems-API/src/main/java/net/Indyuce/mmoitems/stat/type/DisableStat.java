@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class DisableStat extends BooleanStat {
 	public DisableStat(String id, Material material, String name, String... lore) {
-		super("DISABLE_" + id, material, name, lore, new String[] { "all" });
+		super("DISABLE_" + id, material, name, lore, new String[0]);
 	}
 
 	public DisableStat(String id, Material material, String name, Material[] materials, String... lore) {
-		super("DISABLE_" + id, material, name, lore, new String[] { "all" }, materials);
+		super("DISABLE_" + id, material, name, lore, new String[0], materials);
 	}
 
 	public DisableStat(String id, Material material, String name, String[] types, String... lore) {

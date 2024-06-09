@@ -34,7 +34,7 @@ import java.util.Set;
 public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPatternData> {
 	public ShieldPatternStat() {
 		super("SHIELD_PATTERN", Material.SHIELD, "盾牌图案", new String[] { "修改盾牌的颜色和图案" },
-				new String[] { "all" }, Material.SHIELD);
+		        new String[0], Material.SHIELD);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.element.Element;
+import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -24,9 +25,11 @@ public class StatManager {
     private final Map<String, ItemStat<?, ?>> stats = new LinkedHashMap<>();
 
     /**
-     * TODO refactor with stat categories
+     * If, for whatever reason, a stat needs to change its internal
+     * string ID, this map keeps a reference for the deprecated old
+     * IDs while being separated from the main ItemStat map.
      */
-    @Deprecated
+    @BackwardsCompatibility(version = "unknown")
     private final Map<String, ItemStat<?, ?>> legacyAliases = new HashMap<>();
 
     /*
@@ -39,14 +42,11 @@ public class StatManager {
     private final List<ConsumableItemInteraction> consumableActions = new ArrayList<>();
     private final List<PlayerConsumable> playerConsumables = new ArrayList<>();
 
-
     /**
      * Load default stats using java reflection, get all public static final
      * fields in the ItemStat and register them as stat instances
-     * <p>
-     * TODO refactor
      */
-    public void load() {
+    public void loadInternalStats() {
         for (Field field : ItemStats.class.getFields())
             try {
                 if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof ItemStat)
@@ -56,26 +56,20 @@ public class StatManager {
             }
 
         // Custom stats
-        loadCustom();
+        loadCustomStats();
     }
 
-    /**
-     * @see FictiveNumericStat
-     * <p>
-     * TODO refactor
-     */
+    // TODO refactor with stat categories
     public void reload(boolean cleanFirst) {
 
         // Clean fictive numeric stats before
-        if (cleanFirst) {
-            numeric.removeIf(stat -> stat instanceof FictiveNumericStat);
-            loadCustom(); // Already loaded on plugin startup
-        }
+        if (cleanFirst)
+            numeric.removeIf(stat -> stat instanceof FictiveNumericStat); // temporary fix, this is for elements.
 
         // Register elemental stats
         loadElements();
 
-        // Load stat translation objects
+        // Load stat translation objects (nothing to do with stats)
         final ConfigurationSection statOptions = new ConfigFile("/language", "stats").getConfig();
         for (ItemStat stat : getAll())
             try {
@@ -89,10 +83,8 @@ public class StatManager {
 
     /**
      * Load custom stats
-     * <p>
-     * TODO refactor
      */
-    public void loadCustom() {
+    private void loadCustomStats() {
         ConfigManager.DefaultFile.CUSTOM_STATS.checkFile();
         ConfigFile config = new ConfigFile("custom-stats");
         ConfigurationSection section = config.getConfig().getConfigurationSection("custom-stats");
@@ -103,7 +95,7 @@ public class StatManager {
     /**
      * Register all MythicLib elements as stats
      * <p>
-     * TODO refactor
+     * TODO refactor with stat categories
      */
     public void loadElements() {
         for (ElementStatType type : ElementStatType.values())
@@ -195,6 +187,10 @@ public class StatManager {
      * @param stat The stat to register
      */
     public void register(@NotNull ItemStat<?, ?> stat) {
+        register(stat, false);
+    }
+
+    private void register(@NotNull ItemStat<?, ?> stat, boolean customStat) {
 
         // Skip disabled stats.
         if (!stat.isEnabled()) return;

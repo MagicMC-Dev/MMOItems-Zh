@@ -19,10 +19,10 @@ import java.util.Optional;
 
 /**
  * Used for elements otherwise MMOItems doesn't
- * register elemental stats inside of MythicLib
+ * register elemental stats inside MythicLib
  * <p>
- * Workaround that will be removed when adding stat categories
- * in order to give more clarity to the item editor.
+ * TODO Workaround that will be removed when adding stat categories
+ * TODO in order to give more clarity to the item editor.
  *
  * @deprecated Definitely not a perfect implementation
  */

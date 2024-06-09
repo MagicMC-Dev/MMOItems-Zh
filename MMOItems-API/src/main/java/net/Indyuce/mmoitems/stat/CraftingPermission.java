@@ -9,6 +9,6 @@ public class CraftingPermission extends StringStat implements TemplateOption, Ge
     public CraftingPermission() {
         super("CRAFT_PERMISSION", VersionMaterial.OAK_SIGN.toMaterial(), "制作配方权限",
                 new String[]{"制作此物品所需的权限，更改此", "设置需要使用 &o/mi reload recipes"},
-                new String[]{"all"});
+                new String[0]);
     }
 }

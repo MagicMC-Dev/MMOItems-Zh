@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @VersionDependant(minor = 20)
 public class TrimPatternStat extends ChooseStat implements GemStoneStat {
     public TrimPatternStat() {
-        super("TRIM_PATTERN", Material.LEATHER_CHESTPLATE, "更改纹饰", new String[]{"更改你的盔甲装备纹饰"}, new String[]{"armor"});
+        super("TRIM_PATTERN", Material.LEATHER_CHESTPLATE, "更改纹饰", new String[]{"更改你的盔甲装备纹饰"}, new String[]{"armor", "skin"});
 
         // Version dependency
         if (!isEnabled()) return;

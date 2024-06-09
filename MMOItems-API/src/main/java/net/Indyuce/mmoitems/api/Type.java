@@ -28,45 +28,44 @@ import java.util.Objects;
 public class Type implements CooldownObject, PreloadedObject {
 
     // Slashing
-    public static final Type SWORD = new Type("SWORD", true, ModifierSource.MELEE_WEAPON);
+    public static final Type SWORD = new Type("SWORD", ModifierSource.MELEE_WEAPON);
 
     // Piercing
-    public static final Type DAGGER = new Type("DAGGER", true, ModifierSource.MELEE_WEAPON);
-    public static final Type SPEAR = new Type("SPEAR", true, ModifierSource.MELEE_WEAPON);
+    public static final Type DAGGER = new Type("DAGGER", ModifierSource.MELEE_WEAPON);
+    public static final Type SPEAR = new Type("SPEAR", ModifierSource.MELEE_WEAPON);
 
     // Blunt
-    public static final Type HAMMER = new Type("HAMMER", true, ModifierSource.MELEE_WEAPON);
-    public static final Type GAUNTLET = new Type("GAUNTLET", true, ModifierSource.MELEE_WEAPON);
+    public static final Type HAMMER = new Type("HAMMER", ModifierSource.MELEE_WEAPON);
+    public static final Type GAUNTLET = new Type("GAUNTLET", ModifierSource.MELEE_WEAPON);
 
     // Range
-    public static final Type WHIP = new Type("WHIP", true, ModifierSource.RANGED_WEAPON);
-    public static final Type STAFF = new Type("STAFF", true, ModifierSource.RANGED_WEAPON);
-    public static final Type BOW = new Type("BOW", true, ModifierSource.RANGED_WEAPON);
-    public static final Type CROSSBOW = new Type("CROSSBOW", true, ModifierSource.RANGED_WEAPON);
-    public static final Type MUSKET = new Type("MUSKET", true, ModifierSource.RANGED_WEAPON);
-    public static final Type LUTE = new Type("LUTE", true, ModifierSource.RANGED_WEAPON);
+    public static final Type WHIP = new Type("WHIP", ModifierSource.RANGED_WEAPON);
+    public static final Type STAFF = new Type("STAFF", ModifierSource.RANGED_WEAPON);
+    public static final Type BOW = new Type("BOW", ModifierSource.RANGED_WEAPON);
+    public static final Type CROSSBOW = new Type("CROSSBOW", ModifierSource.RANGED_WEAPON);
+    public static final Type MUSKET = new Type("MUSKET", ModifierSource.RANGED_WEAPON);
+    public static final Type LUTE = new Type("LUTE", ModifierSource.RANGED_WEAPON);
+
+    // Other weapons
+    public static final Type TOOL = new Type("TOOL", ModifierSource.MELEE_WEAPON);
 
     // Hand Accessories
-    public static final Type CATALYST = new Type("CATALYST", false, ModifierSource.HAND_ITEM);
-    public static final Type OFF_CATALYST = new Type("OFF_CATALYST", false, ModifierSource.OFFHAND_ITEM);
-    public static final Type MAIN_CATALYST = new Type("MAIN_CATALYST", false, ModifierSource.MAINHAND_ITEM);
+    public static final Type CATALYST = new Type("CATALYST", ModifierSource.HAND_ITEM);
+    public static final Type OFF_CATALYST = new Type("OFF_CATALYST", ModifierSource.OFFHAND_ITEM);
+    public static final Type MAIN_CATALYST = new Type("MAIN_CATALYST", ModifierSource.MAINHAND_ITEM);
 
-    // Any
-    public static final Type ORNAMENT = new Type("ORNAMENT", false, ModifierSource.VOID);
-
-    // Extra
-    public static final Type ARMOR = new Type("ARMOR", false, ModifierSource.ARMOR);
-    public static final Type TOOL = new Type("TOOL", false, ModifierSource.MELEE_WEAPON);
-    public static final Type CONSUMABLE = new Type("CONSUMABLE", false, ModifierSource.MAINHAND_ITEM);
-    public static final Type MISCELLANEOUS = new Type("MISCELLANEOUS", false, ModifierSource.MAINHAND_ITEM);
-    public static final Type GEM_STONE = new Type("GEM_STONE", false, ModifierSource.VOID);
-    public static final Type SKIN = new Type("SKIN", false, ModifierSource.VOID);
-    public static final Type ACCESSORY = new Type("ACCESSORY", false, ModifierSource.ACCESSORY);
-    public static final Type BLOCK = new Type("BLOCK", false, ModifierSource.VOID);
+    // Other
+    public static final Type ORNAMENT = new Type("ORNAMENT", ModifierSource.VOID);
+    public static final Type ARMOR = new Type("ARMOR", ModifierSource.ARMOR);
+    public static final Type CONSUMABLE = new Type("CONSUMABLE", ModifierSource.MAINHAND_ITEM);
+    public static final Type MISCELLANEOUS = new Type("MISCELLANEOUS", ModifierSource.MAINHAND_ITEM);
+    public static final Type GEM_STONE = new Type("GEM_STONE", ModifierSource.VOID);
+    public static final Type SKIN = new Type("SKIN", ModifierSource.VOID);
+    public static final Type ACCESSORY = new Type("ACCESSORY", ModifierSource.ACCESSORY);
+    public static final Type BLOCK = new Type("BLOCK", ModifierSource.VOID);
 
     private final String id;
     private final ModifierSource modifierSource;
-    private final boolean weapon;
 
     private String name;
 
@@ -94,11 +93,11 @@ public class Type implements CooldownObject, PreloadedObject {
 
     private UnidentifiedItem unidentifiedTemplate;
 
-    private SkillHandler onLeftClick, onRightClick, onAttack, onEntityInteract;
+    private SkillHandler<?> onLeftClick, onRightClick, onAttack, onEntityInteract;
 
     public Script ent;
 
-    private boolean meleeAttacks;
+    private boolean meleeAttacks, hideInGame;
 
     /**
      * List of stats which can be applied onto an item which has this type. This
@@ -114,21 +113,20 @@ public class Type implements CooldownObject, PreloadedObject {
     });
 
     /**
-     * Hard-coded type with given parameters
+     * Hard-coded type with given parameters. Can be used by other plugins
+     * to create types using MMOItems API.
      */
-    public Type(String id, boolean weapon, ModifierSource modSource) {
+    public Type(@NotNull String id, @NotNull ModifierSource modifierSource) {
         this.id = UtilityMethods.enumName(id);
-        this.modifierSource = modSource;
-        this.weapon = weapon;
+        this.modifierSource = modifierSource;
     }
 
     /**
-     * Custom type
+     * Load custom type from a configuration file
      */
     public Type(@NotNull TypeManager manager, @NotNull ConfigurationSection config) {
         id = UtilityMethods.enumName(config.getName());
         parent = manager.get(config.getString("parent", "").toUpperCase().replace("-", "_").replace(" ", "_"));
-        weapon = config.getBoolean("weapon", parent != null && parent.weapon);
         modifierSource = config.contains("modifier-source") ? ModifierSource.valueOf(UtilityMethods.enumName(config.getString("modifier-source"))) : (parent != null ? parent.modifierSource : ModifierSource.OTHER);
     }
 
@@ -141,12 +139,7 @@ public class Type implements CooldownObject, PreloadedObject {
         loreFormat = config.getString("LoreFormat", (parent != null ? parent.loreFormat : null));
         attackCooldownKey = config.getString("attack-cooldown-key", "default");
         meleeAttacks = !config.getBoolean("disable-melee-attacks");
-    }
-
-    @Deprecated
-    public void postload(ConfigurationSection config) {
-        postLoadAction.cacheConfig(config);
-        postLoadAction.performAction();
+        hideInGame = config.getBoolean("hide-in-game");
     }
 
     @NotNull
@@ -155,13 +148,8 @@ public class Type implements CooldownObject, PreloadedObject {
         return postLoadAction;
     }
 
-    /**
-     * @deprecated Type is no longer an enum so that external plugins
-     * can register their own types. Use getId() instead
-     */
-    @Deprecated
-    public String name() {
-        return getId();
+    public boolean isDisplayed() {
+        return !hideInGame;
     }
 
     /**
@@ -174,7 +162,7 @@ public class Type implements CooldownObject, PreloadedObject {
     }
 
     public boolean isWeapon() {
-        return weapon;
+        return modifierSource.isWeapon();
     }
 
     public boolean hasMeleeAttacks() {
@@ -195,7 +183,7 @@ public class Type implements CooldownObject, PreloadedObject {
     }
 
     @Nullable
-    public SkillHandler onLeftClick() {
+    public SkillHandler<?> onLeftClick() {
         return onLeftClick;
     }
 
@@ -205,34 +193,18 @@ public class Type implements CooldownObject, PreloadedObject {
     }
 
     @Nullable
-    public SkillHandler onRightClick() {
+    public SkillHandler<?> onRightClick() {
         return onRightClick;
     }
 
     @Nullable
-    public SkillHandler onAttack() {
+    public SkillHandler<?> onAttack() {
         return onAttack;
     }
 
     @Nullable
-    public SkillHandler onEntityInteract() {
+    public SkillHandler<?> onEntityInteract() {
         return onEntityInteract;
-    }
-
-    /**
-     * @deprecated Use {@link #getSupertype()}
-     */
-    @Deprecated
-    public boolean isSubtype() {
-        return parent != null;
-    }
-
-    /**
-     * @deprecated Use {@link #getSupertype()}
-     */
-    @Deprecated
-    public Type getParent() {
-        return parent;
     }
 
     /**
@@ -253,6 +225,7 @@ public class Type implements CooldownObject, PreloadedObject {
     /**
      * @return The highest parent of this type, or itself, if it has no parent.
      */
+    @NotNull
     public Type getSupertype() {
         Type parentMost = this;
         while (parentMost.parent != null)
@@ -287,16 +260,6 @@ public class Type implements CooldownObject, PreloadedObject {
 
     public UnidentifiedItem getUnidentifiedTemplate() {
         return unidentifiedTemplate;
-    }
-
-    /**
-     * @param stat The stat to check
-     * @return If the stat can be handled by this type of item
-     * @deprecated Use ItemStat.isCompatible(Type) instead
-     */
-    @Deprecated
-    public boolean canHave(ItemStat stat) {
-        return stat.isCompatible(this);
     }
 
     private ItemStack read(String str) {
@@ -366,4 +329,57 @@ public class Type implements CooldownObject, PreloadedObject {
     public static boolean isValid(@Nullable String id) {
         return id != null && MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_").replace(" ", "_"));
     }
+
+    //region Deprecated API
+
+    /**
+     * @param stat The stat to check
+     * @return If the stat can be handled by this type of item
+     * @deprecated Use ItemStat.isCompatible(Type) instead
+     */
+    @Deprecated
+    public boolean canHave(ItemStat stat) {
+        return stat.isCompatible(this);
+    }
+
+    /**
+     * @deprecated Use {@link #getSupertype()}
+     */
+    @Deprecated
+    public boolean isSubtype() {
+        return parent != null;
+    }
+
+    /**
+     * @deprecated Use {@link #getSupertype()}
+     */
+    @Deprecated
+    public Type getParent() {
+        return parent;
+    }
+
+    /**
+     * @deprecated 'weapon' boolean is now automatically inferred from the modifierSource
+     */
+    @Deprecated
+    public Type(@NotNull String id, boolean weapon, @NotNull ModifierSource modSource) {
+        this(id, modSource);
+    }
+
+    @Deprecated
+    public void postload(ConfigurationSection config) {
+        postLoadAction.cacheConfig(config);
+        postLoadAction.performAction();
+    }
+
+    /**
+     * @deprecated Type is no longer an enum so that external plugins
+     * can register their own types. Use getId() instead
+     */
+    @Deprecated
+    public String name() {
+        return getId();
+    }
+
+    //endregion
 }

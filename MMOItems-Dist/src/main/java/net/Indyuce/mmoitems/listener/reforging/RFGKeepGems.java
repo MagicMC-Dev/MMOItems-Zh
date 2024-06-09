@@ -148,7 +148,7 @@ public class RFGKeepGems implements Listener {
                                     /*
                                      * The gem data is registered directly into the history (emphasis on not recalculating with purge)
                                      */
-                                    StatHistory hist = StatHistory.from(event.getNewMMOItem(), stat);
+                                    StatHistory hist = event.getNewMMOItem().computeStatHistory(stat);
                                     hist.registerGemstoneData(reforgedGemData.getHistoricUUID(), data);
 
                                     //RFG//MMOItems.log("\u00a79>>> \u00a77 Stat history of this stat");
@@ -174,7 +174,7 @@ public class RFGKeepGems implements Listener {
             //RFG//for (GemstoneData s : reforgedGemstoneData.getGemstones()) { MMOItems.log("  \u00a7a*\u00a7f " + s.getName() + "\u00a77 " + s.getHistoricUUID()); }
 
             // That's the original data
-            StatHistory gemStory = StatHistory.from(event.getNewMMOItem(), ItemStats.GEM_SOCKETS);
+            StatHistory gemStory = event.getNewMMOItem().computeStatHistory(ItemStats.GEM_SOCKETS);
             gemStory.setOriginalData(reforgedGemstoneData);
             event.getNewMMOItem().setData(ItemStats.GEM_SOCKETS, gemStory.recalculate(event.getNewMMOItem().getUpgradeLevel()));
             //RFG//MMOItems.log("  \u00a7a* \u00a77History Final\u00a7a --------");

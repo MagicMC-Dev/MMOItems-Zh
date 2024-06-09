@@ -135,7 +135,7 @@ public class UpgradeTemplate {
 			((Upgradable) stat).preprocess(mmoitem);
 
 			// Initializes Stat History
-			StatHistory hist = StatHistory.from(mmoitem, stat);
+			StatHistory hist = mmoitem.computeStatHistory(stat);
 			//UPGR//MMOItems.log(" \u00a73>\u00a7a> \u00a77Stat History Initialized");
 
 			// Midprocess

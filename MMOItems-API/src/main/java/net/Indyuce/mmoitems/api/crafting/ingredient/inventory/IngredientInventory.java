@@ -13,13 +13,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class IngredientInventory {
-	private final Map<String, Set<PlayerIngredient>> ingredients = new HashMap<>();
+	private final Map<String, List<PlayerIngredient>> ingredients = new HashMap<>();
 
 	/**
 	 * Loads all the possible crafting station ingredients from a player's inventory
@@ -52,23 +52,14 @@ public class IngredientInventory {
 	 * @param ingredient The type of the ingredient added
 	 */
 	public void addIngredient(NBTItem item, IngredientType ingredient) {
-		String key = ingredient.getId();
-
-		// Add to existing set
-		if (ingredients.containsKey(key))
-			ingredients.get(key).add(ingredient.readPlayerIngredient(item));
-
-			// Initialize
-		else {
-			Set<PlayerIngredient> ingredients = new HashSet<>();
-			ingredients.add(ingredient.readPlayerIngredient(item));
-			this.ingredients.put(key, ingredients);
-		}
+		final String key = ingredient.getId();
+		final List<PlayerIngredient> ingredients = this.ingredients.computeIfAbsent(key, ignored -> new ArrayList<>());
+		ingredients.add(ingredient.readPlayerIngredient(item));
 	}
 
 	@Nullable
 	public CheckedIngredient findMatching(@NotNull Ingredient ingredient) {
-		Set<PlayerIngredient> found = new HashSet<>();
+		List<PlayerIngredient> found = new ArrayList<>();
 		if (!ingredients.containsKey(ingredient.getId()))
 			return new CheckedIngredient(ingredient, found);
 

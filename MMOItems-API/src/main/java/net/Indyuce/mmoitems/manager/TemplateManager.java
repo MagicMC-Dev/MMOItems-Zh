@@ -34,7 +34,7 @@ public class TemplateManager implements Reloadable {
      */
     private final Map<String, ModifierNode> modifierNodes = new HashMap<>();
 
-    private static final Random random = new Random();
+    private static final Random RANDOM = new Random();
 
     /**
      * @param type The MMOItem Type
@@ -175,7 +175,7 @@ public class TemplateManager implements Reloadable {
             return template;
 
         } catch (IllegalArgumentException exception) {
-            MMOItems.plugin.getLogger().log(Level.INFO,
+            MMOItems.plugin.getLogger().log(Level.WARNING,
                     "An error occurred while trying to reload item gen template '" + id + "': " + exception.getMessage());
             return null;
         }
@@ -224,7 +224,7 @@ public class TemplateManager implements Reloadable {
 
         double s = 0;
         for (ItemTier tier : MMOItems.plugin.getTiers().getAll()) {
-            if (s >= 1 || random.nextDouble() < tier.getGenerationChance() / (1 - s))
+            if (s >= 1 || RANDOM.nextDouble() < tier.getGenerationChance() / (1 - s))
                 return tier;
 
             s += tier.getGenerationChance();
@@ -243,7 +243,7 @@ public class TemplateManager implements Reloadable {
      */
     public int rollLevel(int playerLevel) {
         double spread = MMOItems.plugin.getLanguage().levelSpread;
-        double found = random.nextGaussian() * spread * .7 + playerLevel;
+        double found = RANDOM.nextGaussian() * spread * .7 + playerLevel;
 
         // must be in [level - spread, level + spread]
         // lower bound must be higher than 1

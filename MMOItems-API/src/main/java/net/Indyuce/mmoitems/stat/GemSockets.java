@@ -33,7 +33,7 @@ import java.util.Optional;
 public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
     public GemSockets() {
         super("GEM_SOCKETS", Material.EMERALD, "宝石插槽", new String[]{"武器拥有的宝石插槽数量"},
-                new String[]{"weapon", "tool", "armor", "accessory", "catalyst", "off_catalyst", "main_catalyst", "ornament", "!gem_stone"});
+                new String[]{"!gem_stone", "equipment", "ornament"});
     }
 
     @Override

@@ -58,6 +58,19 @@ public class ModifierNode implements PreloadedObject {
             } catch (RuntimeException exception) {
                 MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load parent modifier node '" + key + "' of modifier group '" + getId() + "': " + exception.getMessage());
             }
+
+        // Post-load stat data
+        Validate.notNull(ModifierNode.this.data, "Internal error");
+        final ConfigurationSection statSection = config.getConfigurationSection("stats");
+        if (statSection != null) for (String key : statSection.getKeys(false))
+            try {
+                final String statId = UtilityMethods.enumName(key);
+                final ItemStat<?, ?> stat = MMOItems.plugin.getStats().get(statId);
+                Validate.notNull(stat, "Could not find stat with ID '" + statId + "'");
+                ModifierNode.this.data.put(stat, stat.whenInitialized(statSection.get(key)));
+            } catch (IllegalArgumentException exception) {
+                MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred while trying to load modifier node " + getId() + ": " + exception.getMessage());
+            }
     });
 
     public ModifierNode(@NotNull String nodeId, @NotNull Object configObject) {
@@ -126,16 +139,6 @@ public class ModifierNode implements PreloadedObject {
 
             // Modifier
             this.data = new HashMap<>();
-            final ConfigurationSection statSection = config.getConfigurationSection("stats");
-            if (statSection != null) for (String key : statSection.getKeys(false))
-                try {
-                    final String statId = UtilityMethods.enumName(key);
-                    final ItemStat stat = MMOItems.plugin.getStats().get(statId);
-                    Validate.notNull(stat, "Could not find stat with ID '" + statId + "'");
-                    ModifierNode.this.data.put(stat, stat.whenInitialized(statSection.get(key)));
-                } catch (IllegalArgumentException exception) {
-                    MMOItems.plugin.getLogger().log(Level.INFO, "An error occurred while trying to load modifier node " + getId() + ": " + exception.getMessage());
-                }
         }
     }
 

@@ -54,7 +54,7 @@ public class RFGKeepRNG implements Listener {
                      * preserve its rolls, even if it should be
                      * preserving the rolls.
                      */
-                    final StatHistory hist = StatHistory.from(event.getOldMMOItem(), stat);
+                    final StatHistory hist = event.getOldMMOItem().computeStatHistory( stat);
                     final StatData keptData = ((UpdatableRandomStatData) source).reroll(stat, hist.getOriginalData(), event.getReforger().getGenerationItemLevel());
 
                     // Old roll is ridiculously low probability under the new parameters. Forget.
@@ -62,7 +62,7 @@ public class RFGKeepRNG implements Listener {
                         return;
 
                     // Fetch History from the new item
-                    final StatHistory clear = StatHistory.from(event.getNewMMOItem(), stat);
+                    final StatHistory clear = event.getNewMMOItem().computeStatHistory(stat);
 
                     // Replace original data of the new one with the roll from the old one
                     clear.setOriginalData(keptData);

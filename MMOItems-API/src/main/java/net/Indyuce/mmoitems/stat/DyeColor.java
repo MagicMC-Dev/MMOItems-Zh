@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public class DyeColor extends ItemStat<ColorData, ColorData> {
 	public DyeColor() {
 		super("DYE_COLOR", VersionMaterial.RED_DYE.toMaterial(), "染料颜色",
-				new String[] { "您物品的颜色 (对于可染色物品 ) ,RGB 模式" }, new String[] { "all" }, Material.LEATHER_HELMET,
+				new String[] { "您物品的颜色 (对于可染色物品 ) ,RGB 模式" }, new String[0], Material.LEATHER_HELMET,
 				Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, VersionMaterial.LEATHER_HORSE_ARMOR.toMaterial());
 	}
 

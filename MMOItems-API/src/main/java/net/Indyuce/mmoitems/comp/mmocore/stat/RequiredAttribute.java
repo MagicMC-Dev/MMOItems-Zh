@@ -4,13 +4,16 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.jetbrains.annotations.NotNull;
 
 public class RequiredAttribute extends DoubleStat implements ItemRestriction, GemStoneStat {
     private final PlayerAttribute attribute;
@@ -33,5 +36,17 @@ public class RequiredAttribute extends DoubleStat implements ItemRestriction, Ge
             return false;
         }
         return true;
+    }
+
+    @Override
+    @Deprecated
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
+
+        // Lore Management
+        int lvl = (int) Math.round(data.getValue());
+        item.getLore().insert(getPath(), DoubleStat.formatPath(getPath(), getGeneralStatFormat(), false, false, lvl));
+
+        // Insert NBT
+        item.addItemTag(getAppliedNBT(data));
     }
 }

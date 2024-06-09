@@ -172,7 +172,7 @@ public class Weapon extends UseItem {
         // Check for attack effect conditions
         final SkillMetadata meta = new TriggerMetadata(getPlayerData().getMMOPlayerData(), TriggerType.API).toSkillMetadata(new SimpleSkill(handler));
         final SkillResult result = handler.getResult(meta);
-        if (!result.isSuccessful(meta)) return WeaponAttackResult.NO_ATTACK;
+        if (!result.isSuccessful()) return WeaponAttackResult.NO_ATTACK;
 
         // Check for durability
         UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), actionHand);

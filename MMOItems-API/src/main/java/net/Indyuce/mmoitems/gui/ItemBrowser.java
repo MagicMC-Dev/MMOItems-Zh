@@ -28,9 +28,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ItemBrowser extends PluginInventory {
     private final Map<String, ItemStack> cached = new LinkedHashMap<>();
+    private final List<Type> itemTypes;
 
     private final Type type;
     private boolean deleteMode;
@@ -49,8 +51,9 @@ public class ItemBrowser extends PluginInventory {
         super(player);
 
         this.type = type;
-    }
 
+        this.itemTypes = MMOItems.plugin.getTypes().getAll().stream().filter(Type::isDisplayed).collect(Collectors.toList());
+    }
 
     @NotNull
     @Override
@@ -61,7 +64,7 @@ public class ItemBrowser extends PluginInventory {
          *          TYPE BROWSER
          *
          *          Displays all possible item types if no type was previously selected by the player.
-         *  ------------------------------
+         * ------------------------------
          */
         if (type == null) {
 
@@ -74,11 +77,10 @@ public class ItemBrowser extends PluginInventory {
             Inventory inv = Bukkit.createInventory(this, 54, "物品浏览器 (QQ: 3217962725)");
 
             // Fetch the list of types
-            List<Type> types = new ArrayList<>(MMOItems.plugin.getTypes().getAll());
-            for (int j = min; j < Math.min(max, types.size()); j++) {
+            for (int j = min; j < Math.min(max, itemTypes.size()); j++) {
 
                 // Current type to display into the GUI
-                Type currentType = types.get(j);
+                Type currentType = itemTypes.get(j);
 
                 // Get number of items
                 int items = MMOItems.plugin.getTemplates().getTemplates(currentType).size();

@@ -11,7 +11,6 @@ import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.tooltip.TooltipTexture;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
-import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -71,18 +70,16 @@ public class MMOItem implements ItemReference {
      * stored as a GemStone in the history, allowing to be removed from the item with that same UUID.
      */
     public void mergeData(@NotNull ItemStat stat, @NotNull StatData data, @Nullable UUID associatedGemStone) {
-        boolean bc = stat.equals(ItemStats.ABILITIES);
 
         // Merge if possible, otherwise write over
         if (data instanceof Mergeable) {
 
             // Prepare to merge, gather history
-            StatHistory sHistory = StatHistory.from(this, stat);
+            StatHistory sHistory = computeStatHistory(stat);
             if (associatedGemStone != null) sHistory.registerGemstoneData(associatedGemStone, data);
             else sHistory.registerExternalData(data);
             setData(stat, sHistory.recalculate(getUpgradeLevel()));
-        } else
-            setData(stat, data);
+        } else setData(stat, data);
     }
 
     public void setData(@NotNull ItemStat stat, @NotNull StatData data) {
@@ -97,8 +94,14 @@ public class MMOItem implements ItemReference {
         stats.remove(stat);
     }
 
+    @Nullable
     public StatData getData(@NotNull ItemStat stat) {
         return stats.get(stat);
+    }
+
+    @NotNull
+    public StatData computeData(@NotNull ItemStat<?, ?> stat) {
+        return stats.computeIfAbsent(stat, ItemStat::getClearStatData);
     }
 
     public boolean hasData(@NotNull ItemStat stat) {
@@ -132,66 +135,51 @@ public class MMOItem implements ItemReference {
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public MMOItem clone() {
-        MMOItem clone = new MMOItem(type, id);
-
-        // Clone them stats and histories
-        for (ItemStat stat : stats.keySet()) {
-
-            // Copy Stat Datas themselves
-            clone.stats.put(stat, stats.get(stat));
-
-            // Copy Histories
-            StatHistory hist = getStatHistory(stat);
-            if (hist != null) {
-                final StatHistory histClone = hist.clone();
-                histClone.setParent(clone);
-                clone.setStatHistory(stat, histClone);
-            }
-        }
-
-        // Thats it
+        // TODO deep clone
+        final MMOItem clone = new MMOItem(type, id);
+        // Clone stats
+        clone.stats.putAll(this.stats);
+        // CLone stat histories
+        mergeableStatHistory.forEach((stat, hist) -> clone.mergeableStatHistory.put(stat, hist.clone().setParent(clone)));
         return clone;
     }
     //endregion
 
     //region Stat History Stuff
-    /*
+    /**
      * When merging stats (like applying a gemstone), the item must remember which were
      * its original stats, and from which gem stone came each stat, in order to allow
      * removal of gem stones in the future. This is where that is remembered.
      */
     @NotNull
-    private final Map<ItemStat, StatHistory> mergeableStatHistory = new HashMap<>();
+    private final Map<ItemStat<?, ?>, StatHistory> mergeableStatHistory = new HashMap<>();
+
+    public boolean hasStatHistory(@NotNull ItemStat<?, ?> stat) {
+        return stat instanceof Mergeable && mergeableStatHistory.containsKey(stat);
+    }
+
+    @Nullable
+    public StatHistory getStatHistory(@NotNull ItemStat<?, ?> stat) {
+
+        // TODO refactor
+        if (stat.equals(ItemStats.ENCHANTS)) return computeStatHistory(stat);
+
+        return mergeableStatHistory.get(stat);
+    }
 
     /**
-     * Gets the history associated to this stat, if there is any
-     * <p></p>
+     * Gets the history associated to this stat, if there is any.
      * A stat history is basically the memory of its original stats,
-     * from when it was created, its gemstone stats,
-     * those added by which gem, and its upgrade bonuses.
+     * from when it was created, its gemstone stats, those added by
+     * which gem, and its bonuses due to upgrades.
      */
-    @Nullable
-    public StatHistory getStatHistory(@NotNull ItemStat stat) {
-
-        /*
-         * As an assumption for several enchantment recognition operations,
-         * Enchantment data must never be clear and lack history. This is
-         * the basis for when an item is 'old'
-         */
-        if (stat instanceof Enchants)
-            return mergeableStatHistory.getOrDefault(stat, StatHistory.from(this, stat, true));
-
-        /*
-         * Normal stat, just fetch.
-         */
-        try {
-
-            // Well that REALLY should work
-            return mergeableStatHistory.get(stat);
-
-        } catch (ClassCastException ignored) {
-            return null;
-        }
+    @NotNull
+    public StatHistory computeStatHistory(@NotNull ItemStat<?, ?> stat) {
+        return mergeableStatHistory.computeIfAbsent(stat, itemStat -> {
+            final StatData currentData = computeData(itemStat);
+            Validate.isTrue(currentData instanceof Mergeable, "Stat " + itemStat.getId() + " is not mergeable");
+            return new StatHistory(this, itemStat, currentData);
+        });
     }
 
     @NotNull
@@ -394,27 +382,23 @@ public class MMOItem implements ItemReference {
 
         // Found?
         final @Nullable GemSocketsData thisSocketsData = (GemSocketsData) getData(ItemStats.GEM_SOCKETS);
-        if (thisSocketsData == null)
-            return new ArrayList<>();
+        if (thisSocketsData == null) return new ArrayList<>();
 
         // Find restored items
         final List<Pair<GemstoneData, MMOItem>> pairs = new ArrayList<>();
         for (GemstoneData gem : thisSocketsData.getGemstones()) {
             final MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gem.getMMOItemType()), gem.getMMOItemID());
-            if (restored != null)
-                pairs.add(Pair.of(gem, restored));
+            if (restored != null) pairs.add(Pair.of(gem, restored));
         }
 
         // If RevID updating, no need to identify stats
-        if (MMOItemReforger.gemstonesRevIDWhenUnsocket)
-            return pairs;
+        if (MMOItemReforger.gemstonesRevIDWhenUnsocket) return pairs;
 
         // Identify actual stats
         for (StatHistory hist : mergeableStatHistory.values())
             for (Pair<GemstoneData, MMOItem> gem : pairs) {
                 final StatData historicGemData = hist.getGemstoneData(gem.getKey().getHistoricUUID());
-                if (historicGemData != null)
-                    gem.getValue().setData(hist.getItemStat(), historicGemData);
+                if (historicGemData != null) gem.getValue().setData(hist.getItemStat(), historicGemData);
             }
 
         return pairs;
@@ -433,18 +417,15 @@ public class MMOItem implements ItemReference {
     public MMOItem extractGemstone(@NotNull GemstoneData gem) {
 
         final MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gem.getMMOItemType()), gem.getMMOItemID());
-        if (restored == null)
-            return null;
+        if (restored == null) return null;
 
         // If RevID updating, no need to identify stats
-        if (MMOItemReforger.gemstonesRevIDWhenUnsocket)
-            return restored;
+        if (MMOItemReforger.gemstonesRevIDWhenUnsocket) return restored;
 
         // Identify actual stats
         for (StatHistory hist : mergeableStatHistory.values()) {
             final StatData historicGemData = hist.getGemstoneData(gem.getHistoricUUID());
-            if (historicGemData != null)
-                restored.setData(hist.getItemStat(), historicGemData);
+            if (historicGemData != null) restored.setData(hist.getItemStat(), historicGemData);
         }
 
         return restored;
@@ -460,11 +441,10 @@ public class MMOItem implements ItemReference {
     public void removeGemStone(@NotNull UUID gemUUID, @Nullable String color) {
 
         // Get gemstone data
-        if (!hasData(ItemStats.GEM_SOCKETS))
-            return;
+        if (!hasData(ItemStats.GEM_SOCKETS)) return;
 
         //GEM//MMOItems.log("\u00a7b-\u00a78-\u00a79-\u00a77 Extracting \u00a7e" + gemUUID.toString());
-        StatHistory gemStory = StatHistory.from(this, ItemStats.GEM_SOCKETS);
+        StatHistory gemStory = computeStatHistory(ItemStats.GEM_SOCKETS);
 
         /*
          * We must only find the StatData where this gem resides,
@@ -472,23 +452,19 @@ public class MMOItem implements ItemReference {
          * will purge themselves from extraneous gems (that are
          * no longer registered onto the GEM_SOCKETS history).
          */
-        if (((GemSocketsData) gemStory.getOriginalData()).removeGem(gemUUID, color))
-            return;
+        if (((GemSocketsData) gemStory.getOriginalData()).removeGem(gemUUID, color)) return;
 
         // Attempt gems
         for (UUID gemDataUUID : gemStory.getAllGemstones())
-            if (((GemSocketsData) gemStory.getGemstoneData(gemDataUUID)).removeGem(gemUUID, color))
-                return;
+            if (((GemSocketsData) gemStory.getGemstoneData(gemDataUUID)).removeGem(gemUUID, color)) return;
 
         // Attempt externals
         for (StatData externalData : gemStory.getExternalData())
-            if (((GemSocketsData) externalData).removeGem(gemUUID, color))
-                return;
+            if (((GemSocketsData) externalData).removeGem(gemUUID, color)) return;
 
         // Attempt gems
         for (UUID gemDataUUID : gemStory.getAllModifiers())
-            if (((GemSocketsData) gemStory.getModifiersBonus(gemDataUUID)).removeGem(gemUUID, color))
-                return;
+            if (((GemSocketsData) gemStory.getModifiersBonus(gemDataUUID)).removeGem(gemUUID, color)) return;
     }
     //endregion
 }

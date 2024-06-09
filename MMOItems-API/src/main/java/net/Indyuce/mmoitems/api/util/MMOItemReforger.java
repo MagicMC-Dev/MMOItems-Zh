@@ -55,17 +55,6 @@ public class MMOItemReforger {
     }
 
     /**
-     * @param nbtItem If for any reason you already generated an NBTItem,
-     *                you may pass it here to ease the performance of
-     *                generating it again from the ItemStack.
-     * @param stack   Useless parameter.
-     */
-    @Deprecated
-    public MMOItemReforger(@Nullable ItemStack stack, @NotNull NBTItem nbtItem) {
-        this(nbtItem);
-    }
-
-    /**
      * Create this reforger to handle all operations regarding RevID
      * increases on any ItemStack, including: 									<br>
      * * Make a fresh version					<br>
@@ -403,7 +392,7 @@ public class MMOItemReforger {
             for (ItemStat stat : getFreshMMOItem().getUpgradeTemplate().getKeys()) {
 
                 // That stat yes
-                StatHistory hist = StatHistory.from(getFreshMMOItem(), stat);
+                StatHistory hist = getFreshMMOItem().computeStatHistory(stat);
 
                 // Recalculate that shit
                 getFreshMMOItem().setData(hist.getItemStat(), hist.recalculate(getFreshMMOItem().getUpgradeLevel()));
@@ -435,6 +424,12 @@ public class MMOItemReforger {
     //endregion
 
     //region Deprecated API
+
+    @Deprecated
+    public MMOItemReforger(@Nullable ItemStack stack, @NotNull NBTItem nbtItem) {
+        this(nbtItem);
+    }
+
     @Deprecated
     public void update(@Nullable Player p, @NotNull ReforgeOptions options) {
         reforge(options, p);

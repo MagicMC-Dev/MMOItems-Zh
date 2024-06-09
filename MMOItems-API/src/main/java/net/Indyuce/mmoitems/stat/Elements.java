@@ -36,7 +36,7 @@ import java.util.*;
 public class Elements extends ItemStat<RandomElementListData, ElementListData> implements Previewable<RandomElementListData, ElementListData> {
     public Elements() {
         super("ELEMENT", Material.SLIME_BALL, "元素", new String[]{"您的物品的元素"},
-                new String[]{"weapon", "catalyst", "tool", "armor", "gem_stone"});
+                new String[]{"equipment", "ornament", "gem_stone"});
     }
 
     @Override

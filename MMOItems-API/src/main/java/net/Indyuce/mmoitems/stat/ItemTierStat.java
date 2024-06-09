@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemTierStat extends StringStat implements GemStoneStat {
 	public ItemTierStat() {
-		super("TIER", Material.DIAMOND, "稀有程度", new String[] { "该品质层定义了您的物品", "的稀有程度以及物品", "被分解时会掉落的物品.", "&9可以在 tiers.yml 文件中配置物品稀有度" }, new String[] { "all" });
+		super("TIER", Material.DIAMOND, "稀有程度", new String[] { "该品质层定义了您的物品", "的稀有程度以及物品", "被分解时会掉落的物品.", "&9可以在 tiers.yml 文件中配置物品稀有度" }, new String[0]);
 	}
 
 	@Override

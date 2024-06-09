@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.listener.reforging;
 
-import io.lumine.mythic.lib.api.util.Ref;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.MMOItemReforgeEvent;
@@ -43,7 +42,7 @@ public class RFGKeepEnchantments implements Listener {
         Enchants.separateEnchantments(operable);
 
         // Gather
-        StatHistory hist = StatHistory.from(operable, ItemStats.ENCHANTS);
+        StatHistory hist = operable.computeStatHistory(ItemStats.ENCHANTS);
         EnchantListData maybeOriginalEnchs = ((EnchantListData) hist.getOriginalData()).clone();
 
         //RFG//MMOItems.log("  \u00a7b*** \u00a77Enchantments in old item:");
@@ -52,7 +51,7 @@ public class RFGKeepEnchantments implements Listener {
 
         // Whats in the new one
         //RFG//MMOItems.log("  \u00a7b*** \u00a77Enchantments in new item:");
-        StatHistory future = StatHistory.from(event.getNewMMOItem(), ItemStats.ENCHANTS);
+        StatHistory future = event.getNewMMOItem().computeStatHistory(ItemStats.ENCHANTS);
         //RFG//future.log();
 
         //RFG//MMOItems.log("  \u00a7b* \u00a77Transfer those already externals:"); int n = 0;

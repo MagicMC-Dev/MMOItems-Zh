@@ -231,7 +231,7 @@ public class RecipeManager implements Reloadable {
                     blueprint.disable();
                     Bukkit.removeRecipe(blueprint.getNk());
                 } catch (Throwable throwable) {
-                    MMOItems.plugin.getLogger().log(Level.INFO, "Could not unregister knowledge book recipe '" + blueprint.getNk() + "': " + throwable.getMessage());
+                    MMOItems.plugin.getLogger().log(Level.WARNING, "Could not unregister knowledge book recipe '" + blueprint.getNk() + "': " + throwable.getMessage());
                 }
             });
             customRecipes.clear();

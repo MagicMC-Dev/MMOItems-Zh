@@ -197,11 +197,11 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-        <!-- AE Api -->
+        <!-- AdvancedEnchants API -->
         <dependency>
-            <groupId>n3kas</groupId>
+            <groupId>net.advancedplugins</groupId>
             <artifactId>ae.api</artifactId>
-            <version>5.7.6</version>
+            <version>8.7.4</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

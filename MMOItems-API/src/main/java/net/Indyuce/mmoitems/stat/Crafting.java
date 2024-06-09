@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 	public Crafting() {
 		super("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "制作",
-				new String[] { "你的物品的制作配方改变配方需要 &o/mi reload recipes&7" }, new String[] { "all" });
+				new String[] { "刷新物品的制作配方需要使用 &o/mi reload recipes&7" }, new String[0]);
 	}
 
 	@Override

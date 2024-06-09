@@ -29,7 +29,7 @@ import java.util.Optional;
 
 public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 	public MaterialStat() {
-		super("MATERIAL", VersionMaterial.GRASS_BLOCK.toMaterial(), "材料", new String[] { "你的物品材料(原版)" }, new String[] { "all" });
+		super("MATERIAL", VersionMaterial.GRASS_BLOCK.toMaterial(), "材料", new String[] { "你的物品材料(原版)" }, new String[0]);
 	}
 
 	@Override

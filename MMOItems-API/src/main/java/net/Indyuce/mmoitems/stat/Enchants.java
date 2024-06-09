@@ -43,7 +43,7 @@ import java.util.*;
 
 public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> implements Upgradable {
     public Enchants() {
-        super("ENCHANTS", Material.ENCHANTED_BOOK, "附魔", new String[]{"物品附魔"}, new String[]{"all"});
+        super("ENCHANTS", Material.ENCHANTED_BOOK, "附魔", new String[]{"物品附魔"}, new String[0]);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
                  *    enchantments applied by players before StatHistory existed.
                  *
                  */
-                StatHistory.from(mmoitem, ItemStats.ENCHANTS);
+                mmoitem.computeStatHistory(ItemStats.ENCHANTS); // TODO remove?
             }
         }
     }
@@ -411,7 +411,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
 
             // Get that data
             EnchantListData data = (EnchantListData) mmoitem.getData(ItemStats.ENCHANTS);
-            StatHistory hist = StatHistory.from(mmoitem, ItemStats.ENCHANTS);
+            StatHistory hist = mmoitem.computeStatHistory(ItemStats.ENCHANTS);
 
             //SENCH//MMOItems.log(" \u00a7b:\u00a73:\u00a79: \u00a77Early Analysis: \u00a73o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
             //SENCH//MMOItems.log("  \u00a73=\u00a7b> \u00a77Active:");

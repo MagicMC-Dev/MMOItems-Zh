@@ -7,10 +7,12 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import io.lumine.mythic.lib.version.VPotionEffectType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -254,6 +256,10 @@ public class MMOUtils {
         return null;
     }
 
+    public static int getLevel(@NotNull ItemStack item, @NotNull Enchantment enchant) {
+        return item.hasItemMeta() ? item.getItemMeta().getEnchantLevel(enchant) : 0;
+    }
+
     /**
      * The last 5 seconds of nausea are useless, night vision flashes in the
      * last 10 seconds, blindness takes a few seconds to decay as well, and
@@ -265,7 +271,7 @@ public class MMOUtils {
      * "permanent" potion effects, depending on the potion effect type
      */
     public static int getEffectDuration(PotionEffectType type) {
-        return type.equals(PotionEffectType.NIGHT_VISION) || type.equals(PotionEffectType.CONFUSION) ? 260 : type.equals(PotionEffectType.BLINDNESS) ? 140 : 100;
+        return type.equals(PotionEffectType.NIGHT_VISION) || type.equals(VPotionEffectType.NAUSEA.get()) ? 260 : type.equals(PotionEffectType.BLINDNESS) ? 140 : 100;
     }
 
     @NotNull

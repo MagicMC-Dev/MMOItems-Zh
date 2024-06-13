@@ -7,16 +7,17 @@ import io.lumine.mythic.lib.comp.flags.CustomFlag;
 import io.lumine.mythic.lib.math3.geometry.euclidean.threed.Line;
 import io.lumine.mythic.lib.math3.geometry.euclidean.threed.Vector3D;
 import io.lumine.mythic.lib.version.OreDrops;
+import io.lumine.mythic.lib.version.VEnchantment;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.BouncingCrackBlockBreakEvent;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -45,7 +46,8 @@ public class Tool extends UseItem {
         if (getNBTItem().getBoolean("MMOITEMS_AUTOSMELT")) {
             final OreDrops drops = MythicLib.plugin.getVersion().getWrapper().getOreDrops(block.getType());
             if (drops != null) {
-                UtilityMethods.dropItemNaturally(block.getLocation(), drops.generate(getFortuneLevel()));
+                final int fortuneLevel = MMOUtils.getLevel(getItem(), VEnchantment.FORTUNE.get());
+                UtilityMethods.dropItemNaturally(block.getLocation(), drops.generate(fortuneLevel));
                 block.getWorld().spawnParticle(Particle.LAVA, block.getLocation().add(.5, .5, .5), 4);
                 block.setType(Material.AIR);
                 cancel = true;
@@ -115,11 +117,6 @@ public class Tool extends UseItem {
         }
 
         return cancel;
-    }
-
-    private int getFortuneLevel() {
-        if (!getItem().hasItemMeta()) return 0;
-        return getItem().getItemMeta().getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS);
     }
 
     private Vector3D toJava(Vector vector) {

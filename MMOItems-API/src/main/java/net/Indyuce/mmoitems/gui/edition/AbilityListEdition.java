@@ -5,7 +5,6 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -88,12 +87,12 @@ public class AbilityListEdition extends EditionInventory {
 				inventory.setItem(slots[n++], abilityItem);
 			}
 
-		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
+		ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		ItemMeta glassMeta = glass.getItemMeta();
 		glassMeta.setDisplayName(ChatColor.RED + "- 无技能 -");
 		glass.setItemMeta(glassMeta);
 
-		ItemStack add = new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial());
+		ItemStack add = new ItemStack(Material.WRITABLE_BOOK);
 		ItemMeta addMeta = add.getItemMeta();
 		addMeta.setDisplayName(ChatColor.GREEN + "添加技能...");
 		add.setItemMeta(addMeta);

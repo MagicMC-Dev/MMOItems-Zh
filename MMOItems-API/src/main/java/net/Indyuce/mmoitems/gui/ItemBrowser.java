@@ -6,7 +6,6 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.util.AdventureUtils;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
@@ -101,7 +100,7 @@ public class ItemBrowser extends PluginInventory {
             }
 
             // Fill remainder slots with 'No Type' notice
-            ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
+            ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
             ItemMeta glassMeta = glass.getItemMeta();
             glassMeta.setDisplayName(ChatColor.RED + "- 没有类型 -");
             glass.setItemMeta(glassMeta);
@@ -141,7 +140,7 @@ public class ItemBrowser extends PluginInventory {
         /*
          * Build cool Item Stacks for buttons and sh
          */
-        ItemStack error = VersionMaterial.RED_STAINED_GLASS_PANE.toItem();
+        ItemStack error = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         ItemMeta errorMeta = error.getItemMeta();
         errorMeta.setDisplayName(ChatColor.RED + "- 错误 -");
         List<String> errorLore = new ArrayList<>();
@@ -150,7 +149,7 @@ public class ItemBrowser extends PluginInventory {
         errorMeta.setLore(errorLore);
         error.setItemMeta(errorMeta);
 
-        ItemStack noItem = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
+        ItemStack noItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta noItemMeta = noItem.getItemMeta();
         noItemMeta.setDisplayName(ChatColor.RED + "- 没有物品 -");
         noItem.setItemMeta(noItemMeta);
@@ -165,12 +164,12 @@ public class ItemBrowser extends PluginInventory {
         backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + "返回");
         back.setItemMeta(backMeta);
 
-        ItemStack create = new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial());
+        ItemStack create = new ItemStack(new ItemStack(Material.WRITABLE_BOOK));
         ItemMeta createMeta = create.getItemMeta();
         createMeta.setDisplayName(ChatColor.GREEN + "创建");
         create.setItemMeta(createMeta);
 
-        ItemStack delete = new ItemStack(VersionMaterial.CAULDRON.toMaterial());
+        ItemStack delete = new ItemStack(new ItemStack(Material.CAULDRON));
         ItemMeta deleteMeta = delete.getItemMeta();
         deleteMeta.setDisplayName(ChatColor.RED + (deleteMode ? "取消删除" : "删除物品"));
         delete.setItemMeta(deleteMeta);

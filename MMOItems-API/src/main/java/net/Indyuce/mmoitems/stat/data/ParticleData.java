@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.lumine.mythic.lib.version.VParticle;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
@@ -93,10 +94,10 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
 	}
 
 	public void display(Location location, int amount, float offsetX, float offsetY, float offsetZ, float speed) {
-		if (particle == Particle.REDSTONE) {
+		if (particle == VParticle.REDSTONE.get()) {
 			location.getWorld().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, new Particle.DustOptions(color, 1));
 		}
-        else if (particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT) {
+        else if (particle == VParticle.ENTITY_EFFECT.get() || particle == VParticle.ENTITY_EFFECT_AMBIENT.get()) {
             // 0 for amount to allow colors (Thats why there is a for loop). Then the offsets are RGB values from 0.0 - 1.0, last 1 is the brightness.
         	for (int i = 0; i < amount; i++) {
         		location.getWorld().spawnParticle(particle, location, 0, (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, 1);
@@ -142,5 +143,9 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
 	@Override
 	public ParticleData randomize(MMOItemBuilder builder) {
 		return this;
+	}
+
+	public void spawn(Location location, Particle particle, int amount, double speed, double offsetX, double offsetY, double offsetZ) {
+
 	}
 }

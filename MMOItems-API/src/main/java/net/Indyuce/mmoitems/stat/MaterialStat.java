@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.EnumUtils;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import io.lumine.mythic.lib.version.VMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -29,7 +29,7 @@ import java.util.Optional;
 
 public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 	public MaterialStat() {
-		super("MATERIAL", VersionMaterial.GRASS_BLOCK.toMaterial(), "材料", new String[] { "你的物品材料(原版)" }, new String[0]);
+		super("MATERIAL", VMaterial.GRASS_BLOCK.get(), "材料", new String[] { "你的物品材料(原版)" }, new String[0]);
 	}
 
 	@Override

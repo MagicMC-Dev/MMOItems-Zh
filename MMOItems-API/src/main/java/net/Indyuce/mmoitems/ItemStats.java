@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems;
 
-import io.lumine.mythic.lib.version.VersionMaterial;
+import io.lumine.mythic.lib.version.VMaterial;
 import net.Indyuce.mmoitems.stat.*;
 import net.Indyuce.mmoitems.stat.block.*;
 import net.Indyuce.mmoitems.stat.type.*;
@@ -46,10 +46,10 @@ public class ItemStats {
             PROJECTILE_PARTICLES = new ProjectileParticles(),
 
     //   Disable Interaction Stats
-    DISABLE_INTERACTION = new DisableStat("INTERACTION", VersionMaterial.GRASS_BLOCK.toMaterial(), "禁用交互", new String[]{"!block", "all"}, "禁止任何不必要的交互:", "方块放置、物品使用..."),
-            DISABLE_CRAFTING = new DisableStat("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "禁用合成", "玩家无法在合成时使用此物品。"), DISABLE_SMELTING = new DisableStat("SMELTING", Material.FURNACE, "禁用熔炼", "玩家不能在熔炉中使用该物品。"),
+    DISABLE_INTERACTION = new DisableStat("INTERACTION", VMaterial.GRASS_BLOCK.get(), "禁用交互", new String[]{"!block", "all"}, "禁止任何不必要的交互:", "方块放置、物品使用..."),
+            DISABLE_CRAFTING = new DisableStat("CRAFTING", Material.CRAFTING_TABLE, "禁用合成", "玩家无法在合成时使用此物品。"), DISABLE_SMELTING = new DisableStat("SMELTING", Material.FURNACE, "禁用熔炼", "玩家不能在熔炉中使用该物品。"),
             DISABLE_SMITHING = new DisableStat("SMITHING", Material.DAMAGED_ANVIL, "禁用锻造", "玩家无法在锻造台中锻造此物品。"),
-            DISABLE_ENCHANTING = new DisableStat("ENCHANTING", VersionMaterial.ENCHANTING_TABLE.toMaterial(), "禁用附魔", new String[]{"!block", "all"}, "玩家无法对此物品进行附魔。"),
+            DISABLE_ENCHANTING = new DisableStat("ENCHANTING", Material.ENCHANTING_TABLE, "禁用附魔", new String[]{"!block", "all"}, "玩家无法对此物品进行附魔。"),
             DISABLE_REPAIRING = new DisableStat("REPAIRING", Material.ANVIL, "禁用修复", new String[]{"!block", "all"}, "玩家无法在铁砧中使用此物品进行修复。"),
             DISABLE_ARROW_SHOOTING = new DisableStat("ARROW_SHOOTING", Material.ARROW, "禁用箭射击", new Material[]{Material.ARROW}, "玩家无法使用弓射击此", "物品。"),
             DISABLE_DROP = new DisableStat("DROPING", Material.LAVA_BUCKET, "禁用物品丢弃", new String[]{"all"}, "禁止丢弃此物品！"),
@@ -79,11 +79,11 @@ public class ItemStats {
             COOLDOWN_REDUCTION = new DoubleStat("COOLDOWN_REDUCTION", Material.BOOK, "冷却时间缩减", new String[]{"减少物品和玩家技能的冷却时间（%）。"}),
             RANGE = new DoubleStat("RANGE", Material.STICK, "攻击范围", new String[]{"你的物品攻击的攻击范围。"}, new String[]{"staff", "whip", "wand", "musket", "gem_stone"}),
             MANA_COST = new ManaCost(),
-            STAMINA_COST = new DoubleStat("STAMINA_COST", VersionMaterial.LIGHT_GRAY_DYE.toMaterial(), "耐力消耗", new String[]{"武器使用时消耗的耐力。"}, new String[]{"weapon"}),
+            STAMINA_COST = new DoubleStat("STAMINA_COST", Material.LIGHT_GRAY_DYE, "耐力消耗", new String[]{"武器使用时消耗的耐力。"}, new String[]{"weapon"}),
             ARROW_VELOCITY = new DoubleStat("ARROW_VELOCITY", Material.ARROW, "箭矢速度", new String[]{"决定你的武器可以射击的距离。", "默认：1.0"}, new String[]{"gem_stone", "bow", "crossbow"}),
             ARROW_POTION_EFFECTS = new ArrowPotionEffects(),
-            PVE_DAMAGE = new DoubleStat("PVE_DAMAGE", VersionMaterial.PORKCHOP.toMaterial(), "PvE 伤害", new String[]{"对非人类实体造成的额外伤害。"}, new String[]{"equipment", "gem_stone"}),
-            PVP_DAMAGE = new DoubleStat("PVP_DAMAGE", VersionMaterial.SKELETON_SKULL.toMaterial(), "PvP 伤害", new String[]{"对玩家造成的额外伤害。"}, new String[]{"equipment", "gem_stone"}),
+            PVE_DAMAGE = new DoubleStat("PVE_DAMAGE", Material.PORKCHOP, "PvE 伤害", new String[]{"对非人类实体造成的额外伤害。"}, new String[]{"equipment", "gem_stone"}),
+            PVP_DAMAGE = new DoubleStat("PVP_DAMAGE", Material.SKELETON_SKULL, "PvP 伤害", new String[]{"对玩家造成的额外伤害。"}, new String[]{"equipment", "gem_stone"}),
             BLUNT_POWER = new DoubleStat("BLUNT_POWER", Material.IRON_AXE, "钝击强度", new String[]{"范围攻击的半径。", "若设置为2.0，目标周围2格内的敌人将受到伤害。", "&9这个属性只适用于钝器。"}, new String[]{"weapon", "gem_stone"}),
             BLUNT_RATING = new DoubleStat("BLUNT_RATING", Material.BRICK, "钝击力量", new String[]{"钝击攻击的力量。", "若设置为50%，受到攻击的敌人", "将受到初始伤害的50%。", "&9这个属性只适用于钝器。"}, new String[]{"weapon", "gem_stone"}),
             WEAPON_DAMAGE = new DoubleStat("WEAPON_DAMAGE", Material.IRON_SWORD, "武器伤害", new String[]{"额外的击中武器伤害（以百分比计算）。"}),
@@ -94,13 +94,13 @@ public class ItemStats {
             DEFENSE = new DoubleStat("DEFENSE", Material.SHIELD, "防御", new String[]{"减少来自任何来源的伤害。", "公式可在MMOLib配置中设置。"}),
             DAMAGE_REDUCTION = new DoubleStat("DAMAGE_REDUCTION", Material.IRON_CHESTPLATE, "伤害减免", new String[]{"减少来自任何来源的伤害。", "以百分比计算。"}),
             FALL_DAMAGE_REDUCTION = new DoubleStat("FALL_DAMAGE_REDUCTION", Material.FEATHER, "坠落伤害减免", new String[]{"减少坠落伤害。", "以百分比计算。"}),
-            PROJECTILE_DAMAGE_REDUCTION = new DoubleStat("PROJECTILE_DAMAGE_REDUCTION", VersionMaterial.SNOWBALL.toMaterial(), "弹道伤害减免", new String[]{"减少弹道伤害。", "以百分比计算。"}),
+            PROJECTILE_DAMAGE_REDUCTION = new DoubleStat("PROJECTILE_DAMAGE_REDUCTION", Material.SNOWBALL, "弹道伤害减免", new String[]{"减少弹道伤害。", "以百分比计算。"}),
             PHYSICAL_DAMAGE_REDUCTION = new DoubleStat("PHYSICAL_DAMAGE_REDUCTION", Material.LEATHER_CHESTPLATE, "物理伤害减免", new String[]{"减少物理伤害。", "以百分比计算。"}),
             FIRE_DAMAGE_REDUCTION = new DoubleStat("FIRE_DAMAGE_REDUCTION", Material.BLAZE_POWDER, "火焰伤害减免", new String[]{"减少火焰伤害。", "以百分比计算。"}),
             MAGIC_DAMAGE_REDUCTION = new DoubleStat("MAGIC_DAMAGE_REDUCTION", Material.POTION, "魔法伤害减免", new String[]{"减少药水造成的魔法伤害。", "以百分比计算。"}),
-            PVE_DAMAGE_REDUCTION = new DoubleStat("PVE_DAMAGE_REDUCTION", VersionMaterial.PORKCHOP.toMaterial(), "PvE 伤害减免", new String[]{"减少怪物造成的伤害。", "以百分比计算。"}),
-            PVP_DAMAGE_REDUCTION = new DoubleStat("PVP_DAMAGE_REDUCTION", VersionMaterial.SKELETON_SKULL.toMaterial(), "PvP 伤害减免", new String[]{"减少玩家造成的伤害。", "以百分比计算。"}),
-            UNDEAD_DAMAGE = new DoubleStat("UNDEAD_DAMAGE", VersionMaterial.SKELETON_SKULL.toMaterial(), "不死生物伤害", new String[]{"对不死生物造成额外伤害。", "以百分比计算。"}),
+            PVE_DAMAGE_REDUCTION = new DoubleStat("PVE_DAMAGE_REDUCTION", Material.PORKCHOP, "PvE 伤害减免", new String[]{"减少怪物造成的伤害。", "以百分比计算。"}),
+            PVP_DAMAGE_REDUCTION = new DoubleStat("PVP_DAMAGE_REDUCTION", Material.SKELETON_SKULL, "PvP 伤害减免", new String[]{"减少玩家造成的伤害。", "以百分比计算。"}),
+            UNDEAD_DAMAGE = new DoubleStat("UNDEAD_DAMAGE", Material.SKELETON_SKULL, "不死生物伤害", new String[]{"对不死生物造成额外伤害。", "以百分比计算。"}),
             LIFESTEAL = new DoubleStat("LIFESTEAL", Material.REDSTONE, "吸血", new String[]{"当造成武器伤害时，你获得的", "生命值百分比。"}),
             SPELL_VAMPIRISM = new DoubleStat("SPELL_VAMPIRISM", Material.REDSTONE, "法术吸血", new String[]{"当施放技能伤害时，你获得的", "生命值百分比。"}),
 
@@ -108,11 +108,11 @@ public class ItemStats {
     UNBREAKABLE = new Unbreakable(),
             TIER = new ItemTierStat(),
             SET = new ItemSetStat(),
-            ARMOR = new DoubleStat("ARMOR", VersionMaterial.GOLDEN_CHESTPLATE.toMaterial(), "护甲", new String[]{"赋予持有者的护甲值"}),
+            ARMOR = new DoubleStat("ARMOR", Material.GOLDEN_CHESTPLATE, "护甲", new String[]{"赋予持有者的护甲值"}),
             ARMOR_TOUGHNESS = new DoubleStat("ARMOR_TOUGHNESS", Material.DIAMOND_CHESTPLATE, "护甲韧性", new String[]{"护甲韧性可减少所受的伤害"}),
             MAX_HEALTH = new DoubleStat("MAX_HEALTH", Material.GOLDEN_APPLE, "最大生命值", new String[]{"物品赋予持有者的额外生命值"}),
             UNSTACKABLE = new Unstackable(),
-            MAX_MANA = new DoubleStat("MAX_MANA", VersionMaterial.LAPIS_LAZULI.toMaterial(), "最大法力值", new String[]{"增加最大法力值的魔力"}),
+            MAX_MANA = new DoubleStat("MAX_MANA", Material.LAPIS_LAZULI, "最大法力值", new String[]{"增加最大法力值的魔力"}),
             KNOCKBACK_RESISTANCE = new KnockbackResistance(),
             MOVEMENT_SPEED = new MovementSpeed(),
             TWO_HANDED = new BooleanStat("TWO_HANDED", Material.IRON_INGOT, "双手持握", new String[]{"若设为true, 则玩家持有两个物品时", "其中一个为双手武器时会显著降低速度"}, new String[]{"handheld"}),
@@ -154,7 +154,7 @@ public class ItemStats {
 
     // Unique Stats
     AUTOSMELT = new BooleanStat("AUTOSMELT", Material.COAL, "自动熔炼", new String[]{"如果设置为true, 你的工具将会", "自动熔炼挖掘到的矿石"}, new String[]{"tool"}),
-            BOUNCING_CRACK = new BooleanStat("BOUNCING_CRACK", VersionMaterial.COBBLESTONE_WALL.toMaterial(), "范围挖掘", new String[]{"如果设置为true, 你的工具将会", "同时破坏附近的方块"}, new String[]{"tool"}),
+            BOUNCING_CRACK = new BooleanStat("BOUNCING_CRACK", Material.COBBLESTONE_WALL, "范围挖掘", new String[]{"如果设置为true, 你的工具将会", "同时破坏附近的方块"}, new String[]{"tool"}),
             PICKAXE_POWER = new PickaxePower(),
             CUSTOM_SOUNDS = new CustomSounds(),
             ELEMENTS = new Elements(),
@@ -162,7 +162,7 @@ public class ItemStats {
     //   STAFF_SPIRIT = new StaffSpiritStat(),
     LUTE_ATTACK_SOUND = new LuteAttackSoundStat(),
             LUTE_ATTACK_EFFECT = new LuteAttackEffectStat(),
-            NOTE_WEIGHT = new DoubleStat("NOTE_WEIGHT", VersionMaterial.MUSIC_DISC_MALL.toMaterial(), "音符重量", new String[]{"定义你的琴产生的投射物", "向下倾斜的程度"}, new String[]{"lute"}),
+            NOTE_WEIGHT = new DoubleStat("NOTE_WEIGHT", Material.MUSIC_DISC_MALL, "音符重量", new String[]{"定义你的琴产生的投射物", "向下倾斜的程度"}, new String[]{"lute"}),
             REMOVE_ON_CRAFT = new BooleanStat("REMOVE_ON_CRAFT", Material.GLASS_BOTTLE, "合成时移除", new String[]{"如果物品在合成时应该完全", "移除, 或者变成一个空瓶子或空桶"}, new String[0], Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET),
             COMPATIBLE_TYPES = new CompatibleTypes(),
             COMPATIBLE_IDS = new CompatibleIds(),
@@ -175,8 +175,8 @@ public class ItemStats {
             REPAIR_TYPE = new RepairReference(),
             INEDIBLE = new BooleanStat("INEDIBLE", Material.POISONOUS_POTATO, "不可食用", new String[]{"玩家无法右键点击此消耗品", "", "它的任何效果都不会发生"}, new String[]{"consumable"}),
             DISABLE_RIGHT_CLICK_CONSUME = new DisableStat("RIGHT_CLICK_CONSUME", Material.BAKED_POTATO, "无限消耗", new String[]{"消耗品"}, "玩家将能够右键点击此消耗品", "并从其效果中受益, 但它不会被消耗"),
-            KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "击退", new String[]{"使用这把火枪会击退", "如果为正, 则击退用户"}, new String[]{"musket", "gem_stone"}),
-            RECOIL = new DoubleStat("RECOIL", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "后坐力", new String[]{"对应于射击的不准确性"}, new String[]{"musket", "gem_stone"}),
+            KNOCKBACK = new DoubleStat("KNOCKBACK", Material.IRON_HORSE_ARMOR, "击退", new String[]{"使用这把火枪会击退", "如果为正, 则击退用户"}, new String[]{"musket", "gem_stone"}),
+            RECOIL = new DoubleStat("RECOIL", Material.IRON_HORSE_ARMOR, "后坐力", new String[]{"对应于射击的不准确性"}, new String[]{"musket", "gem_stone"}),
             HANDWORN = new BooleanStat("HANDWORN", Material.STRING, "无视双持", new String[]{"这个物品无视双手持有的物品", "", "基本上是一枚你可以佩戴的戒指或手套, ", "并且仍然可以释放手来", "携带双手武器"}, new String[]{"catalyst", "off_catalyst", "main_catalyst"}),
             AMPHIBIAN = new Amphibian(),
 

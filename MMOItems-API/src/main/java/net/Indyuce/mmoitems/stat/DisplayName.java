@@ -4,7 +4,6 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.comp.adventure.AdventureParser;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -16,6 +15,7 @@ import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class DisplayName extends StringStat implements GemStoneStat {
 
     public DisplayName() {
-        super("NAME", VersionMaterial.OAK_SIGN.toMaterial(), "显示名称", new String[]{"物品显示名称"},
+        super("NAME", Material.OAK_SIGN, "显示名称", new String[]{"物品显示名称"},
                 new String[0]);
     }
 

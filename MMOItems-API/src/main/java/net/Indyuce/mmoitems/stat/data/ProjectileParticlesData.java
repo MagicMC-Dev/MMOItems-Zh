@@ -2,9 +2,11 @@ package net.Indyuce.mmoitems.stat.data;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.gson.JsonObject;
+import io.lumine.mythic.lib.version.VParticle;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,7 +50,7 @@ public class ProjectileParticlesData implements StatData, RandomStatData<Project
         final JsonObject obj = MythicLib.plugin.getGson().fromJson(jsonObject, JsonObject.class);
         particle = Particle.valueOf(obj.get("Particle").getAsString());
 
-        if (isColorable(particle)) {
+        if (MMOUtils.isColorable(particle)) {
             colored = true;
             red = obj.get("Red").getAsInt();
             green = obj.get("Green").getAsInt();
@@ -82,8 +84,9 @@ public class ProjectileParticlesData implements StatData, RandomStatData<Project
         return false;
     }
 
+    @Deprecated
     public static boolean isColorable(Particle particle) {
-        return particle == Particle.REDSTONE || particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT || particle == Particle.NOTE;
+        return MMOUtils.isColorable(particle);
     }
 
     @Override
@@ -104,32 +107,29 @@ public class ProjectileParticlesData implements StatData, RandomStatData<Project
     }
 
     public void shootParticle(Location loc, int amount, double offset) {
-        if (isColorable(particle)) {
-            switch (particle) {
-                case REDSTONE:
-                    // REDSTONE particles take dustOptions with RGB values. Normal REDSTONE particles are size 1 but can realistically be anything.
-                    Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(red, green, blue), 1);
-                    loc.getWorld().spawnParticle(Particle.REDSTONE, loc, amount, offset, offset, offset, 0, dustOptions);
-                    break;
-                case NOTE:
-                    // NOTE particles only have 24 colors. offsetX must be a number between 0 and 1 in intervals of 1/24. offsetY and offsetZ must be 0. Count should be 0 and "extra" should be 1.
-                    double note = red / 24D;
-                    loc.getWorld().spawnParticle(Particle.NOTE, loc, 0, note, 0, 0, 1);
-                    break;
-                default:
-                    // SPELL_MOB and SPELL_MOB_AMBIENT must be a value between 0 and 1 in intervals in 1/255. "Extra" must be 1 or the color will not be correct. 0 will be black and anything else will be random.
-                    double red = this.red / 255D;
-                    double green = this.green / 255D;
-                    double blue = this.blue / 255D;
-                    loc.getWorld().spawnParticle(particle, loc, 0, red, green, blue, 1);
+        if (MMOUtils.isColorable(particle)) {
+            if (particle == VParticle.REDSTONE.get()) {
+                // REDSTONE particles take dustOptions with RGB values. Normal REDSTONE particles are size 1 but can realistically be anything.
+                Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(red, green, blue), 1);
+                loc.getWorld().spawnParticle(particle, loc, amount, offset, offset, offset, 0, dustOptions);
+            } else if (particle == Particle.NOTE) {
+                // NOTE particles only have 24 colors. offsetX must be a number between 0 and 1 in intervals of 1/24. offsetY and offsetZ must be 0. Count should be 0 and "extra" should be 1.
+                double note = red / 24D;
+                loc.getWorld().spawnParticle(Particle.NOTE, loc, 0, note, 0, 0, 1);
+            } else {
+                // SPELL_MOB and SPELL_MOB_AMBIENT must be a value between 0 and 1 in intervals in 1/255. "Extra" must be 1 or the color will not be correct. 0 will be black and anything else will be random.
+                double red = this.red / 255D;
+                double green = this.green / 255D;
+                double blue = this.blue / 255D;
+                loc.getWorld().spawnParticle(particle, loc, 0, red, green, blue, 1);
             }
 
-        } else if (particle == Particle.ITEM_CRACK) {
+        } else if (particle == VParticle.ITEM.get()) {
             // Some particles require a material. I don't really want to handle this right now so just make it stone.
             ItemStack materialData = new ItemStack(Material.STONE);
             loc.getWorld().spawnParticle(particle, loc, amount, offset, offset, offset, 0, materialData);
 
-        } else if (particle == Particle.ITEM_CRACK || particle == Particle.BLOCK_CRACK || particle == Particle.BLOCK_DUST || particle == Particle.FALLING_DUST) {
+        } else if (particle == VParticle.BLOCK.get() || particle == VParticle.BLOCK_DUST.get() || particle == Particle.FALLING_DUST) {
             BlockData fallingDustData = Material.STONE.createBlockData();
             loc.getWorld().spawnParticle(particle, loc, amount, offset, offset, offset, 0, fallingDustData);
 

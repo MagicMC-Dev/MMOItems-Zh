@@ -6,7 +6,6 @@ import com.google.gson.JsonSyntaxException;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -33,7 +32,7 @@ import java.util.Optional;
 public class CompatibleMaterials extends ItemStat<StringListData, StringListData> {
 
     public CompatibleMaterials() {
-        super("COMPATIBLE_MATERIALS", VersionMaterial.COMMAND_BLOCK.toMaterial(), "兼容材料",
+        super("COMPATIBLE_MATERIALS", Material.COMMAND_BLOCK, "兼容材料",
                 new String[]{"该皮肤兼容的物品材料"}, new String[]{"skin"});
     }
 

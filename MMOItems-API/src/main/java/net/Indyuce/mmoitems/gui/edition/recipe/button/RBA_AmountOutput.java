@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
+import net.Indyuce.mmoitems.stat.HidePotionEffects;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -49,7 +50,7 @@ public class RBA_AmountOutput extends RecipeButtonAction {
         if (MythicLib.plugin.getVersion().isStrictlyHigher(1, 13) && resultMeta.hasCustomModelData()) { buttonMeta.setCustomModelData(resultMeta.getCustomModelData()); }
         if (resultMeta instanceof LeatherArmorMeta) { ((LeatherArmorMeta) buttonMeta).setColor(((LeatherArmorMeta) resultMeta).getColor()); }
         if (resultMeta instanceof BannerMeta) { ((BannerMeta) buttonMeta).setPatterns(((BannerMeta) resultMeta).getPatterns()); }
-        buttonMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DYE, ItemFlag.HIDE_POTION_EFFECTS);
+        buttonMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DYE, HidePotionEffects.ITEM_FLAG);
         button.setItemMeta(buttonMeta);
     }
 

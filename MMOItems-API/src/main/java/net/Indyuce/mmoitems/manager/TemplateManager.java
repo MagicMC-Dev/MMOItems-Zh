@@ -324,7 +324,7 @@ public class TemplateManager implements Reloadable {
         templates.forEach(template -> {
             try {
                 template.getPostLoadAction().performAction();
-            } catch (IllegalArgumentException exception) {
+            } catch (Exception exception) {
                 ffp.activatePrefix(true, "Item Templates \u00a78($r" + template.getType().getId() + "\u00a78)");
                 ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not post-load item template '" + template.getId() + "': " + exception.getMessage());
             }

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.comp.mythicmobs;
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.version.VParticle;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Random;
 
 public class LootsplosionListener implements Listener {
-    private static final Random random = new Random();
+    private static final Random RANDOM = new Random();
 
     private final boolean colored;
 
@@ -42,8 +43,8 @@ public class LootsplosionListener implements Listener {
         private final List<ItemStack> drops;
 
         /*
-         * Y coordinate offset so the velocity is not directly negated when the
-         * item spawns on the ground
+         * Y coordinate offset so the velocity is not
+         * directly negated when the item spawns on the ground
          */
         private final double offset;
 
@@ -85,7 +86,7 @@ public class LootsplosionListener implements Listener {
     private Vector randomVector() {
         double offset = MMOItems.plugin.getConfig().getDouble("lootsplosion.offset"),
                 height = MMOItems.plugin.getConfig().getDouble("lootsplosion.height");
-        return new Vector(Math.cos(random.nextDouble() * Math.PI * 2) * offset, height, Math.sin(random.nextDouble() * Math.PI * 2) * offset);
+        return new Vector(Math.cos(RANDOM.nextDouble() * Math.PI * 2) * offset, height, Math.sin(RANDOM.nextDouble() * Math.PI * 2) * offset);
     }
 
     public class LootColor extends BukkitRunnable {
@@ -108,7 +109,7 @@ public class LootsplosionListener implements Listener {
                 return;
             }
 
-            item.getWorld().spawnParticle(Particle.REDSTONE, item.getLocation(), 1, new Particle.DustOptions(color, 1.3f));
+            item.getWorld().spawnParticle(VParticle.REDSTONE.get(), item.getLocation(), 1, new Particle.DustOptions(color, 1.3f));
         }
     }
 }

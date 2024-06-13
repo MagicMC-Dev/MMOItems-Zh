@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.api.interaction;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -14,6 +13,7 @@ import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -175,8 +175,8 @@ public class ItemSkin extends UseItem {
 
             // Skull texture
             if (volSkin.hasData(ItemStats.SKULL_TEXTURE)
-                    && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
-                    && nbtSkin.getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial())
+                    && item.getType() == Material.PLAYER_HEAD
+                    && nbtSkin.getItem().getType() == Material.PLAYER_HEAD)
                 MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta) meta,
                         ((SkullTextureData) volSkin.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
 

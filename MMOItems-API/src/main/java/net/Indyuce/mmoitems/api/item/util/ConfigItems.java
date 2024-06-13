@@ -3,11 +3,11 @@ package net.Indyuce.mmoitems.api.item.util;
 import net.Indyuce.mmoitems.api.item.util.crafting.CraftingRecipeDisplay;
 import net.Indyuce.mmoitems.api.item.util.crafting.QueueItemDisplay;
 import net.Indyuce.mmoitems.api.item.util.crafting.UpgradingRecipeDisplay;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import org.bukkit.Material;
 
 public class ConfigItems {
-	public static final ConfigItem CONFIRM = new ConfigItem("CONFIRM", VersionMaterial.GREEN_STAINED_GLASS_PANE.toMaterial(), "&aConfirm");
-	public static final ConfigItem FILL = new ConfigItem("FILL", VersionMaterial.GRAY_STAINED_GLASS_PANE.toMaterial(), "&8");
+	public static final ConfigItem CONFIRM = new ConfigItem("CONFIRM", Material.GREEN_STAINED_GLASS_PANE, "&aConfirm");
+	public static final ConfigItem FILL = new ConfigItem("FILL", Material.GRAY_STAINED_GLASS_PANE, "&8");
 	public static final CustomSkull PREVIOUS_PAGE = new CustomSkull("PREVIOUS_PAGE",
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==",
 			"&aPrevious Page");

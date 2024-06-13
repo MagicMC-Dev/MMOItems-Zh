@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -12,6 +11,7 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class ManaCost extends DoubleStat implements ItemRestriction, PlayerConsumable {
 
     public ManaCost() {
-        super("MANA_COST", VersionMaterial.LAPIS_LAZULI.toMaterial(), "法力消耗", new String[]{"使用武器时将消耗你的法力值"}, new String[]{"weapon"});
+        super("MANA_COST", Material.LAPIS_LAZULI, "法力消耗", new String[]{"使用武器时将消耗你的法力值"}, new String[]{"weapon"});
     }
 
 

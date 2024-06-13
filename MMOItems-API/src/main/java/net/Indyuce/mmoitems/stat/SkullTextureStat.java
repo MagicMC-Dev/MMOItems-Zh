@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -14,6 +13,7 @@ import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -29,11 +29,11 @@ import java.util.UUID;
 
 public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureData> {
     public SkullTextureStat() {
-        super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toMaterial(), "头颅纹理", new String[]{
+        super("SKULL_TEXTURE", Material.PLAYER_HEAD, "头颅纹理", new String[]{
                 "无法在数据库中找到头颅纹理 &nvalue",
                 "建议 1.20+ 用户使用头颅纹理",
                 "(开头为 https://...)."
-        }, new String[0], VersionMaterial.PLAYER_HEAD.toMaterial());
+        }, new String[0], Material.PLAYER_HEAD);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull SkullTextureData data) {
-        if (item.getItemStack().getType() != VersionMaterial.PLAYER_HEAD.toMaterial()) return;
+        if (item.getItemStack().getType() != Material.PLAYER_HEAD) return;
 
         if (data.getGameProfile() != null)
             MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta) item.getMeta(), data.getGameProfile());

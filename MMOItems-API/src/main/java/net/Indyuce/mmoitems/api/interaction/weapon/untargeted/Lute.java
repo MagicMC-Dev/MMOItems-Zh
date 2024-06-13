@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.interaction.InteractionType;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
-import io.lumine.mythic.lib.version.VersionSound;
+import io.lumine.mythic.lib.version.VSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -48,7 +48,7 @@ public class Lute extends Weapon implements LegacyWeapon {
         final Vector weight = new Vector(0, -.003 * stats.getStat("NOTE_WEIGHT"), 0);
 
         final @Nullable LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());
-        @Deprecated final SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound());
+        @Deprecated final SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VSound.BLOCK_NOTE_BLOCK_BELL.get());
         final @NotNull ProjectileParticlesData projParticle = getNBTItem().hasTag("MMOITEMS_PROJECTILE_PARTICLES") ?
                 new ProjectileParticlesData(getNBTItem().getString("MMOITEMS_PROJECTILE_PARTICLES")) : ProjectileParticlesData.DEFAULT;
 

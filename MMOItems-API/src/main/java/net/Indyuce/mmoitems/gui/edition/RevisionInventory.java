@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.api.util.ItemFactory;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -51,7 +50,7 @@ public class RevisionInventory extends EditionInventory {
                     "旧物品的显示名称将转移到新物品"
                     , 40, "\u00a77")).build();
 
-            lore = ItemFactory.of(VersionMaterial.WRITABLE_BOOK.toMaterial()).name("\u00a7dLore 标注").lore(SilentNumbers.chop(
+            lore = ItemFactory.of(Material.WRITABLE_BOOK).name("\u00a7dLore 标注").lore(SilentNumbers.chop(
                     "特别保留以 \u00a7n&7 颜色代码开头的 Lore 标注行"
                     , 40, "\u00a77")).build();
 

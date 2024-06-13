@@ -7,7 +7,8 @@ author: Indyuce
 description: ${project.description}
 depend: [MythicLib]
 softdepend: [WorldGuard,Residence,BossShopPro,SkillAPI,SkillsPro,MMOCore,MMOProfiles,MythicMobs,MMOInventory,PlaceholderAPI,Vault,Denizen,AureliumSkills,AuraSkills]
-api-version: 1.13
+api-version: 1.14
+website: www.phoenixdevt.fr
 commands:
     mmoitems:
         description: MMOItems主命令。

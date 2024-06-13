@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.command.mmoitems.debug;
 
+import io.lumine.mythic.lib.version.VPotionEffectType;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
@@ -25,8 +26,9 @@ public class HealCommandTreeNode extends CommandTreeNode {
 		player.setFoodLevel(20);
 		player.setFireTicks(0);
 		player.setSaturation(12);
-		for (PotionEffectType pe : new PotionEffectType[] { PotionEffectType.POISON, PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION,
-				PotionEffectType.HUNGER, PotionEffectType.WEAKNESS, PotionEffectType.SLOW, PotionEffectType.SLOW_DIGGING })
+		for (PotionEffectType pe : new PotionEffectType[] { PotionEffectType.POISON, PotionEffectType.BLINDNESS, VPotionEffectType
+				.NAUSEA.get(),
+				PotionEffectType.HUNGER, PotionEffectType.WEAKNESS, VPotionEffectType.SLOWNESS.get(), PotionEffectType.MINING_FATIGUE })
 			player.removePotionEffect(pe);
 		return CommandResult.SUCCESS;
 	}

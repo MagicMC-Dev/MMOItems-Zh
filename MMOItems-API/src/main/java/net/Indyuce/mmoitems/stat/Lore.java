@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -13,6 +12,7 @@ import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.StringListStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 public class Lore extends StringListStat implements GemStoneStat {
     public Lore() {
-        super("LORE", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Lore", new String[]{"物品 Lore 标注"}, new String[0]);
+        super("LORE", Material.WRITABLE_BOOK, "Lore", new String[]{"物品 Lore 标注"}, new String[0]);
     }
 
     @Override

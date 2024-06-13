@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -8,10 +9,9 @@ import net.Indyuce.mmoitems.stat.data.StoredTagsData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.NotImplementedException;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 public class StoredTags extends ItemStat<RandomStatData<StoredTagsData>, StoredTagsData> implements InternalStat, GemStoneStat {
 	public StoredTags() {
-		super("STORED_TAGS", VersionMaterial.OAK_SIGN.toMaterial(), "存储标签",
+		super("STORED_TAGS", Material.OAK_SIGN, "存储标签",
 				new String[] { "您发现了 2020 年疫情期间推出的秘密开发者复活节彩蛋！" }, new String[0]);
 	}
 

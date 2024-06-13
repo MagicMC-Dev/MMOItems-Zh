@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -53,7 +52,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		particleItemMeta.setLore(particleItemLore);
 		particleItem.setItemMeta(particleItemMeta);
 
-		ItemStack amount = VersionMaterial.GRAY_DYE.toItem();
+		ItemStack amount = new ItemStack(Material.GRAY_DYE);
 		ItemMeta amountMeta = amount.getItemMeta();
 		amountMeta.setDisplayName(ChatColor.GREEN + "粒子数量");
 		List<String> amountLore = new ArrayList<>();
@@ -65,7 +64,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		amountMeta.setLore(amountLore);
 		amount.setItemMeta(amountMeta);
 
-		ItemStack offset = VersionMaterial.GRAY_DYE.toItem();
+		ItemStack offset = new ItemStack(Material.GRAY_DYE);
 		ItemMeta offsetMeta = offset.getItemMeta();
 		offsetMeta.setDisplayName(ChatColor.GREEN + "粒子偏移");
 		List<String> offsetLore = new ArrayList<>();
@@ -84,7 +83,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 				int green = section.getInt("color.green");
 				int blue = section.getInt("color.blue");
 
-				ItemStack speed = VersionMaterial.GRAY_DYE.toItem();
+				ItemStack speed = new ItemStack(Material.GRAY_DYE);
 				ItemMeta speedMeta = speed.getItemMeta();
 				speedMeta.setDisplayName(ChatColor.GREEN + "粒子颜色");
 				List<String> speedLore = new ArrayList<>();
@@ -100,7 +99,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 
 				inventory.setItem(41, speed);
 			} else {
-				ItemStack colorItem = VersionMaterial.GRAY_DYE.toItem();
+				ItemStack colorItem = new ItemStack(Material.GRAY_DYE);
 				ItemMeta colorItemMeta = colorItem.getItemMeta();
 				colorItemMeta.setDisplayName(ChatColor.GREEN + "粒子速度");
 				List<String> colorItemLore = new ArrayList<>();

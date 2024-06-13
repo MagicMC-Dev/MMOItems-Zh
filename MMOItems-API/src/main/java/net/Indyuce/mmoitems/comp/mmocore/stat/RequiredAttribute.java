@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.comp.mmocore.stat;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -12,6 +11,7 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +20,7 @@ public class RequiredAttribute extends DoubleStat implements ItemRestriction, Ge
 
     // TODO merge with RequiredLevelStat
     public RequiredAttribute(PlayerAttribute attribute) {
-        super("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), VersionMaterial.GRAY_DYE.toMaterial(), attribute.getName() + " Requirement (MMOCore)", new String[]{"Amount of " + attribute.getName() + " points the", "player needs to use the item."}, new String[]{"!block", "all"});
+        super("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), Material.GRAY_DYE, attribute.getName() + " Requirement (MMOCore)", new String[]{"Amount of " + attribute.getName() + " points the", "player needs to use the item."}, new String[]{"!block", "all"});
 
         this.attribute = attribute;
     }

@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
 import io.lumine.mythic.lib.api.event.SynchronizedDataLoadEvent;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
@@ -22,6 +21,7 @@ import net.Indyuce.mmoitems.comp.mmocore.stat.RequiredAttribute;
 import net.Indyuce.mmoitems.comp.mmocore.stat.RequiredProfession;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -50,7 +50,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
             // Adds profession specific Additional Experience stats.
             MMOItems.plugin.getStats().register(new DoubleStat((StatType.ADDITIONAL_EXPERIENCE.name() + '_' + profession.getId())
                     .replace('-', '_').replace(' ', '_').toUpperCase(Locale.ROOT),
-                    VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), profession.getName() + ' ' + "Additional Experience (MMOCore)"
+                    Material.EXPERIENCE_BOTTLE, profession.getName() + ' ' + "Additional Experience (MMOCore)"
                     , new String[]{"Additional MMOCore profession " + profession.getName() + " experience in %."}, new String[]{"!block", "all"}));
             MMOItems.plugin.getStats().register(new RequiredProfession(profession));
         }

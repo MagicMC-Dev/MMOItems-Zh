@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.util;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.version.VEnchantment;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -104,7 +105,7 @@ public class NoClipItem implements Listener {
          * to look like a vanilla item if a player somehow picks it up and Luck 0 does nothing.
          */
         if (oldItem.getItemMeta().hasEnchants()) {
-            newItemMeta.addEnchant(Enchantment.LUCK, 0, true);
+            newItemMeta.addEnchant(VEnchantment.POWER.get(), 0, true);
             newItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
 

@@ -6,7 +6,6 @@ import com.google.gson.JsonSyntaxException;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -18,6 +17,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +29,7 @@ import java.util.Optional;
 
 public class CompatibleTypes extends ItemStat<StringListData, StringListData> {
     public CompatibleTypes() {
-        super("COMPATIBLE_TYPES", VersionMaterial.COMMAND_BLOCK.toMaterial(), "兼容类型",
+        super("COMPATIBLE_TYPES", Material.COMMAND_BLOCK, "兼容类型",
                 new String[]{"该皮肤兼容的物品类型"}, new String[]{"skin"});
     }
 

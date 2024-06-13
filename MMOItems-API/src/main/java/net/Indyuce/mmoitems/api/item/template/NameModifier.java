@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.api.item.template;
 
 import io.lumine.mythic.lib.UtilityMethods;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 

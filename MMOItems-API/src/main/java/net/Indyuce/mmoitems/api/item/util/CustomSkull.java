@@ -4,9 +4,10 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.util.AdventureUtils;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.stream.Collectors;
@@ -19,13 +20,13 @@ public class CustomSkull extends ConfigItem {
     }
 
     public CustomSkull(String id, String textureValue, String name, String... lore) {
-        super(id, VersionMaterial.PLAYER_HEAD.toMaterial(), name, lore);
+        super(id, Material.PLAYER_HEAD, name, lore);
 
         this.textureValue = textureValue;
     }
 
     public void updateItem() {
-        setItem(VersionMaterial.PLAYER_HEAD.toItem());
+        setItem(new ItemStack(Material.PLAYER_HEAD));
         SkullMeta meta = (SkullMeta) getItem().getItemMeta();
         AdventureUtils.setDisplayName(meta, getName());
         meta.addItemFlags(ItemFlag.values());

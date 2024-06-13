@@ -1,12 +1,12 @@
 package net.Indyuce.mmoitems.stat;
 
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RestoreMana extends DoubleStat implements PlayerConsumable {
     public RestoreMana() {
-        super("RESTORE_MANA", VersionMaterial.LAPIS_LAZULI.toMaterial(), "法力恢复", new String[]{"使用消耗品恢复的法力值"}, new String[]{"consumable"});
+        super("RESTORE_MANA", Material.LAPIS_LAZULI, "法力恢复", new String[]{"使用消耗品恢复的法力值"}, new String[]{"consumable"});
     }
 
     @Override

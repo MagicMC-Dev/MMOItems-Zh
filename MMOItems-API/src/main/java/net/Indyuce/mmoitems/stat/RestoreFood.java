@@ -2,13 +2,13 @@ package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
+import net.Indyuce.mmoitems.util.MMOUtils;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RestoreFood extends DoubleStat implements PlayerConsumable {
     public RestoreFood() {
-        super("RESTORE_FOOD", VersionMaterial.PORKCHOP.toMaterial(), "饥饿值恢复", new String[]{"食用时给出的饥饿值"}, new String[]{"consumable"});
+        super("RESTORE_FOOD", Material.PORKCHOP, "饥饿值恢复", new String[]{"食用时给出的饥饿值"}, new String[]{"consumable"});
     }
 
     @Override

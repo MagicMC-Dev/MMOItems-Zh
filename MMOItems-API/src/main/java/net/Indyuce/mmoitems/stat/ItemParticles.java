@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import io.lumine.mythic.lib.version.VParticle;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
@@ -32,7 +33,7 @@ import java.util.Optional;
 
 public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 	public ItemParticles() {
-		super("ITEM_PARTICLES", VersionMaterial.PINK_STAINED_GLASS.toMaterial(), "物品粒子", new String[] { "持有/佩戴物品时显示的粒子", "", ChatColor.BLUE + "wiki 上提供了教程" }, new String[] { "all", "!block" });
+		super("ITEM_PARTICLES", Material.PINK_STAINED_GLASS, "物品粒子", new String[] { "持有/佩戴物品时显示的粒子", "", ChatColor.BLUE + "wiki 上提供了教程" }, new String[] { "all", "!block" });
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 
 	@NotNull
 	@Override
-	public ParticleData getClearStatData() { return new ParticleData(ParticleType.AURA, Particle.EXPLOSION_LARGE); }
+	public ParticleData getClearStatData() { return new ParticleData(ParticleType.AURA, VParticle.LARGE_EXPLOSION.get()); }
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {

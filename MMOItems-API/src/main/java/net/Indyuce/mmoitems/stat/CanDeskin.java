@@ -5,7 +5,6 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.SmartGive;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -87,8 +86,8 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
                 else targetItemMeta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
             }
 
-            if (target.hasTag("SkullOwner") && (targetItem.getType() == VersionMaterial.PLAYER_HEAD.toMaterial())
-                    && (originalItem.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()))
+            if (target.hasTag("SkullOwner") && (targetItem.getType() == Material.PLAYER_HEAD)
+                    && (originalItem.getType() == Material.PLAYER_HEAD))
                 MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta) targetItemMeta,
                         ((SkullTextureData) originalMmoitem.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
 

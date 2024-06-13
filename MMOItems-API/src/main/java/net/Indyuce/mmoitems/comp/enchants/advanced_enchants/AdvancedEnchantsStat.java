@@ -1,10 +1,7 @@
 package net.Indyuce.mmoitems.comp.enchants.advanced_enchants;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -12,8 +9,9 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.advancedplugins.ae.api.AEAPI;
-import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -34,7 +32,7 @@ public class AdvancedEnchantsStat extends ItemStat<RandomStatData<AdvancedEnchan
     private final String aeNamespace;
 
     public AdvancedEnchantsStat() {
-        super("ADVANCED_ENCHANTS", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Advanced Enchants", new String[]{"The AEnchants of this item. Format:", "\u00a7e[internal_name] [level]"}, new String[]{"!miscellaneous", "!block", "all"});
+        super("ADVANCED_ENCHANTS", Material.EXPERIENCE_BOTTLE, "Advanced Enchants", new String[]{"The AEnchants of this item. Format:", "\u00a7e[internal_name] [level]"}, new String[]{"!miscellaneous", "!block", "all"});
 
         ae = Bukkit.getPluginManager().getPlugin("AdvancedEnchantments");
         Validate.notNull(ae, "Could not find plugin AdvancedEnchants");

@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.comp.mmocore;
 
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.block.BlockType;
 import net.Indyuce.mmocore.api.load.MMOLoader;
@@ -31,16 +30,16 @@ public class MMOCoreMMOLoader extends MMOLoader {
 
     private static final ItemStat HEALTH_REGENERATION = new DoubleStat("HEALTH_REGENERATION", Material.BREAD, "Health Regeneration", new String[]{"Amount of health pts regenerated every second."});
     private static final ItemStat MAX_HEALTH_REGENERATION = new DoubleStat("MAX_HEALTH_REGENERATION", Material.BREAD, "Max Health Regeneration", new String[]{"Percentage of max health regenerated every second."});
-    private static final ItemStat MANA_REGENERATION = new DoubleStat("MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Mana Regeneration", new String[]{"Amount of mana pts regenerated every second."});
-    private static final ItemStat MAX_MANA_REGENERATION = new DoubleStat("MAX_MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Max Mana Regeneration", new String[]{"Percentage of max mana regenerated every second."});
-    private static final ItemStat STAMINA_REGENERATION = new DoubleStat("STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Stamina Regeneration", new String[]{"Amount of stamina pts regenerated every second."});
-    private static final ItemStat MAX_STAMINA_REGENERATION = new DoubleStat("MAX_STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Max Stamina Regeneration", new String[]{"Percentage of max stamina regenerated every second."});
+    private static final ItemStat MANA_REGENERATION = new DoubleStat("MANA_REGENERATION", Material.LAPIS_LAZULI, "Mana Regeneration", new String[]{"Amount of mana pts regenerated every second."});
+    private static final ItemStat MAX_MANA_REGENERATION = new DoubleStat("MAX_MANA_REGENERATION", Material.LAPIS_LAZULI, "Max Mana Regeneration", new String[]{"Percentage of max mana regenerated every second."});
+    private static final ItemStat STAMINA_REGENERATION = new DoubleStat("STAMINA_REGENERATION", Material.LIGHT_BLUE_DYE, "Stamina Regeneration", new String[]{"Amount of stamina pts regenerated every second."});
+    private static final ItemStat MAX_STAMINA_REGENERATION = new DoubleStat("MAX_STAMINA_REGENERATION", Material.LIGHT_BLUE_DYE, "Max Stamina Regeneration", new String[]{"Percentage of max stamina regenerated every second."});
 
-    private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Max Stamina",
+    private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", Material.LIGHT_BLUE_DYE, "Max Stamina",
             new String[]{"Adds stamina to your max stamina bar."});
-    private static final ItemStat MAX_STELLIUM = new DoubleStat("MAX_STELLIUM", VersionMaterial.ENDER_EYE.toMaterial(), "Max Stellium",
+    private static final ItemStat MAX_STELLIUM = new DoubleStat("MAX_STELLIUM", Material.ENDER_EYE, "Max Stellium",
             new String[]{"Additional maximum stellium."});
-    private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat("ADDITIONAL_EXPERIENCE", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(),
+    private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat("ADDITIONAL_EXPERIENCE", Material.EXPERIENCE_BOTTLE,
             "Additional Experience", new String[]{"Additional MMOCore main class experience in %."});
 
     /*

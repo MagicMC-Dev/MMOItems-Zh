@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ItemFactory;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -38,7 +37,7 @@ public class UpgradingEdition extends EditionInventory {
 		boolean workbench = getEditedSection().getBoolean("upgrade.workbench");
 		if (!template.getType().corresponds(Type.CONSUMABLE)) {
 
-			ItemStack workbenchItem = new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial());
+			ItemStack workbenchItem = new ItemStack(Material.CRAFTING_TABLE);
 			ItemMeta workbenchItemMeta = workbenchItem.getItemMeta();
 			workbenchItemMeta.setDisplayName(ChatColor.GREEN + "仅在工作台升级");
 			List<String> workbenchItemLore = new ArrayList<>();
@@ -53,7 +52,7 @@ public class UpgradingEdition extends EditionInventory {
 			inventory.setItem(20, workbenchItem);
 
 			String upgradeTemplate = getEditedSection().getString("upgrade.template");
-			ItemStack templateItem = new ItemStack(VersionMaterial.OAK_SIGN.toMaterial());
+			ItemStack templateItem = new ItemStack(Material.OAK_SIGN);
 			ItemMeta templateItemMeta = templateItem.getItemMeta();
 			templateItemMeta.setDisplayName(ChatColor.GREEN + "升级模板");
 			List<String> templateItemLore = new ArrayList<>();
@@ -129,7 +128,7 @@ public class UpgradingEdition extends EditionInventory {
 			inventory.setItem(38, notAvailable);
 
 		double success = getEditedSection().getDouble("upgrade.success");
-		ItemStack successItem = new ItemStack(VersionMaterial.EXPERIENCE_BOTTLE.toMaterial());
+		ItemStack successItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
 		ItemMeta successItemMeta = successItem.getItemMeta();
 		successItemMeta.setDisplayName(ChatColor.GREEN + "升级成功机率");
 		List<String> successItemLore = new ArrayList<>();

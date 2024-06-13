@@ -21,24 +21,33 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
+
 public class RepairPower extends DoubleStat implements ConsumableItemInteraction {
     public RepairPower() {
         super("REPAIR", Material.ANVIL, "修复能力", new String[]{"设置物品修复物品", "可以修复的固定耐久度"},
                 new String[]{"consumable"});
     }
 
-    private static final String REPAIR_TYPE_TAG = "MMOITEMS_REPAIR_TYPE";
+    public static final String REPAIR_TYPE_TAG_KEY = "MMOITEMS_REPAIR_TYPE";
 
     @Override
     public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
-        int repairPower = (int) consumable.getNBTItem().getStat(ItemStats.REPAIR.getId());
-        if (repairPower <= 0)
-            return false;
+        final int repairPower = (int) consumable.getNBTItem().getStat(ItemStats.REPAIR.getId());
+        if (repairPower <= 0) return false;
+
+        return handleRepair(playerData, consumable, target, ignored -> repairPower);
+    }
+
+    public static boolean handleRepair(@NotNull PlayerData playerData,
+                                       @NotNull Consumable consumable,
+                                       @NotNull NBTItem target,
+                                       @NotNull Function<DurabilityItem, Integer> repairAmountSupplier) {
 
         // Check repair reference
         final Player player = playerData.getPlayer();
-        final @Nullable String repairType1 = consumable.getNBTItem().getString(REPAIR_TYPE_TAG);
-        final @Nullable String repairType2 = target.getString(REPAIR_TYPE_TAG);
+        final @Nullable String repairType1 = consumable.getNBTItem().getString(REPAIR_TYPE_TAG_KEY);
+        final @Nullable String repairType2 = target.getString(REPAIR_TYPE_TAG_KEY);
         if (!MMOUtils.checkReference(repairType1, repairType2)) {
             Message.UNABLE_TO_REPAIR.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
@@ -46,20 +55,21 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
         }
 
         // Custom durability
-        if (target.hasTag("MMOITEMS_DURABILITY")) {
-
+        final boolean customDurability = target.hasTag("MMOITEMS_DURABILITY");
+        if (customDurability) {
             final DurabilityItem durItem = new DurabilityItem(player, target);
-            if (durItem.getDurability() < durItem.getMaxDurability()) {
-                target.getItem().setItemMeta(durItem.addDurability(repairPower).toItem().getItemMeta());
-                Message.REPAIRED_ITEM
-                        .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", String.valueOf(repairPower))
-                        .send(player);
-                CustomSoundListener.playSound(consumable.getItem(), CustomSound.ON_CONSUME, player);
-            }
+            if (durItem.getDurability() >= durItem.getMaxDurability()) return false;
+
+            final int repairPower = repairAmountSupplier.apply(durItem);
+            target.getItem().setItemMeta(durItem.addDurability(repairPower).toItem().getItemMeta());
+            Message.REPAIRED_ITEM
+                    .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", String.valueOf(repairPower))
+                    .send(player);
+            CustomSoundListener.playSound(consumable.getItem(), CustomSound.ON_CONSUME, player);
             return true;
         }
 
         // vanilla durability
-        return RepairUtils.repairVanillaItem(playerData, target, consumable, repairPower);
+        return RepairUtils.repairVanillaItem(playerData, target, consumable, repairAmountSupplier.apply(null));
     }
 }

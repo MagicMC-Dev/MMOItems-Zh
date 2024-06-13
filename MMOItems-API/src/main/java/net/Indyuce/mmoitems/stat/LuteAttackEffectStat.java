@@ -3,17 +3,15 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.*;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +20,7 @@ import java.util.Objects;
 
 public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 	public LuteAttackEffectStat() {
-		super("LUTE_ATTACK_EFFECT", VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial(), "琴攻击效果",
+		super("LUTE_ATTACK_EFFECT", Material.DIAMOND_HORSE_ARMOR, "琴攻击效果",
 				new String[] { "更改右键单击时琴的行为方式", "&9Tip: /mi list lute" }, new String[] { "lute" });
 	}
 

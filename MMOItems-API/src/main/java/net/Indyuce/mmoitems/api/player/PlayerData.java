@@ -11,6 +11,7 @@ import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import io.lumine.mythic.lib.player.skill.PassiveSkill;
 import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import io.lumine.mythic.lib.util.Closeable;
+import io.lumine.mythic.lib.version.VPotionEffectType;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemSet;
@@ -277,7 +278,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
 
         // Two handed slowness
         if (encumbered)
-            getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
+            getPlayer().addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), 40, 1, true, false));
     }
 
     public InventoryUpdateHandler getInventory() {

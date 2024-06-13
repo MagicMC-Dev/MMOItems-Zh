@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.gui.edition;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
@@ -63,7 +62,7 @@ public class ItemEdition extends EditionInventory {
             inventory.setItem(slots[n++], MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("guiStat", stat.getId())).toItem());
         }
 
-        ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
+        ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta glassMeta = glass.getItemMeta();
         glassMeta.setDisplayName(ChatColor.RED + "- 无物品编号 -");
         glass.setItemMeta(glassMeta);

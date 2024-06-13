@@ -1,9 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ApplySoulboundEvent;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
@@ -15,8 +13,10 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -29,7 +29,7 @@ public class SoulbindingChance extends DoubleStat implements ConsumableItemInter
 	private static final Random random = new Random();
 
 	public SoulbindingChance() {
-		super("SOULBINDING_CHANCE", VersionMaterial.ENDER_EYE.toMaterial(), "灵魂绑定机率",
+		super("SOULBINDING_CHANCE", Material.ENDER_EYE, "灵魂绑定机率",
 				new String[] { "设置你的消耗物品将另一个物品绑定到", "你的灵魂以防止其他玩家使用(与死亡不掉落)使用它的机会,", "(一个把消耗类型物品添加灵魂绑定作用的设置)" },
 				new String[] { "consumable" });
 	}

@@ -4,17 +4,16 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -45,7 +44,7 @@ public class CommandListEdition extends EditionInventory {
 				boolean console = getEditedSection().getBoolean("commands." + key + ".console"),
 						op = getEditedSection().getBoolean("commands." + key + ".op");
 
-				ItemStack item = new ItemStack(VersionMaterial.COMPARATOR.toMaterial());
+				ItemStack item = new ItemStack(Material.COMPARATOR);
 				ItemMeta itemMeta = item.getItemMeta();
 				itemMeta.setDisplayName(format == null || format.equals("") ? ChatColor.RED + "无格式" : ChatColor.GREEN + format);
 				List<String> itemLore = new ArrayList<>();
@@ -61,12 +60,12 @@ public class CommandListEdition extends EditionInventory {
 				inventory.setItem(slots[n++], NBTItem.get(item).addTag(new ItemTag("configKey", key)).toItem());
 			}
 
-		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
+		ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		ItemMeta glassMeta = glass.getItemMeta();
 		glassMeta.setDisplayName(ChatColor.RED + "- 无命令 -");
 		glass.setItemMeta(glassMeta);
 
-		ItemStack add = new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial());
+		ItemStack add = new ItemStack(Material.WRITABLE_BOOK);
 		ItemMeta addMeta = add.getItemMeta();
 		addMeta.setDisplayName(ChatColor.GREEN + "创建一个命令...");
 		add.setItemMeta(addMeta);

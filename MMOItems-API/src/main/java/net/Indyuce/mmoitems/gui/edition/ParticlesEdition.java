@@ -4,7 +4,6 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -18,7 +17,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -47,7 +45,7 @@ public class ParticlesEdition extends EditionInventory {
         } catch (Exception ignored) {
         }
 
-        ItemStack particleTypeItem = VersionMaterial.PINK_STAINED_GLASS.toItem();
+        ItemStack particleTypeItem = new ItemStack(Material.PINK_STAINED_GLASS);
         ItemMeta particleTypeItemMeta = particleTypeItem.getItemMeta();
         particleTypeItemMeta.setDisplayName(ChatColor.GREEN + "粒子模式");
         List<String> particleTypeItemLore = new ArrayList<>();
@@ -69,7 +67,7 @@ public class ParticlesEdition extends EditionInventory {
         if (particleType != null) {
             ConfigurationSection psection = getEditedSection().getConfigurationSection("item-particles");
             for (String modifier : particleType.getModifiers()) {
-                ItemStack modifierItem = VersionMaterial.GRAY_DYE.toItem();
+                ItemStack modifierItem = new ItemStack(Material.GRAY_DYE);
                 ItemMeta modifierItemMeta = modifierItem.getItemMeta();
                 modifierItemMeta.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
                 List<String> modifierItemLore = new ArrayList<>();
@@ -114,7 +112,7 @@ public class ParticlesEdition extends EditionInventory {
             int green = getEditedSection().getInt("item-particles.color.green");
             int blue = getEditedSection().getInt("item-particles.color.blue");
 
-            ItemStack colorItem = VersionMaterial.RED_DYE.toItem();
+            ItemStack colorItem = new ItemStack(Material.RED_DYE);
             ItemMeta colorItemMeta = colorItem.getItemMeta();
             colorItemMeta.setDisplayName(ChatColor.GREEN + "粒子颜色");
             List<String> colorItemLore = new ArrayList<>();
@@ -132,7 +130,7 @@ public class ParticlesEdition extends EditionInventory {
             inventory.setItem(25, colorItem);
         }
 
-        ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
+        ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta glassMeta = glass.getItemMeta();
         glassMeta.setDisplayName(ChatColor.RED + "- 未编辑 -");
         glass.setItemMeta(glassMeta);

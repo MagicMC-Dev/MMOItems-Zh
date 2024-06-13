@@ -2,8 +2,7 @@ package net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
-import io.lumine.mythic.lib.version.VersionMaterial;
-import net.Indyuce.mmoitems.util.MMOUtils;
+import io.lumine.mythic.lib.version.VMaterial;
 import net.Indyuce.mmoitems.manager.RecipeManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -14,9 +13,9 @@ public enum CraftingType {
     //SHAPED(21, "The C. Table Recipe (Shaped) for this item", VersionMaterial.CRAFTING_TABLE, null),
     //SHAPELESS(22, "The C. Table Recipe (Shapeless) for this item", VersionMaterial.CRAFTING_TABLE, null),
     FURNACE(23, "该物品的熔炉配方", Material.FURNACE, RecipeManager.BurningRecipeType.FURNACE),
-    BLAST(29, "该物品的高炉配方", VersionMaterial.BLAST_FURNACE, RecipeManager.BurningRecipeType.BLAST, 1, 14),
-    SMOKER(30, "该物品的烟熏炉食谱", VersionMaterial.SMOKER, RecipeManager.BurningRecipeType.SMOKER, 1, 14),
-    CAMPFIRE(32, "该物品的篝火配方", VersionMaterial.CAMPFIRE, RecipeManager.BurningRecipeType.CAMPFIRE, 1, 14);
+    BLAST(29, "该物品的高炉配方", VMaterial.BLAST_FURNACE, RecipeManager.BurningRecipeType.BLAST, 1, 14),
+    SMOKER(30, "该物品的烟熏炉食谱", VMaterial.SMOKER, RecipeManager.BurningRecipeType.SMOKER, 1, 14),
+    CAMPFIRE(32, "该物品的篝火配方", VMaterial.CAMPFIRE, RecipeManager.BurningRecipeType.CAMPFIRE, 1, 14);
     //SMITHING(33, "The Smithing Recipe for this item", VersionMaterial.SMITHING_TABLE, null, 1, 15);
 
     private final int slot;
@@ -25,8 +24,8 @@ public enum CraftingType {
     private final int[] mustBeHigher;
     private final RecipeManager.BurningRecipeType burning;
 
-    private CraftingType(int slot, String lore, VersionMaterial material, @Nullable RecipeManager.BurningRecipeType burn, int... mustBeHigher) {
-        this(slot, lore, material.toMaterial(), burn, mustBeHigher);
+    private CraftingType(int slot, String lore, VMaterial material, @Nullable RecipeManager.BurningRecipeType burn, int... mustBeHigher) {
+        this(slot, lore, material.get(), burn, mustBeHigher);
     }
 
     private CraftingType(int slot, String lore, Material material, @Nullable RecipeManager.BurningRecipeType burn, int... mustBeHigher) {

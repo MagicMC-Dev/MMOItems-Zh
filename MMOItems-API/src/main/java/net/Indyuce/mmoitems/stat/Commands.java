@@ -4,9 +4,7 @@ import com.google.gson.*;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
@@ -14,8 +12,10 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.CommandData;
 import net.Indyuce.mmoitems.stat.data.CommandListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +29,7 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
     private static final int MAXIMUM_COMMANDS = 15;
 
     public Commands() {
-        super("COMMANDS", VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial(), "命令",
+        super("COMMANDS", Material.COMMAND_BLOCK_MINECART, "命令",
                 new String[]{"右键单击物品时", "执行的命令"}, new String[]{"!armor", "!block", "!gem_stone", "all"});
     }
 

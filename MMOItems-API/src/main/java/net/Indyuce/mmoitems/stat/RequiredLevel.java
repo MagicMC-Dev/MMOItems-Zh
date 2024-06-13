@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -17,6 +16,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +31,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
      * only keep the highest levels of the two and not sum the two values
      */
     public RequiredLevel() {
-        super("REQUIRED_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "所需等级",
+        super("REQUIRED_LEVEL", Material.EXPERIENCE_BOTTLE, "所需等级",
                 new String[]{"您的物品需要使用的级别"}, new String[]{"!block", "all"});
     }
 

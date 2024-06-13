@@ -7,7 +7,7 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import io.lumine.mythic.lib.version.VParticle;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -31,7 +32,7 @@ import java.util.Optional;
 
 public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesData> {
 	public ArrowParticles() {
-		super("ARROW_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toMaterial(), "箭头粒子",
+		super("ARROW_PARTICLES", Material.LIME_STAINED_GLASS, "箭头粒子",
 				new String[] { "弓箭发射的箭头", "周围显示的粒子" }, new String[] { "bow", "crossbow" });
 	}
 
@@ -200,6 +201,6 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 	@NotNull
 	@Override
 	public ArrowParticlesData getClearStatData() {
-		return new ArrowParticlesData(Particle.EXPLOSION_LARGE, 1, 0, 1);
+		return new ArrowParticlesData(VParticle.LARGE_EXPLOSION.get(), 1, 0, 1);
 	}
 }

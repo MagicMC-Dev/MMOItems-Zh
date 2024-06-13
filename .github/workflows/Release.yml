@@ -25,11 +25,11 @@ jobs:
     steps:
 # 下载代码
     - uses: actions/checkout@v3
-    - name: Set up JDK 17
+    - name: Set up JDK 21
 # 安装 JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
         server-id: phoenixdevt-releases
     - name: Install depends

@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * @deprecated Merge with other Hide- stats
  */
 @Deprecated
-@VersionDependant(minor = 16, patch = 3)
+@VersionDependant(version = {1, 16, 3})
 public class HideDye extends BooleanStat {
 	public HideDye() {
 		super("HIDE_DYE", Material.CYAN_DYE, "皮革染色", new String[] { "启用以隐藏项目中的 '染色' 标签" }, new String[0],

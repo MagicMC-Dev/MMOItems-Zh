@@ -54,13 +54,6 @@ public class StatEdition implements Edition {
 
 	@Override
 	public boolean processInput(String input) {
-
-		// If cancel, open back inventory
-		if (input.equals("cancel")) {
-			inv.open();
-			return true;
-		}
-
 		try {
 
 			// Perform WhenInput Operation

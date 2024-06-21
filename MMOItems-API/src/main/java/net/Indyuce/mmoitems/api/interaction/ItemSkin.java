@@ -137,10 +137,6 @@ public class ItemSkin extends UseItem {
         target.addTag(new ItemTag(SKIN_ID_TAG, appliedSkinId));
         target.addTag(new ItemTag(SKIN_TYPE_TAG, appliedTypeId));
 
-        // Custom model data
-        if (nbtSkin.getInteger("CustomModelData") != 0)
-            target.addTag(new ItemTag("CustomModelData", nbtSkin.getInteger("CustomModelData")));
-
         // Particles
         if (!nbtSkin.getString("MMOITEMS_ITEM_PARTICLES").isEmpty())
             target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", nbtSkin.getString("MMOITEMS_ITEM_PARTICLES")));
@@ -154,6 +150,9 @@ public class ItemSkin extends UseItem {
         if (skinMeta != null && meta != null) {
 
             // TODO SkinStat interface
+
+            // Custom model data
+            if (skinMeta.hasCustomModelData()) meta.setCustomModelData(skinMeta.getCustomModelData());
 
             // Unbreakable & durability
             if (skinMeta.isUnbreakable()) {

@@ -1219,3 +1219,30 @@ SHADOWBOOTS:
     max-health: 8.0
     movement-speed: 0.01
     dye-color: 0 0 0
+GARGOYLE_CHESTPLATE:
+  base:
+    material: IRON_CHESTPLATE
+    scale: 1.0
+    name: Gargoyle Chestplate
+    trim-material: netherite
+    trim-pattern: silence
+    hide-armor-trim: true
+    max-health: 10.0
+    armor: 6.0
+    movement-speed: -0.02
+SHRINKING_BOOTS:
+  base:
+    material: GOLDEN_BOOTS
+    trim-material: redstone
+    trim-pattern: silence
+    hide-armor-trim: true
+    scale: -0.5
+    movement-speed: 0.02
+    required-class:
+      - Mage
+    skill-damage: -50.0
+    max-health: -10.0
+    name: Boots of Shrinking
+    lore:
+      - '&7&oMay this item help you get'
+      - '&7&othrough the narrowest paths...'

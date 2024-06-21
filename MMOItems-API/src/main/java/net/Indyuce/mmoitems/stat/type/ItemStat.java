@@ -64,8 +64,7 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
         // Version dependency
         if (getClass().isAnnotationPresent(VersionDependant.class)) {
             final VersionDependant implVersion = getClass().getAnnotation(VersionDependant.class);
-            if (MythicLib.plugin.getVersion().isBelowOrEqual(implVersion.major(), implVersion.minor(), implVersion.patch() - 1))
-                disable();
+            if (MythicLib.plugin.getVersion().isUnder(implVersion.version())) disable();
         }
     }
 

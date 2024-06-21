@@ -1,10 +1,9 @@
 package net.Indyuce.mmoitems.api.edition.input;
 
+import net.Indyuce.mmoitems.api.edition.Edition;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import net.Indyuce.mmoitems.api.edition.Edition;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PlayerInputHandler {
@@ -31,7 +30,7 @@ public abstract class PlayerInputHandler {
     /**
      * Processes the player input, closes the edition process if needed and
      * opens the previously opened GUI if needed. This method is protected
-     * because it should only be ran by edition process classes.
+     * because it should only be run by edition process classes.
      * For security this method should be called on the main server thread.
      *
      * @param input Player input
@@ -39,12 +38,11 @@ public abstract class PlayerInputHandler {
     protected void registerInput(@NotNull String input) {
         Validate.isTrue(Bukkit.isPrimaryThread(), "Input must be registered on primary thread");
 
-        if (!edition.processInput(input))
-            return;
-
-        if (edition.shouldGoBack())
-            edition.getInventory().open();
-        close();
+        // If input is 'cancel' just cancel
+        if (input.equalsIgnoreCase("cancel") || edition.processInput(input)) {
+            if (edition.shouldGoBack()) edition.getInventory().open();
+            close();
+        }
     }
 
     public abstract void close();

@@ -83,6 +83,18 @@ additional-experience-smelting: '&7■ 额外锻造经验: &f<plus>{value}%'
 additional-experience-smithing: '&7■ 额外冶炼经验: &f<plus>{value}%'
 additional-experience-woodcutting: '&7■ 额外伐木经验: &f<plus>{value}%'
 
+# 1.20.2+ Attributes
+block-break-speed: '&3 &7■ 挖掘速度: &f<plus>{value}'
+block-interaction-range: '&3 &7■ 方块交互距离: &f<plus>{value}' # Range for interacting with blocks & mining.
+entity-interaction-range: '&3 &7■ 攻击距离: &f<plus>{value}'
+fall-damage-multiplier: '&3 &7■ 摔落伤害: &f<plus>{value}%'
+gravity: '&3 &7■ 重力: &f<plus>{value}%'
+jump-strength: '&3 &7■ 跳跃高度: &f<plus>{value}'
+max-absorption: '&3 &7■ 伤害吸收: &f<plus>{value}'
+safe-fall-distance: '&3 &7■ 安全摔落距离: &f<plus>{value}'
+scale: '&3 &7■ 大小: &f<plus>{value}%'
+step-height: '&3 &7■ Smooth Walking: &f<plus>{value}'  # TODO 不知道怎么翻，先放着
+
 # Extra Options
 perm-effects: '&3 &7■ 永久效果 &f{effect}'
 commands: '&3 &7■ 指令: &f{format} &3 &7(&f{cooldown}&3 &7秒)'

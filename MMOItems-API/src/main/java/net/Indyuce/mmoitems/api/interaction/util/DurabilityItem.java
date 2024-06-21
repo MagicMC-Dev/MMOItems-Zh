@@ -22,6 +22,8 @@ import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -221,6 +223,11 @@ public class DurabilityItem {
         if (durability == initialDurability)
             return nbtItem.getItem();
 
+        nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability));
+
+        // Apply the NBT tags
+        ItemStack item = nbtItem.toItem();
+
         /*
          * Cross multiplication to display the current item durability on the
          * item durability bar. (1 - ratio) because minecraft works with item
@@ -231,15 +238,12 @@ public class DurabilityItem {
          * issues. Also makes sure the item can be mended using the vanilla
          * enchant.
          */
-        if (!barHidden) {
-            int damage = (durability == maxDurability) ? 0 : Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * nbtItem.getItem().getType().getMaxDurability()));
-            nbtItem.addTag(new ItemTag("Damage", damage));
+        if (!barHidden && item.getType().getMaxDurability() > 0) {
+            final int damage = (durability == maxDurability) ? 0 : Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * nbtItem.getItem().getType().getMaxDurability()));
+            final ItemMeta meta = item.getItemMeta();
+            ((Damageable) meta).setDamage(damage);
+            item.setItemMeta(meta);
         }
-
-        nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability));
-
-        // Apply the NBT tags
-        ItemStack item = nbtItem.toItem();
 
         // Item lore update
         final String format = MythicLib.inst().parseColors(ItemStats.ITEM_DAMAGE.getGeneralStatFormat().replace("{max}", String.valueOf(maxDurability)));

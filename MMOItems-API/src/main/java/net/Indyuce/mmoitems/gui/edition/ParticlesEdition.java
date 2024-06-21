@@ -1,8 +1,6 @@
 package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.UtilityMethods;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -12,6 +10,7 @@ import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -19,12 +18,15 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParticlesEdition extends EditionInventory {
+    private static final NamespacedKey PATTERN_MODIFIED_KEY = new NamespacedKey(MMOItems.plugin, "PatternModifierId");
+
     public ParticlesEdition(Player player, MMOItemTemplate template) {
         super(player, template);
     }
@@ -67,7 +69,7 @@ public class ParticlesEdition extends EditionInventory {
         if (particleType != null) {
             ConfigurationSection psection = getEditedSection().getConfigurationSection("item-particles");
             for (String modifier : particleType.getModifiers()) {
-                ItemStack modifierItem = new ItemStack(Material.GRAY_DYE);
+                final ItemStack modifierItem = new ItemStack(Material.GRAY_DYE);
                 ItemMeta modifierItemMeta = modifierItem.getItemMeta();
                 modifierItemMeta.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
                 List<String> modifierItemLore = new ArrayList<>();
@@ -78,9 +80,8 @@ public class ParticlesEdition extends EditionInventory {
                 modifierItemLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD
                         + (psection.contains(modifier) ? psection.getDouble(modifier) : particleType.getModifier(modifier)));
                 modifierItemMeta.setLore(modifierItemLore);
+                modifierItemMeta.getPersistentDataContainer().set(PATTERN_MODIFIED_KEY, PersistentDataType.STRING, modifier);
                 modifierItem.setItemMeta(modifierItemMeta);
-
-                modifierItem = NBTItem.get(modifierItem).addTag(new ItemTag("patternModifierId", modifier)).toItem();
 
                 inventory.setItem(slots[n++], modifierItem);
             }
@@ -201,9 +202,8 @@ public class ParticlesEdition extends EditionInventory {
             }
         }
 
-        String tag = NBTItem.get(item).getString("patternModifierId");
-        if (tag.equals(""))
-            return;
+        final String tag = item.getItemMeta().getPersistentDataContainer().get(PATTERN_MODIFIED_KEY, PersistentDataType.STRING);
+        if (tag == null || tag.equals("")) return;
 
         if (event.getAction() == InventoryAction.PICKUP_ALL)
             new StatEdition(this, ItemStats.ITEM_PARTICLES, tag).enable("在聊天栏中输入您想要的值");

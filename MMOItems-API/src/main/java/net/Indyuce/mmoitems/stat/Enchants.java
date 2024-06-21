@@ -78,18 +78,17 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
      */
     @Override
     public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-        String[] split = message.split(" ");
-        Validate.isTrue(split.length >= 2, "使用这种格式: {Enchant Name} {Enchant Level Numeric Formula}. 示例: 'sharpness 5 0.3' "
-                + "代表 Sharpness 5, 每个物品级别加上 0.3 级别 (向上舍入到较小的整数) ");
+        final String[] split = message.split(" ");
 
-        Enchantment enchant = getEnchant(split[0]);
+        final Enchantment enchant = getEnchant(split[0]);
         Validate.notNull(enchant, split[0]
                 + " 不是有效的附魔! 所有附魔都可以在这里找到: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
+        final NumericStatFormula formula = split.length > 1 ? new NumericStatFormula(message.substring(message.indexOf(" ") + 1))
+                : new NumericStatFormula(1, 0, 0, 0);
 
-        NumericStatFormula formula = new NumericStatFormula(message.substring(message.indexOf(" ") + 1));
         formula.fillConfigurationSection(inv.getEditedSection(), "enchants." + enchant.getKey().getKey());
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + enchant.getKey().getKey() + " " + formula.toString() + " successfully added.");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + enchant.getKey().getKey() + " " + formula + " successfully added.");
     }
 
     @Override
@@ -181,16 +180,18 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
 
     /**
      * @param source Something that may not even have enchs.
-     *
      * @return Enchantments of this extracted as a list of enchants data.
      */
-    @NotNull public static EnchantListData fromVanilla(@Nullable ItemStack source) {
+    @NotNull
+    public static EnchantListData fromVanilla(@Nullable ItemStack source) {
 
         // List
         EnchantListData eld = new EnchantListData();
 
         // Null is clear
-        if (source == null) { return eld; }
+        if (source == null) {
+            return eld;
+        }
 
         // For each enchants
         for (Enchantment e : source.getEnchantments().keySet()) {
@@ -199,7 +200,9 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
             int l = source.getEnchantmentLevel(e);
 
             // Add if significant
-            if (l != 0) { eld.addEnchant(e, l); }
+            if (l != 0) {
+                eld.addEnchant(e, l);
+            }
         }
 
         return eld;
@@ -274,8 +277,10 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
                 // Vanilla enchanted books expect this behaviour from enchants I guess
                 ((EnchantmentStorageMeta) item.getMeta()).addStoredEnchant(enchant, lvl, true);
 
-            // Add normally
-            } else { item.getMeta().addEnchant(enchant, lvl, true); }
+                // Add normally
+            } else {
+                item.getMeta().addEnchant(enchant, lvl, true);
+            }
 
             // Handle custom enchant
             for (EnchantPlugin enchantPlugin : MMOItems.plugin.getEnchantPlugins())
@@ -497,17 +502,15 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
     @Nullable
     public static Enchantment getEnchant(String key) {
         key = key.toLowerCase().replace("-", "_");
-        Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(key));
 
         // Vanilla enchant
-        if (enchant != null)
-            return enchant;
+        Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(key));
+        if (enchant != null) return enchant;
 
         // Check for custom enchants
         for (EnchantPlugin enchPlugin : MMOItems.plugin.getEnchantPlugins()) {
             Enchantment checked = Enchantment.getByKey(enchPlugin.getNamespacedKey(key));
-            if (checked != null)
-                return checked;
+            if (checked != null) return checked;
         }
 
         // Last try, vanilla enchant with name

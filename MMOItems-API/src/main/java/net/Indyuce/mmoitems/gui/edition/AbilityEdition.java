@@ -1,8 +1,6 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
-import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.ItemStats;
@@ -14,12 +12,14 @@ import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ public class AbilityEdition extends EditionInventory {
 
 	private static final DecimalFormat MODIFIER_FORMAT = new DecimalFormat("0.###");
 	private static final int[] slots = { 23, 24, 25, 32, 33, 34, 41, 42, 43, 50, 51, 52 };
+	private static final NamespacedKey ABILITY_MOD_KEY = new NamespacedKey(MMOItems.plugin, "AbilityModifier");
 
 	public AbilityEdition(Player player, MMOItemTemplate template, String configKey) {
 		super(player, template);
@@ -98,7 +99,7 @@ public class AbilityEdition extends EditionInventory {
 		if (ability != null) {
 			ConfigurationSection section = getEditedSection().getConfigurationSection("ability." + configKey);
 			for (String modifier : ability.getHandler().getModifiers()) {
-				ItemStack modifierItem = new ItemStack(Material.GRAY_DYE);
+				final ItemStack modifierItem = new ItemStack(Material.GRAY_DYE);
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
 				modifierItemMeta.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
 				List<String> modifierItemLore = new ArrayList<>();
@@ -119,10 +120,8 @@ public class AbilityEdition extends EditionInventory {
 				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击选择");
 				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击重置");
 				modifierItemMeta.setLore(modifierItemLore);
+				modifierItemMeta.getPersistentDataContainer().set(ABILITY_MOD_KEY, PersistentDataType.STRING, modifier);
 				modifierItem.setItemMeta(modifierItemMeta);
-
-				modifierItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(modifierItem).addTag(new ItemTag("abilityModifier", modifier))
-						.toItem();
 
 				inventory.setItem(slots[n++], modifierItem);
 			}
@@ -190,9 +189,8 @@ public class AbilityEdition extends EditionInventory {
 			return;
 		}
 
-		String tag = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("abilityModifier");
-		if (tag.equals(""))
-			return;
+		final String tag = item.getItemMeta().getPersistentDataContainer().get(ABILITY_MOD_KEY, PersistentDataType.STRING);
+		if (tag == null || tag.equals("")) return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(this, ItemStats.ABILITIES, configKey, tag).enable("在聊天栏中输入您想要的值.");

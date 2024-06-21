@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 
 public class NewItemEdition implements Edition {
     private final ItemBrowser inv;
+    private boolean successful;
 
     public NewItemEdition(ItemBrowser inv) {
         this.inv = inv;
@@ -34,16 +35,12 @@ public class NewItemEdition implements Edition {
 
     @Override
     public boolean processInput(String input) {
-        if (input.equals("cancel"))
-            return true;
-
-        Bukkit.dispatchCommand(inv.getPlayer(),
+        return successful = Bukkit.dispatchCommand(inv.getPlayer(),
                 "mmoitems create " + inv.getType().getId() + " " + input.toUpperCase().replace(" ", "_").replace("-", "_"));
-        return true;
     }
 
     @Override
     public boolean shouldGoBack() {
-        return false;
+        return !successful;
     }
 }

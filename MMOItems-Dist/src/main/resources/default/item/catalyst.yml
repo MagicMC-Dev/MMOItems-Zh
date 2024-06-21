@@ -189,3 +189,10 @@ ICE_GOLEM_HEART:
         defense: 100.0
     handworn: true
     fire-damage-reduction: 100.0
+SHRINKIFIKATOR:
+  base:
+    material: PRISMARINE_SHARD
+    name: Shrinkificator
+    scale: -0.5
+    max-health: -10.0
+    movement-speed: -0.03

@@ -1,8 +1,6 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
-import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
@@ -12,17 +10,20 @@ import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AbilityListEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25 };
+	private static final NamespacedKey CONFIG_KEY = new NamespacedKey(MMOItems.plugin, "ConfigKey");
 
 	public AbilityListEdition(Player player, MMOItemTemplate template) {
 		super(player, template);
@@ -52,7 +53,7 @@ public class AbilityListEdition extends EditionInventory {
                     castMode = null;
                 }
 
-				ItemStack abilityItem = new ItemStack(Material.BLAZE_POWDER);
+				final ItemStack abilityItem = new ItemStack(Material.BLAZE_POWDER);
 				ItemMeta abilityItemMeta = abilityItem.getItemMeta();
 				abilityItemMeta.setDisplayName(ability != null ? ChatColor.GREEN + ability.getName() : ChatColor.RED + "! 没有选择技能 !");
 				List<String> abilityItemLore = new ArrayList<>();
@@ -80,9 +81,8 @@ public class AbilityListEdition extends EditionInventory {
 				abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + " 左键单击进行编辑");
 				abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击即可删除");
 				abilityItemMeta.setLore(abilityItemLore);
+				abilityItemMeta.getPersistentDataContainer().set(CONFIG_KEY, PersistentDataType.STRING, key);
 				abilityItem.setItemMeta(abilityItemMeta);
-
-				abilityItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(abilityItem).addTag(new ItemTag("configKey", key)).toItem();
 
 				inventory.setItem(slots[n++], abilityItem);
 			}
@@ -130,9 +130,8 @@ public class AbilityListEdition extends EditionInventory {
 				}
 		}
 
-		String tag = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("configKey");
-		if (tag.equals(""))
-			return;
+		final String tag = item.getItemMeta().getPersistentDataContainer().get(CONFIG_KEY, PersistentDataType.STRING);
+		if (tag == null || tag.equals("")) return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new AbilityEdition(player, template, tag).open(this);

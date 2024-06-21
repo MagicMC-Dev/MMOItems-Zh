@@ -16,9 +16,5 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface VersionDependant {
 
-    public int major() default 1;
-
-    public int minor();
-
-    public int patch() default 0;
+    public int[] version();
 }

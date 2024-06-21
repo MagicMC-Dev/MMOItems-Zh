@@ -1,8 +1,6 @@
 package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
@@ -10,11 +8,13 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 public class ItemEdition extends EditionInventory {
     private static final int[] slots = {19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};
+    private static final NamespacedKey STAT_ID_KEY = new NamespacedKey(MMOItems.plugin,"StatId");
 
     public ItemEdition(Player player, MMOItemTemplate template) {
         super(player, template);
@@ -57,9 +58,10 @@ public class ItemEdition extends EditionInventory {
 
             stat.whenDisplayed(lore, getEventualStatData(stat));
 
+            meta.getPersistentDataContainer().set(STAT_ID_KEY, PersistentDataType.STRING, stat.getId());
             meta.setLore(lore);
             item.setItemMeta(meta);
-            inventory.setItem(slots[n++], MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("guiStat", stat.getId())).toItem());
+            inventory.setItem(slots[n++], item);
         }
 
         ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -103,9 +105,8 @@ public class ItemEdition extends EditionInventory {
             refreshInventory();
         }
 
-        final String tag = NBTItem.get(item).getString("guiStat");
-        if (tag.isEmpty())
-            return;
+        final String tag = item.getItemMeta().getPersistentDataContainer().get(STAT_ID_KEY, PersistentDataType.STRING);
+        if (tag == null || tag.isEmpty()) return;
 
         // Check for OP stats
         final ItemStat edited = MMOItems.plugin.getStats().get(tag);

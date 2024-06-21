@@ -11,17 +11,20 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandListEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25, 28, 29, 33, 34, 37, 38, 42, 43 };
+	private static final NamespacedKey CONFIG_KEY = new NamespacedKey(MMOItems.plugin, "ConfigKey");
 
 	public CommandListEdition(Player player, MMOItemTemplate template) {
 		super(player, template);
@@ -44,7 +47,7 @@ public class CommandListEdition extends EditionInventory {
 				boolean console = getEditedSection().getBoolean("commands." + key + ".console"),
 						op = getEditedSection().getBoolean("commands." + key + ".op");
 
-				ItemStack item = new ItemStack(Material.COMPARATOR);
+				final ItemStack item = new ItemStack(Material.COMPARATOR);
 				ItemMeta itemMeta = item.getItemMeta();
 				itemMeta.setDisplayName(format == null || format.equals("") ? ChatColor.RED + "无格式" : ChatColor.GREEN + format);
 				List<String> itemLore = new ArrayList<>();
@@ -55,9 +58,10 @@ public class CommandListEdition extends EditionInventory {
 				itemLore.add("");
 				itemLore.add(ChatColor.YELLOW + AltChar.listDash + " 右键单击即可删除");
 				itemMeta.setLore(itemLore);
+				itemMeta.getPersistentDataContainer().set(CONFIG_KEY, PersistentDataType.STRING, key);
 				item.setItemMeta(itemMeta);
 
-				inventory.setItem(slots[n++], NBTItem.get(item).addTag(new ItemTag("configKey", key)).toItem());
+				inventory.setItem(slots[n++], item);
 			}
 
 		ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -90,9 +94,8 @@ public class CommandListEdition extends EditionInventory {
 			return;
 		}
 
-		String tag = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("configKey");
-		if (tag.equals(""))
-			return;
+        final String tag = item.getItemMeta().getPersistentDataContainer().get(CONFIG_KEY, PersistentDataType.STRING);
+        if (tag == null || tag.equals("")) return;
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (getEditedSection().contains("commands") && getEditedSection().getConfigurationSection("commands").contains(tag)) {

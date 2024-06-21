@@ -37,12 +37,10 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
+        final int lvl = (int) data.getValue();
+        if (lvl <= 0) return;
 
-        // Lore Management
-        int lvl = (int) data.getValue();
         item.getLore().insert(getPath(), DoubleStat.formatPath(getPath(), getGeneralStatFormat(), false, false, lvl));
-
-        // Insert NBT
         item.addItemTag(getAppliedNBT(data));
     }
 

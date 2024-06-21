@@ -295,7 +295,7 @@ public class LoreBuilder extends Buildable<List<String>> {
     @Deprecated
     private String evaluate(String formula) {
         try {
-            return MythicLib.plugin.getMMOConfig().decimals.format(NumericalExpression.eval(formula));
+            return String.valueOf(NumericalExpression.eval(formula));
         } catch (Throwable throwable) {
             return "<ParsingError>";
         }

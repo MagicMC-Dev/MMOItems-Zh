@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * @deprecated Merge with other Hide- stats
  */
 @Deprecated
-@VersionDependant(minor = 20)
+@VersionDependant(version = {1, 20})
 public class HideTrim extends BooleanStat {
     public HideTrim() {
         super("HIDE_ARMOR_TRIM", Material.LEATHER_CHESTPLATE, "隐藏装备装饰", new String[]{"隐藏物品 Lore 标注中的盔甲装饰"}, new String[]{"armor", "skin"});

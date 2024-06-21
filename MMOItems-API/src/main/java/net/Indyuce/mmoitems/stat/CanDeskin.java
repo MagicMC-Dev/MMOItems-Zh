@@ -53,12 +53,6 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
             MMOItem originalMmoitem = targetTemplate.newBuilder(playerData.getRPG()).build();
             ItemStack originalItem = targetTemplate.newBuilder(playerData.getRPG()).build().newBuilder().build();
 
-            int originalCustomModelData = originalItem.getItemMeta().hasCustomModelData() ? originalItem.getItemMeta().getCustomModelData() : -1;
-            if (originalCustomModelData != -1)
-                target.addTag(new ItemTag("CustomModelData", originalCustomModelData));
-            else
-                target.removeTag("CustomModelData");
-
             if (originalMmoitem.hasData(ItemStats.ITEM_PARTICLES)) {
                 JsonObject itemParticles = ((ParticleData) originalMmoitem.getData(ItemStats.ITEM_PARTICLES)).toJson();
                 target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", itemParticles.toString()));
@@ -68,6 +62,10 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
             ItemStack targetItem = target.toItem();
             ItemMeta targetItemMeta = targetItem.getItemMeta();
             ItemMeta originalItemMeta = originalItem.getItemMeta();
+
+            // Custom model data
+            final Integer originalCustomModelData = originalItemMeta.hasCustomModelData() ? originalItemMeta.getCustomModelData() : null;
+            targetItemMeta.setCustomModelData(originalCustomModelData);
 
             // TODO SkinStat
 

@@ -21,10 +21,12 @@ public class ItemStats {
             ITEM_DAMAGE = new ItemDamage(),
             CUSTOM_MODEL_DATA = new CustomModelData(),
             MAX_DURABILITY = new MaximumDurability(),
+            MAX_ITEM_DAMAGE = new MaxItemDamage(),
             WILL_BREAK = new LostWhenBroken(),
             NAME = new DisplayName(),
             LORE = new Lore(),
             NBT_TAGS = new NBTTags(),
+            MAX_STACK_SIZE = new MaxStackSize(),
             LORE_FORMAT = new LoreFormat(),
             TOOLTIP = new TooltipStat(),
 
@@ -118,7 +120,19 @@ public class ItemStats {
             TWO_HANDED = new BooleanStat("TWO_HANDED", Material.IRON_INGOT, "双手持握", new String[]{"若设为true, 则玩家持有两个物品时", "其中一个为双手武器时会显著降低速度"}, new String[]{"handheld"}),
             REQUIRED_BIOMES = new RequiredBiomes(),
             DROP_ON_DEATH = new DisableDeathDrop(),
-            DURABILITY_BAR = new DurabilityBar(),
+            HIDE_DURABILITY_BAR = new HideDurabilityBar(),
+
+    // Extra Attributes (1.20.2+)
+    MAX_ABSORPTION = new MaxAbsorption(),
+            BLOCK_BREAK_SPEED = new BlockBreakSpeed(),
+            BLOCK_INTERACTION_RANGE = new BlockInteractionRange(),
+            ENTITY_INTERACTION_RANGE = new EntityInteractionRange(),
+            FALL_DAMAGE_MULTIPLIER = new FallDamageMultiplier(),
+            GRAVITY = new Gravity(),
+            JUMP_STRENGTH = new JumpStrength(),
+            SAFE_FALL_DISTANCE = new SafeFallDistance(),
+            SCALE = new Scale(),
+            STEP_HEIGHT = new StepHeight(),
 
     // Permanent Effects
     PERM_EFFECTS = new PermanentEffects(),
@@ -188,7 +202,7 @@ public class ItemStats {
             DOWNGRADE_ON_DEATH_CHANCE = new DoubleStat("DEATH_DOWNGRADE_CHANCE", Material.SKELETON_SKULL, "死亡降级几率", new String[]{"物品在玩家死亡时降级的概率。", "", "超过100%将确定降级一件物品，", "并再次投掷以降级另一件（使用多余的概率）。", "&6相同的物品不会降级两次。"}, new String[]{"equipment"}, false),
 
     // Unique Item Stats
-            DYE_COLOR = new DyeColor(),
+    DYE_COLOR = new DyeColor(),
             HIDE_DYE = new HideDye(),
             TRIM_MATERIAL = new TrimMaterialStat(),
             TRIM_PATTERN = new TrimPatternStat(),

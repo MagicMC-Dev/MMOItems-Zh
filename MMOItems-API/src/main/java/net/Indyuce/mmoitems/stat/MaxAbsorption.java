@@ -8,6 +8,6 @@ import org.bukkit.Material;
 public class MaxAbsorption extends DoubleStat {
     public MaxAbsorption() {
         super("MAX_ABSORPTION", Material.ENCHANTED_GOLDEN_APPLE,
-                "伤害吸收最大值", new String[]{"并不提供永久的伤害吸收效果"，"而是増加你在任何时候"，"可以拥有的最大吸收之（黄色心）心数量"});
+                "伤害吸收最大值", new String[]{"并不提供永久的伤害吸收效果", "而是増加你在任何时候", "可以拥有的最大吸收之（黄色心）心数量"});
     }
 }

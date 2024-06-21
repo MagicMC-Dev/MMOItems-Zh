@@ -15,19 +15,21 @@ Official repository for MMOItems Dev-build Premium
 ![][JDK-17]
 [![][license]](LICENSE)
 
-[下载][download-link] | [加群][group-link]
+[不稳定版下载][unstable-link] | [正式版下载][download-link] | [加群][group-link]
 
 </div>
 
 [banner]: https://socialify.git.ci/MagicMC-Dev/MMOItems-Zh/image?description=1&descriptionEditable=A%20Chinese%20version%20of%20MMOItems&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Auto
 
-[actions]: https://img.shields.io/github/actions/workflow/status/MagicMC-Dev/MMOItems-Zh/Release.yml?style=for-the-badge
+[actions]: https://img.shields.io/github/actions/workflow/status/MagicMC-Dev/MMOItems-Zh/test.yml?style=for-the-badge
 
 [actions-link]: https://github.com/MagicMC-Dev/MMOItems-Zh/actions/workflows/build-apk.yml
 
 [releases]: https://img.shields.io/github/v/release/MagicMC-Dev/MMOItems-Zh?style=for-the-badge
 
 [releases-link]: https://github.com/MagicMC-Dev/MMOItems-Zh/releases
+
+[unstable-link]: https://github.com/MagicMC-Dev/MMOItems-Zh/actions/workflows/test.yml
 
 [downloads]: https://img.shields.io/github/downloads/MagicMC-Dev/MMOItems-Zh/total?style=for-the-badge
 
@@ -75,6 +77,7 @@ MMOItems 是一款强大的 Minecraft MMO 插件，它允许服务器管理员�
 > [!TIP]
 > 仅推荐使用 [**Paper**](https://papermc.io/) 或 [**Purpur**](https://purpurmc.org/) 作为服务端使用!
 > MythicLib 建议使用 [**Dev-Build**](https://phoenixdevt.fr/devbuilds)!
+> 如遇到 Bug 请在 [**Issue**](https://github.com/MagicMC-Dev/MMOItems-Zh/issues) 中查询，如果没有相符合的问题，请提出一个 Issue！
 
 ## 贡献
 

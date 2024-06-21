@@ -3,10 +3,10 @@ name: MMOitem Builder [Submit test]
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-   push:
-     branches: [ "*" ]
-   pull_request:
-     branches: [ "*" ]
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
 
 jobs:
   build:
@@ -22,25 +22,17 @@ jobs:
         server-id: phoenixdevt-releases
     - name: Install depends
       run: mvn install
+    - name: Test with Maven
+      run: mvn test
     - name: Build with Maven
-      run: mvn package
-    - run: mkdir staging && cp target/*.jar staging
-#     - name: Set Release version env variable
-#       run: |
-#         echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-#     - name: "Build & test"
-#       run: |
-#         echo "done!"
-#     - uses: "marvinpinto/action-automatic-releases@latest"
-#       with:
-#         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-#         automatic_release_tag: "${{ env.RELEASE_VERSION }}"
-#         prerelease: false
-#         title: "Release ${{ env.RELEASE_VERSION }}"
-#         files: |
-#           staging/*.jar
+      run: mvn -V -B clean package --file pom.xml
+    - name: Move files
+      run: mkdir staging && cp target/*.jar staging
+    - name: Set Release version env variable
+      run: |
+        echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: MMOItems
+        name: MMOItems-${{ env.RELEASE_VERSION }}-${{ env.SHORT_SHA }}
         path: staging/*.jar

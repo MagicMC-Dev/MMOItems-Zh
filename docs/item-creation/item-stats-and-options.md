@@ -357,4 +357,4 @@ FIRE_GREATLANCE:
 
 您也可以使用服务器资源包中的声音。您可以在网上找到 **默认** 声音列表，例如在 [pastebin.com](https://pastebin.com/gLMhUyis) 上，甚至使用 `/sound` 自动命令补全器。
 
-![image](uploads/aed18f65bb1d3cd17317f681adfa4727/image.png)
+![image](../image/10.png)

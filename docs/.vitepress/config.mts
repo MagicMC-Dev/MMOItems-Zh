@@ -5,7 +5,10 @@ export default defineConfig({
   title: "MMOItems 中文 Wiki",
   titleTemplate: ":title - MagicMC",
   base: "/",
-  head: [["meta", { name: "theme-color", content: "#3c8772" }]],
+  head: [
+    [ "meta", { name: "theme-color", content: "#3c8772" }],
+    [ "link", { rel: "icon", href: "/icon.png" }]
+  ],
   outDir: "./dist",
   // srcDir: './src',
   description: "致力于为开发者带一个来更好社区",
@@ -31,7 +34,7 @@ export default defineConfig({
           { text: "命令", link: "/general/command" },
           { text: "权限", link: "/general/permissions" },
           { text: "占位符", link: "/general/placeholders" },
-          { text: "配置文件", link: "/general/config" }
+          { text: "配置文件", link: "/general/config" },
         ],
       },
       {
@@ -41,11 +44,11 @@ export default defineConfig({
           { text: "物品类型", link: "/item-creation/item-type" },
           { text: "物品模板", link: "/item-creation/item-templates" },
           { text: "物品修饰符", link: "/item-creation/item-modifiers" },
-          { text: "物品属性与设定", link: "/item-creation/item-stats-and-options" },
+          { text: "物品属性与设定", link: "/item-creation/item-stats-and-options", },
           { text: "物品复杂属性", link: "/item-creation/complex-stats" },
           { text: "物品描述", link: "/item-creation/lore-formats" },
-          { text: "物品属性设置", link: "/item-creation/config-format-of-stats" }
-        ]
+          { text: "物品属性设置", link: "/item-creation/config-format-of-stats", },
+        ],
       },
       {
         text: "主要功能",
@@ -60,8 +63,8 @@ export default defineConfig({
           { text: "物品升级", link: "/main-feature/item-upgrading" },
           { text: "灵魂绑定", link: "/main-feature/soulbound" },
           { text: "掉落物飞溅", link: "/main-feature/lootsplosion" },
-          { text: "技能", link: "/main-feature/abilities" }
-        ]
+          { text: "技能", link: "/main-feature/abilities" },
+        ],
       },
       {
         text: "合成站",
@@ -71,15 +74,18 @@ export default defineConfig({
           { text: "升级配方", link: "/crafting-stations/upgrading-recipes" },
           { text: "配方条件", link: "/crafting-stations/recipe-conditions" },
           { text: "配方材料", link: "/crafting-stations/recipe-ingredients" },
-          { text: "配方触发器", link: "/crafting-stations/recipe-triggers" }
-        ]
+          { text: "配方触发器", link: "/crafting-stations/recipe-triggers" },
+        ],
       },
       {
         text: "自定义方块",
         items: [
           { text: "自定义方块", link: "/custom-blocks/custom-blocks" },
-          { text: "自定义方块生成", link: "/custom-blocks/world-generation-templates" },
-        ]
+          {
+            text: "自定义方块生成",
+            link: "/custom-blocks/world-generation-templates",
+          },
+        ],
       },
       {
         text: "物品管理",
@@ -88,8 +94,8 @@ export default defineConfig({
           { text: "物品升级", link: "/item-management/item-updater" },
           { text: "物品掉落", link: "/item-management/item-drop-tables" },
           { text: "获取物品", link: "/item-management/obtaining-an-item" },
-        ]
-      }
+        ],
+      },
     ],
     footer: {
       message:
@@ -112,6 +118,5 @@ export default defineConfig({
       provider: "local",
     },
     logo: "icon.png",
-    outline: "deep",
   },
 });

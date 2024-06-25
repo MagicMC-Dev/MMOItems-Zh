@@ -19,7 +19,7 @@ hero:
     text: Github
     link: https://github.com/MagicMC-Dev
   image:
-    src: /image/icon.svg
+    src: /image/icon.png
     alt: VitePress
 features:
 - icon: 👨🏻‍💻

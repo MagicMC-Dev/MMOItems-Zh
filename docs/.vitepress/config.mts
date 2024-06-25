@@ -111,7 +111,7 @@ export default defineConfig({
     search: {
       provider: "local",
     },
-    logo: "/image/icon.svg",
+    logo: "/image/icon.png",
     outline: "deep",
   },
 });

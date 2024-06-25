@@ -2,7 +2,7 @@
 
 技能是可以绑定到物品上的独特技能，使它们更加独特。一个重要的配置功能是技能触发/施放模式，即您需要执行的动作才能施放技能。从 `MMOItems 6.6.2` 开始，这些技能触发与 `MMOCore` 共享；完整列表可以在[这里](https://gitlab.com/phoenix-dvpmt/mythiclib/-/wikis/Trigger%20Types)找到。
 
-![image](uploads/cdb6e7c3c5149283e4a85f1b6d6c4d7e/image.png)
+![image](../image/9.png)
 
 使用正确的技能触发，您可以在玩家击杀实体时或在您射出的箭矢落地时施放技能。
 

@@ -1,0 +1,16 @@
+{
+  "name": "mmoitems_zh-wiki",
+  "version": "1.0.0",
+  "description": "MMOItems 中文 WIKI",
+  "main": "index.js",
+  "scripts": {
+    "docs:dev": "vitepress dev docs --port 4000",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "author": "INSide-734",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "vitepress": "^1.2.3"
+  }
+}

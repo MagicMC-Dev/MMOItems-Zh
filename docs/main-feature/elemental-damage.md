@@ -23,23 +23,23 @@ mmodamage{amount="10";types=PHYSICAL,WEAPON;element=FIRE}
 
 有两种不同的属性可以增加玩家的元素伤害。您可以像这个物品一样给予**固定数量**的元素伤害。以下物品在命中时会额外造成10点伤害。相应的属性是`<ELEMENT_NAME>_DAMAGE`，例如`FIRE_DAMAGE`。
 
-![image](../image/5.png)
+![image](/5.png)
 
 您还可以使用`<ELEMENT_NAME>_DAMAGE_PERCENT`，这会增加一定系数的元素伤害。例如，穿戴以下物品将增加13%的火焰伤害。由于它是伤害倍增器，如果没有物品造成基础/固定伤害，您将不会造成任何火焰伤害。
 
-![image](../image/4.png)
+![image](/4.png)
 
 ### 防御
 
 元素防御减少传入的元素伤害。属性`<ELEMENT_NAME>_DEFENSE`提供固定防御，而`<ELEMENT_NAME>_DEFENSE_PERCENT`提供额外的元素防御点。
 
-![image](../image/3.png)
+![image](/3.png)
 
 ### 弱点
 
 元素弱点会增加受到的元素伤害。例如，10%的火焰弱点会增加10%的传入火焰伤害。相应的玩家属性是`<ELEMENT_NAME>_WEAKNESS`。
 
-![image](../image/2.png)
+![image](/2.png)
 
 ### 最终公式
 
@@ -109,4 +109,4 @@ MythicLib为每个默认元素预配置了攻击效果，虽然您可以根据�
 
 在对实体造成伤害时会显示元素伤害。了解更多关于[伤害指示器的信息](https://gitlab.com/phoenix-dvpmt/mythiclib/-/wikis/Damage-System#damage-indicators)。
 
-![image](../image/1.png)
+![image](/1.png)

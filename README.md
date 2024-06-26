@@ -15,7 +15,7 @@ Official repository for MMOItems Dev-build Premium
 ![][JDK-17]
 [![][license]](LICENSE)
 
-[不稳定版下载][unstable-link] | [正式版下载][download-link] | [加群][group-link]
+[不稳定版下载][unstable-link] | [正式版下载][download-link] | [中文WIKI][wiki-cn] |[加群][group-link]
 
 </div>
 
@@ -30,6 +30,8 @@ Official repository for MMOItems Dev-build Premium
 [releases-link]: https://github.com/MagicMC-Dev/MMOItems-Zh/releases
 
 [unstable-link]: https://github.com/MagicMC-Dev/MMOItems-Zh/actions/workflows/test.yml
+
+[wiki-cn]: https://mmoitems.magicmc.top/
 
 [downloads]: https://img.shields.io/github/downloads/MagicMC-Dev/MMOItems-Zh/total?style=for-the-badge
 

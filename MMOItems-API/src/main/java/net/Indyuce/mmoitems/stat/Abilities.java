@@ -89,7 +89,7 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
         data.getAbilities().forEach(ability -> {
             final StringBuilder builder = new StringBuilder(generalFormat
-                    .replace("{trigger}", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger()))
+                    .replace("{trigger}", MMOItems.plugin.getLanguage().getTriggerTypeName(ability.getTrigger()))
                     .replace("{ability}", ability.getAbility().getName()));
 
             if (!ability.getModifiers().isEmpty()) builder.append(modifierIfAny);

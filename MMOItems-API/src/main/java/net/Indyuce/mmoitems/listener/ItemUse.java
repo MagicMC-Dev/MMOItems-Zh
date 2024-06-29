@@ -244,7 +244,7 @@ public class ItemUse implements Listener {
             // Have to get hand manually because 1.15 and below does not have event.getHand()
             final ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
             final EquipmentSlot bowSlot = itemInMainHand.isSimilar(event.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
-            final ProjectileMetadata proj = ProjectileMetadata.create(playerData.getStats().newTemporary(bowSlot), ProjectileType.ARROW, event.getProjectile());
+            final ProjectileMetadata proj = ProjectileMetadata.create(playerData.getMMOPlayerData(), bowSlot, ProjectileType.ARROW, event.getProjectile());
             proj.setSourceItem(item);
             proj.setCustomDamage(true);
             proj.setDamageMultiplier(event.getForce());

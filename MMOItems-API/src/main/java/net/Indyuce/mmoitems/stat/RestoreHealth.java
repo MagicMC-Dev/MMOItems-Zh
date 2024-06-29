@@ -23,6 +23,10 @@ public class RestoreHealth extends DoubleStat implements PlayerConsumable {
 
     @Override
     public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player, boolean vanillaEating) {
+
+        // (Fixes MMOItems#1579) Cannot restore health if player is dying
+        if (player.isDead() || player.getHealth() <= 0) return;
+
         if (!mmo.hasData(ItemStats.RESTORE_HEALTH)) return;
 
         final DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_HEALTH);

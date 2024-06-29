@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
-import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
@@ -243,8 +242,14 @@ public class ConfigManager implements Reloadable {
         return Message.valueOf(UtilityMethods.enumName(path)).getUpdated();
     }
 
+    @Deprecated
     @NotNull
     public String getCastingModeName(@NotNull TriggerType triggerType) {
+        return getTriggerTypeName(triggerType);
+    }
+
+    @NotNull
+    public String getTriggerTypeName(@NotNull TriggerType triggerType) {
         return Objects.requireNonNull(triggerTypeNames.get(triggerType), "Trigger type name for '" + triggerType.name() + "' not found");
     }
 

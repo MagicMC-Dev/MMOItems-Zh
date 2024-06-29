@@ -124,9 +124,13 @@ public class AbilityListEdition extends EditionInventory {
 
 			for (int j = 1; j < 8; j++)
 				if (!getEditedSection().getConfigurationSection("ability").contains("ability" + j)) {
-					getEditedSection().createSection("ability.ability" + j);
-					registerTemplateEdition();
-					break;
+
+                    // (Fixes MMOItems#1575) Initialize sample ability to avoid console logs
+                    final String tag = "ability" + j;
+                    getEditedSection().set("ability." + tag + ".type", "FIREBOLT");
+                    getEditedSection().set("ability." + tag + ".mode", "RIGHT_CLICK");
+                    registerTemplateEdition();
+					return;
 				}
 		}
 

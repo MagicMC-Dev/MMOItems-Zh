@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.comp.PhatLootsHook;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
 import net.Indyuce.mmoitems.listener.*;
 import net.Indyuce.mmoitems.listener.option.DroppedItems;
+import net.Indyuce.mmoitems.listener.option.SoulboundNoDrop;
 import org.bukkit.Bukkit;
 
 public class MMOItemsBukkit {
@@ -32,6 +33,9 @@ public class MMOItemsBukkit {
             Bukkit.getPluginManager().registerEvents(new DroppedItems(plugin.getConfig().getConfigurationSection("dropped-items")), plugin);
         if (plugin.getLanguage().disableRemovedItems)
             Bukkit.getPluginManager().registerEvents(new DisabledItemsListener(plugin), plugin);
+
+        if (!plugin.getConfig().getBoolean("soulbound.can-drop"))
+            Bukkit.getPluginManager().registerEvents(new SoulboundNoDrop(), plugin);
 
         // Profile support
         if (MythicLib.plugin.hasProfiles())

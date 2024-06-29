@@ -36,6 +36,11 @@ public class MMOUtils {
         return particle.getDataType() == Particle.DustOptions.class;
     }
 
+    /**
+     * Optimized Soulbound check based on the fact that the
+     * compressed item Soulbound data contains only one UUID,
+     * the target player's UUID, sparing one Json parse pass.
+     */
     public static boolean isSoulboundTo(@NotNull NBTItem item, @NotNull Player player) {
         final @Nullable String foundNbt = item.getString("MMOITEMS_SOULBOUND");
         return foundNbt != null && foundNbt.contains(player.getUniqueId().toString());
@@ -343,25 +348,26 @@ public class MMOUtils {
     }
 
     /**
-     * @param player Player to heal
-     * @param heal   Heal amount
-     *               <br>
-     *               Negative values are just ignored
+     * @param entity Player to heal
+     * @param heal   Heal amount. Negative values are just ignored
      */
-    public static void heal(@NotNull LivingEntity player, double heal) {
-        heal(player, heal, true);
+    public static void heal(@NotNull LivingEntity entity, double heal) {
+        heal(entity, heal, true);
     }
 
     /**
-     * @param player         Player to heal
+     * @param entity         Living entity to heal
      * @param heal           Heal amount
-     * @param allowNegatives If passing a negative health value will damage the entity x)
-     *                       <br>
+     * @param allowNegatives If passing a negative health value will damage the entity
      *                       If <code>false</code>, negative values are just ignored
      */
-    public static void heal(@NotNull LivingEntity player, double heal, boolean allowNegatives) {
-        if (heal > 0 || allowNegatives)
-            player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), player.getHealth() + heal));
+    public static void heal(@NotNull LivingEntity entity, double heal, boolean allowNegatives) {
+        if (heal == 0) return;
+        if (entity.isDead() || entity.getHealth() <= 0) return;
+        if (heal < 0 && !allowNegatives) return;
+
+        final double maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+        entity.setHealth(Math.min(maxHealth, entity.getHealth() + heal));
     }
     //endregion
 

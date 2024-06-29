@@ -21,7 +21,8 @@ public class RandomAbilityData {
 	private final Map<String, NumericStatFormula> modifiers = new HashMap<>();
 
 	public RandomAbilityData(ConfigurationSection config) {
-		Validate.isTrue(config.contains("type") && config.contains("mode"), "Ability is missing type or mode");
+		Validate.isTrue(config.contains("type"), "Missing ability type");
+		Validate.isTrue(config.contains("mode"), "Missing ability trigger type/casting mode");
 
 		String abilityFormat = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
 		Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(abilityFormat), "Could not find ability called '" + abilityFormat + "'");

@@ -81,11 +81,6 @@ public class PlayerListener implements Listener {
             final ItemStack item = iterator.next();
             final NBTItem nbt = NBTItem.get(item);
 
-            /*
-             * Not a perfect check but it's very sufficient and so we avoid
-             * using a JsonParser followed by map checkups in the SoulboundData
-             * constructor
-             */
             if (nbt.getBoolean("MMOITEMS_DISABLE_DEATH_DROP") || (MMOItems.plugin.getLanguage().keepSoulboundOnDeath && MMOUtils.isSoulboundTo(nbt, player))) {
                 iterator.remove();
                 soulboundInfo.registerItem(item);
@@ -137,7 +132,7 @@ public class PlayerListener implements Listener {
                 return;
             }
 
-            final ProjectileMetadata proj = ProjectileMetadata.create(playerData.getStats().newTemporary(EquipmentSlot.fromBukkit(item.getSlot())), ProjectileType.TRIDENT, event.getEntity());
+            final ProjectileMetadata proj = ProjectileMetadata.create(playerData.getMMOPlayerData(), EquipmentSlot.fromBukkit(item.getSlot()), ProjectileType.TRIDENT, event.getEntity());
             proj.setSourceItem(nbtItem);
             proj.setCustomDamage(true);
         }

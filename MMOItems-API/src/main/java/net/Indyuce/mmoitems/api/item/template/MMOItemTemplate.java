@@ -192,22 +192,16 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
         return options.contains(option);
     }
 
-    public MMOItemBuilder newBuilder(@Nullable Player player) {
-        if (player != null) {
-            return newBuilder(PlayerData.get(player).getRPG());
-        }
-        return newBuilder((RPGPlayer) null);
-    }
-
     public MMOItemBuilder newBuilder() {
         return newBuilder((RPGPlayer) null);
     }
 
+    public MMOItemBuilder newBuilder(@Nullable Player player) {
+        return newBuilder(player == null ? null : PlayerData.get(player).getRPG());
+    }
+
     public MMOItemBuilder newBuilder(@Nullable PlayerData player) {
-        if (player != null) {
-            return newBuilder(player.getRPG());
-        }
-        return newBuilder((RPGPlayer) null);
+        return newBuilder(player == null ? null : player.getRPG());
     }
 
     /**
@@ -233,12 +227,11 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
      * @param forDisplay Should it take modifiers into account
      * @return Item builder with random level and tier?
      */
+    @NotNull
     public MMOItemBuilder newBuilder(@Nullable RPGPlayer player, boolean forDisplay) {
 
         // No player ~ default settings
-        if (player == null) {
-            return newBuilder(0, null);
-        }
+        if (player == null) return newBuilder(0, null);
 
         // Read from player
         int itemLevel = hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(player.getLevel()) : 0;
@@ -251,6 +244,7 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
      * @param itemTier  The desired item tier, can be null
      * @return Item builder with specific item level and tier
      */
+    @NotNull
     public MMOItemBuilder newBuilder(int itemLevel, @Nullable ItemTier itemTier) {
         return new MMOItemBuilder(this, itemLevel, itemTier);
     }

@@ -21,7 +21,6 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
@@ -135,13 +134,6 @@ public class ItemListener implements Listener {
             return;
         ItemStack newItem = modifyItem(event.getCurrentItem(), (Player) event.getWhoClicked(), ReforgeReason.CLICK);
         if (newItem != null) event.setCurrentItem(newItem);
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    private void dropItem(PlayerDropItemEvent event) {
-        NBTItem nbt = NBTItem.get(event.getItemDrop().getItemStack());
-        if (!MMOItems.plugin.getConfig().getBoolean("soulbound.can-drop") && nbt.hasTag("MMOITEMS_SOULBOUND"))
-            event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

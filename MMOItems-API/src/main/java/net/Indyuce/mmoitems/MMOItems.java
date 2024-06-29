@@ -198,7 +198,6 @@ public class MMOItems extends MMOPlugin {
 
         Bukkit.getPluginManager().registerEvents(dropTableManager, this);
 
-        // Load Dist module
         // Load MMOCore-Bukkit module
         try {
             Class.forName("net.Indyuce.mmoitems.MMOItemsBukkit").getConstructor(MMOItems.class).newInstance(this);
@@ -277,7 +276,7 @@ public class MMOItems extends MMOPlugin {
         playerDataManager.close();
 
         // Drop abandoned items
-        DeathItemsHandler.getActive().forEach(info -> info.giveItems(true));
+        DeathItemsHandler.getActive().forEach(DeathItemsHandler::dropItems);
 
         // Close inventories
         for (Player player : Bukkit.getOnlinePlayers())

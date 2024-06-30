@@ -80,6 +80,13 @@ body:
       placeholder: 请注意将您的敏感信息从日志中过滤或替换。
 
   - type: textarea
+    id: config
+    attributes:
+      label: 相关配置
+      description: 请提供此 `config.yml` 或问题相关配置文件
+      placeholder: 请注意将您的敏感信息从配置中过滤或替换。
+
+  - type: textarea
     id: context
     attributes:
       label: 额外补充

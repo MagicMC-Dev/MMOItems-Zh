@@ -157,18 +157,24 @@ public class ArrowParticlesEdition extends EditionInventory {
 			}
 		}
 
-		for (String string : new String[] { "amount", "offset", "speed" })
+		for (String string : new String[]{"粒子数量", "粒子偏移", "粒子速度"}) /*amount,offset,speed*/ {
+			String psString = null; // psString是arrow-particles.psString 注册名
+			if (string.equals("粒子数量")) psString = "amount";
+			if (string.equals("粒子偏移")) psString = "offset";
+			if (string.equals("粒子速度")) psString = "speed";
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + UtilityMethods.caseOnWords(string))) {
-				if (event.getAction() == InventoryAction.PICKUP_ALL)
-					new StatEdition(this, ItemStats.ARROW_PARTICLES, string).enable("在聊天栏中输入您想要的 " + string + " 数值.");
+				if (event.getAction() == InventoryAction.PICKUP_ALL) {
+					new StatEdition(this, ItemStats.ARROW_PARTICLES, psString).enable("在聊天栏中输入您想要的 " + string + " 数值.");
 
+				}
 				if (event.getAction() == InventoryAction.PICKUP_HALF) {
-					if (getEditedSection().contains("arrow-particles." + string)) {
-						getEditedSection().set("arrow-particles." + string, null);
+					if (getEditedSection().contains("arrow-particles." + psString)) {
+						getEditedSection().set("arrow-particles." + psString, null);
 						registerTemplateEdition();
 						player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置 " + string + ".");
 					}
 				}
 			}
+		}
 	}
 }

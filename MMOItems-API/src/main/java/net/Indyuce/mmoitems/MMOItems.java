@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
@@ -43,7 +44,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -73,7 +73,7 @@ public class MMOItems extends MMOPlugin {
     private final TypeManager typeManager = new TypeManager();
     private final ItemManager itemManager = new ItemManager();
     private final PlayerInventoryHandler inventory = new PlayerInventoryHandler();
-    private final List<EnchantPlugin<? extends Enchantment>> enchantPlugins = new ArrayList<>();
+    private final List<EnchantPlugin<?>> enchantPlugins = new ArrayList<>();
     private final StatManager statManager = new StatManager();
 
     private PlayerDataManager playerDataManager;
@@ -133,11 +133,11 @@ public class MMOItems extends MMOPlugin {
 
         PluginUtils.isDependencyPresent("MMOCore", u -> new MMOCoreMMOLoader());
         PluginUtils.isDependencyPresent("mcMMO", u -> statManager.register(McMMOHook.disableMcMMORepair));
-        PluginUtils.isDependencyPresent("AdvancedEnchantments", u -> {
+        PluginUtils.hookDependencyIfPresent("AdvancedEnchantments", u -> {
             statManager.register(AdvancedEnchantmentsHook.ADVANCED_ENCHANTMENTS);
             statManager.register(AdvancedEnchantmentsHook.DISABLE_ADVANCED_ENCHANTMENTS);
         });
-        PluginUtils.isDependencyPresent("MythicEnchants", u -> enchantPlugins.add(new MythicEnchantsSupport()));
+        PluginUtils.hookDependencyIfPresent("MythicEnchants", u -> enchantPlugins.add(new MythicEnchantsSupport()));
         PluginUtils.isDependencyPresent("Heroes", u -> statManager.register(HeroesHook.MAX_STAMINA));
     }
 
@@ -279,9 +279,7 @@ public class MMOItems extends MMOPlugin {
         DeathItemsHandler.getActive().forEach(DeathItemsHandler::dropItems);
 
         // Close inventories
-        for (Player player : Bukkit.getOnlinePlayers())
-            if (player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
-                player.closeInventory();
+        UtilityMethods.closeOpenViewsOfType(PluginInventory.class);
 
         // WorldGen
         this.worldGenManager.unload();
@@ -419,10 +417,10 @@ public class MMOItems extends MMOPlugin {
      *
      * @param value The player inventory subclass
      * @deprecated Rather than setting this to the only inventory MMOItems will
-     *         search equipment within, you must add your inventory to the
-     *         handler with <code>getInventory().register()</code>. This method
-     *         will clear all other PlayerInventories for now, as to keep
-     *         backwards compatibility.
+     * search equipment within, you must add your inventory to the
+     * handler with <code>getInventory().register()</code>. This method
+     * will clear all other PlayerInventories for now, as to keep
+     * backwards compatibility.
      */
     @Deprecated
     public void setPlayerInventory(PlayerInventory value) {
@@ -516,7 +514,7 @@ public class MMOItems extends MMOPlugin {
         return vaultSupport != null && vaultSupport.getPermissions() != null;
     }
 
-    public List<EnchantPlugin<? extends Enchantment>> getEnchantPlugins() {
+    public List<EnchantPlugin<?>> getEnchantPlugins() {
         return enchantPlugins;
     }
 
@@ -532,9 +530,9 @@ public class MMOItems extends MMOPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will
-     *         scale according to the player RPG level if the template has the
-     *         'level-item' option. The item will pick a random tier if the
-     *         template has the 'tiered' option
+     * scale according to the player RPG level if the template has the
+     * 'level-item' option. The item will pick a random tier if the
+     * template has the 'tiered' option
      */
     @Nullable
     public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, @Nullable PlayerData player) {
@@ -552,9 +550,9 @@ public class MMOItems extends MMOPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will
-     *         scale according to the player RPG level if the template has the
-     *         'level-item' option. The item will pick a random tier if the
-     *         template has the 'tiered' option
+     * scale according to the player RPG level if the template has the
+     * 'level-item' option. The item will pick a random tier if the
+     * template has the 'tiered' option
      */
     @Nullable
     public ItemStack getItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
@@ -571,7 +569,7 @@ public class MMOItems extends MMOPlugin {
      * @param itemLevel The desired item level
      * @param itemTier  The desired item tier, can be null
      * @return Generates an item given an item template with a
-     *         specific item level and item tier
+     * specific item level and item tier
      */
     @Nullable
     public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
@@ -591,7 +589,7 @@ public class MMOItems extends MMOPlugin {
      * @param itemLevel The desired item level
      * @param itemTier  The desired item tier, can be null
      * @return Generates an item given an item template with a
-     *         specific item level and item tier
+     * specific item level and item tier
      */
     @Nullable
     public ItemStack getItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
@@ -606,10 +604,10 @@ public class MMOItems extends MMOPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will be
-     *         0 and the item will have no item tier unless one is specified in
-     *         the base item data.
-     *         <p></p>
-     *         Will return <code>null</code> if such MMOItem does not exist.
+     * 0 and the item will have no item tier unless one is specified in
+     * the base item data.
+     * <p></p>
+     * Will return <code>null</code> if such MMOItem does not exist.
      */
     @Nullable
     public MMOItem getMMOItem(@Nullable Type type, @Nullable String id) {
@@ -618,10 +616,10 @@ public class MMOItems extends MMOPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will be
-     *         0 and the item will have no item tier unless one is specified in
-     *         the base item data.
-     *         <p></p>
-     *         Will return <code>null</code> if such MMOItem does not exist.
+     * 0 and the item will have no item tier unless one is specified in
+     * the base item data.
+     * <p></p>
+     * Will return <code>null</code> if such MMOItem does not exist.
      */
 
     @Nullable
@@ -634,10 +632,10 @@ public class MMOItems extends MMOPlugin {
 
     /**
      * @return Generates an item given an item template. The item level will be
-     *         0 and the item will have no item tier unless one is specified in
-     *         the base item data.
-     *         <p></p>
-     *         Will return <code>null</code> if such MMOItem does not exist.
+     * 0 and the item will have no item tier unless one is specified in
+     * the base item data.
+     * <p></p>
+     * Will return <code>null</code> if such MMOItem does not exist.
      */
     @Nullable
     public ItemStack getItem(@Nullable Type type, @Nullable String id) {

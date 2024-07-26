@@ -5,6 +5,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.util.AdventureUtils;
+import io.lumine.mythic.lib.version.VersionUtils;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -19,6 +20,7 @@ import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
@@ -28,7 +30,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 public class ItemStackBuilder {
@@ -40,8 +44,7 @@ public class ItemStackBuilder {
     private final LoreBuilder lore;
     private final List<ItemTag> tags = new ArrayList<>();
 
-    private static final AttributeModifier FAKE_MODIFIER = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
-            "mmoitemsDecoy", 0, Operation.ADD_NUMBER);
+    private static final AttributeModifier FAKE_MODIFIER = VersionUtils.attrMod(new NamespacedKey(MMOItems.plugin, "decoy"), 0, Operation.ADD_NUMBER);
 
     /**
      * Used to build an MMOItem into an ItemStack.
@@ -229,7 +232,7 @@ public class ItemStackBuilder {
          */
         JsonArray array = new JsonArray();
         event.getParsedLore().forEach(array::add);
-        if (array.size() != 0) tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
+        if (!array.isEmpty()) tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
 
         /*
          * This tag is added to entirely override default vanilla item attribute

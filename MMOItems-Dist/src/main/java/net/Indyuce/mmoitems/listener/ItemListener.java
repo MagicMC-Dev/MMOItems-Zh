@@ -3,6 +3,8 @@ package net.Indyuce.mmoitems.listener;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.lib.version.VInventoryView;
+import io.lumine.mythic.lib.version.VersionUtils;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
@@ -54,10 +56,11 @@ public class ItemListener implements Listener {
 
     @EventHandler
     private void onItemCraftRepair(PrepareItemCraftEvent event) {
-        if (!(event.getView().getPlayer() instanceof Player) || !event.isRepair())
+        final VInventoryView view = VersionUtils.getView(event);
+        if (!(view.getPlayer() instanceof Player) || !event.isRepair())
             return;
 
-        final Player player = (Player) event.getView().getPlayer();
+        final Player player = (Player) view.getPlayer();
         final CraftingInventory inv = event.getInventory();
         final ItemStack air = new ItemStack(Material.AIR);
         final ItemStack originalResult = inv.getResult();

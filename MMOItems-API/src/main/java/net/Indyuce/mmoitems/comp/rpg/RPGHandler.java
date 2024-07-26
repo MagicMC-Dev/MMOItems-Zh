@@ -31,8 +31,7 @@ public interface RPGHandler {
     enum PluginEnum {
         MMOCORE("MMOCore", MMOCoreHook.class),
         HEROES("Heroes", HeroesHook.class),
-        PROSKILLAPI("ProSkillAPI", ProSkillAPIHook.class),
-        SKILLAPI("SkillAPI", SkillAPIHook.class),
+        FABLED("Fabled", FabledHook.class),
         RPGPLAYERLEVELING("RPGPlayerLeveling", RPGPlayerLevelingHook.class),
         RACESANDCLASSES("RacesAndClasses", RacesAndClassesHook.class),
         BATTLELEVELS("BattleLevels", BattleLevelsHook.class),

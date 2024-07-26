@@ -88,7 +88,11 @@ public class DurabilityListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void mendEvent(PlayerItemMendEvent event) {
-        DurabilityItem durItem = new DurabilityItem(event.getPlayer(), event.getItem());
+
+        // Useless repair amount
+        if (event.getRepairAmount() <= 0) return;
+
+        final DurabilityItem durItem = new DurabilityItem(event.getPlayer(), event.getItem());
         if (durItem.isValid()) {
             event.getItem().setItemMeta(durItem.addDurability(event.getRepairAmount()).toItem().getItemMeta());
             event.setCancelled(true);

@@ -283,9 +283,13 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
             }
 
             // Handle custom enchant
-            for (EnchantPlugin enchantPlugin : MMOItems.plugin.getEnchantPlugins())
-                if (enchantPlugin.isCustomEnchant(enchant))
-                    enchantPlugin.handleEnchant(item, enchant, lvl);
+            for (EnchantPlugin enchantPlugin : MMOItems.plugin.getEnchantPlugins()) {
+                final Object custom = enchantPlugin.transfer(enchant);
+                if (custom != null) {
+                    enchantPlugin.handleEnchant(item, custom, lvl);
+                    break;
+                }
+            }
         }
 
         // Apply tags
@@ -509,8 +513,8 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
 
         // Check for custom enchants
         for (EnchantPlugin enchPlugin : MMOItems.plugin.getEnchantPlugins()) {
-            Enchantment checked = Enchantment.getByKey(enchPlugin.getNamespacedKey(key));
-            if (checked != null) return checked;
+            enchant = Enchantment.getByKey(enchPlugin.getNamespacedKey(key));
+            if (enchant != null) return enchant;
         }
 
         // Last try, vanilla enchant with name

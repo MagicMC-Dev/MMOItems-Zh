@@ -1,7 +1,8 @@
 package net.Indyuce.mmoitems.gui.edition.recipe;
 
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.api.util.ItemFactory;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.lib.version.VersionUtils;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -163,7 +164,7 @@ public class RecipeListGUI extends EditionInventory {
     @Override public void whenClicked(InventoryClickEvent event) {
 
         // Clicked inventory was not the observed inventory? Not our business
-        if ((event.getView().getTopInventory() != event.getClickedInventory())) { return; }
+        if ((VersionUtils.getView(event).getTopInventory() != event.getClickedInventory())) { return; }
 
         // Disallow any clicking.
         event.setCancelled(true);

@@ -2,6 +2,8 @@ package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.version.VInventoryView;
+import io.lumine.mythic.lib.version.VersionUtils;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -55,7 +57,7 @@ public abstract class EditionInventory extends PluginInventory {
      * base item data
      *
      * @deprecated Not being used atm, the item editor only lets the user
-     *         edit the base item data.
+     * edit the base item data.
      */
     @Deprecated
     private ModifierNode editedModifier = null;
@@ -79,9 +81,9 @@ public abstract class EditionInventory extends PluginInventory {
         // For building the Inventory
         this.template = template;
         this.configFile = template.getType().getConfigFile();
-        player.getOpenInventory();
-        if (player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory)
-            this.cachedItem = ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cachedItem;
+        final VInventoryView open = VersionUtils.getOpen(player);
+        if (open.getTopInventory().getHolder() instanceof EditionInventory)
+            this.cachedItem = ((EditionInventory) open.getTopInventory().getHolder()).cachedItem;
     }
 
     @Override
@@ -137,9 +139,9 @@ public abstract class EditionInventory extends PluginInventory {
 
     /**
      * @return The currently edited configuration section. It depends on if the
-     *         player is editing the base item data or editing a modifier. This
-     *         config section contains item data (either the 'base' config
-     *         section or the 'stats' section for modifiers).
+     * player is editing the base item data or editing a modifier. This
+     * config section contains item data (either the 'base' config
+     * section or the 'stats' section for modifiers).
      */
     public ConfigurationSection getEditedSection() {
         ConfigurationSection config = configFile.getConfig().getConfigurationSection(template.getId());

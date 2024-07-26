@@ -18,7 +18,7 @@ locked-skins: true
 # 可用的插件:
 # - MMOCORE (级别、职业、法力值、耐力)
 # - HEROES (级别、职业、法力值、耐力)
-# - SKILLAPI 或 PROSKILLAPI (级别、职业、法力值)
+# - FABLED (级别、职业、法力值))
 # - RPGPLAYERLEVELING (级别、法力值、力量)
 # - RACESANDCLASSES (级别、职业、法力值)
 # - BATTLELEVELS (级别)

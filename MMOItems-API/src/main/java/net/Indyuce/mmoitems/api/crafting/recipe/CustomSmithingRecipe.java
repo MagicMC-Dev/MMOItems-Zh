@@ -12,6 +12,7 @@ import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.lib.version.VersionUtils;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.GemStone;
@@ -284,7 +285,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         if (!(eventTrigger.getWhoClicked() instanceof Player)) { return mythicRecipeInventory.getResultInventory(); }
 
         // Get the two combinant items
-        MythicBlueprintInventory original = mapping.extractFrom(eventTrigger.getView().getTopInventory());
+        MythicBlueprintInventory original = mapping.extractFrom(VersionUtils.getView(eventTrigger).getTopInventory());
         ItemStack item = original.getMainInventory().getFirst();
         ItemStack ingot = firstFromFirstSide(original);
 
@@ -401,7 +402,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
             map.applyToResultInventory(eventTrigger.getInventory(), resultInventory, false);
 
             // Apply result to the cursor
-            eventTrigger.getView().setCursor(actualCursor);
+            VersionUtils.getView(eventTrigger).setCursor(actualCursor);
 
             // Consume ingredients
             consumeIngredients(otherInventories, cache, eventTrigger.getInventory(), map, 1);

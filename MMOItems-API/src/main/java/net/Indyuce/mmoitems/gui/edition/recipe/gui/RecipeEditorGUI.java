@@ -10,15 +10,16 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.util.AdventureUtils;
+import io.lumine.mythic.lib.version.VersionUtils;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_AmountOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RecipeButtonAction;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -404,7 +405,7 @@ public abstract class RecipeEditorGUI extends EditionInventory {
     public void whenClicked(InventoryClickEvent event) {
 
         // Clicked inventory was not the observed inventory? Not our business
-        if (event.getView().getTopInventory() != event.getClickedInventory()) {
+        if (VersionUtils.getView(event).getTopInventory() != event.getClickedInventory()) {
             return;
         }
 

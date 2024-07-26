@@ -1,17 +1,17 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.event.PlayerLevelUpEvent;
-import com.sucy.skill.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import studio.magemonkey.fabled.Fabled;
+import studio.magemonkey.fabled.api.event.PlayerLevelUpEvent;
+import studio.magemonkey.fabled.api.player.PlayerData;
 
-public class ProSkillAPIHook implements RPGHandler, Listener {
+public class FabledHook implements RPGHandler, Listener {
 
     @Override
     public RPGPlayer getInfo(net.Indyuce.mmoitems.api.player.PlayerData data) {
-        return new SkillAPIPlayer(data);
+        return new PlayerWrapper(data);
     }
 
     @EventHandler
@@ -23,26 +23,26 @@ public class ProSkillAPIHook implements RPGHandler, Listener {
     public void refreshStats(net.Indyuce.mmoitems.api.player.PlayerData data) {
     }
 
-    public static class SkillAPIPlayer extends RPGPlayer {
-        public SkillAPIPlayer(net.Indyuce.mmoitems.api.player.PlayerData playerData) {
+    private static class PlayerWrapper extends RPGPlayer {
+        public PlayerWrapper(net.Indyuce.mmoitems.api.player.PlayerData playerData) {
             super(playerData);
         }
 
         @Override
         public int getLevel() {
-            PlayerData rpgdata = SkillAPI.getPlayerData(getPlayer());
+            PlayerData rpgdata = Fabled.getData(getPlayer());
             return rpgdata.hasClass() ? rpgdata.getMainClass().getLevel() : 0;
         }
 
         @Override
         public String getClassName() {
-            PlayerData rpgdata = SkillAPI.getPlayerData(getPlayer());
+            PlayerData rpgdata = Fabled.getData(getPlayer());
             return rpgdata.hasClass() ? rpgdata.getMainClass().getData().getName() : "";
         }
 
         @Override
         public double getMana() {
-            PlayerData rpgdata = SkillAPI.getPlayerData(getPlayer());
+            PlayerData rpgdata = Fabled.getData(getPlayer());
             return rpgdata.hasClass() ? rpgdata.getMana() : 0;
         }
 
@@ -53,7 +53,7 @@ public class ProSkillAPIHook implements RPGHandler, Listener {
 
         @Override
         public void setMana(double value) {
-            PlayerData rpgdata = SkillAPI.getPlayerData(getPlayer());
+            PlayerData rpgdata = Fabled.getData(getPlayer());
             if (rpgdata.hasClass())
                 rpgdata.setMana(value);
         }

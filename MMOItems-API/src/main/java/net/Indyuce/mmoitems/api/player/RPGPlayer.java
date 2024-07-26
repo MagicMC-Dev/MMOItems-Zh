@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Interface class between RPG core plugins like
- * Heroes, MythicCore, SkillAPI, MMOCore and MMOItems
+ * Heroes, MythicCore, Fabled, MMOCore... and MMOItems
  *
  * @author Jules
  */

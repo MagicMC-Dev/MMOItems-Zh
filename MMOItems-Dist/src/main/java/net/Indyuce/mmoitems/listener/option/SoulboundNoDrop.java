@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems.listener.option;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.version.VInventoryView;
+import io.lumine.mythic.lib.version.VersionUtils;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -34,10 +36,11 @@ public class SoulboundNoDrop implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void cannotDragAround(InventoryDragEvent event) {
 
-        if (event.getView().getType() == InventoryType.CRAFTING) return;
+        final VInventoryView view = VersionUtils.getView(event);
+        if (view.getType() == InventoryType.CRAFTING) return;
 
         // This easily allows to check if the item was dragged in or out of the player's inventory
-        final int topInventorySize = event.getView().getTopInventory().getContents().length;
+        final int topInventorySize = view.getTopInventory().getContents().length;
         for (Map.Entry<Integer, ItemStack> entry : event.getNewItems().entrySet())
             if (entry.getKey() < topInventorySize && isBound(entry.getValue(), event.getWhoClicked())) {
                 event.setCancelled(true);
@@ -49,7 +52,7 @@ public class SoulboundNoDrop implements Listener {
     public void cannotMoveAround(InventoryClickEvent event) {
 
         // Can only move around in
-        if (event.getView().getType() == InventoryType.CRAFTING) return;
+        if (VersionUtils.getView(event).getType() == InventoryType.CRAFTING) return;
 
         try {
 

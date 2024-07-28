@@ -13,14 +13,11 @@ lore-format:
   - '{bar}'
   - '#required-class#'
   - '#required-level#'
-  - '#required-dexterity#'
+  - '#required-secondary-hero-level#' # Heroes secondary hero level req
+  - '#required-dexterity#' # MMOCore attribute requirements
   - '#required-strength#'
   - '#required-intelligence#'
-  - '#success-rate#'
-  - '{bar}'
-  - '#soulbound#'
-  # - '{bar}&8&m--------&f&l &nProfessions&8 &m--------------'
-  - '#profession-alchemy#'
+  - '#profession-alchemy#' # MMOCore profession requirements
   - '#profession-enchanting#'
   - '#profession-farming#'
   - '#profession-fishing#'
@@ -28,7 +25,10 @@ lore-format:
   - '#profession-smelting#'
   - '#profession-smithing#'
   - '#profession-woodcutting#'
-  # - '{bar}&8&m--------&f&l &nStatistics&8 &m-------------'
+  - '#success-rate#'
+  - '{bar}'
+  - '#soulbound#'
+  # - '{bar}&8&m--------&f&l &nItem Stats&8 &m-------------'
   - '{bar}'
   - '#custom-myluck#'
   - '#can-identify#'
@@ -115,7 +115,7 @@ lore-format:
   - '#additional-strength#'
   - '#additional-intelligence#'
   - '#additional-experience#'
-  - '#additional-experience-alchemy#'
+  - '#additional-experience-alchemy#' # MMOCore additional profession exp stats
   - '#additional-experience-enchanting#'
   - '#additional-experience-farming#'
   - '#additional-experience-fishing#'

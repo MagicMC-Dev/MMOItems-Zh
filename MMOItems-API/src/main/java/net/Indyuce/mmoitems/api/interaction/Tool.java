@@ -10,6 +10,7 @@ import io.lumine.mythic.lib.version.OreDrops;
 import io.lumine.mythic.lib.version.VEnchantment;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.BouncingCrackBlockBreakEvent;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
@@ -24,14 +25,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
-public class Tool extends UseItem {
+public class Tool extends Weapon {
+    public Tool(PlayerData playerData, NBTItem item) {
+        super(playerData, item);
+    }
+
+    @Deprecated
     public Tool(Player player, NBTItem item) {
         super(player, item);
     }
 
     @Override
-    public boolean checkItemRequirements() {
-        return MythicLib.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_TOOLS) && playerData.getRPG().canUse(getNBTItem(), true);
+    public CustomFlag getUseFlag() {
+        return CustomFlag.MI_TOOLS;
     }
 
     private static final BlockFace[] NEIGHBORS = {BlockFace.NORTH, BlockFace.DOWN, BlockFace.EAST, BlockFace.UP, BlockFace.WEST, BlockFace.SOUTH};

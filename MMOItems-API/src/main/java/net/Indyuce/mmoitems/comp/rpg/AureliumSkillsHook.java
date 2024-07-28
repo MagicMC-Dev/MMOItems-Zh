@@ -91,13 +91,13 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
     public void a(PlayerDataLoadEvent event) {
         Player player = event.getPlayerData().getPlayer();
         PlayerData playerData = PlayerData.get(player);
-        playerData.setRPGPlayer(new AureliumSkillsPlayer(playerData, event.getPlayerData()));
+        playerData.setRPGPlayer(new PlayerWrapper(playerData, event.getPlayerData()));
     }
 
-    public class AureliumSkillsPlayer extends RPGPlayer {
+    public class PlayerWrapper extends RPGPlayer {
         private final com.archyx.aureliumskills.data.PlayerData info;
 
-        public AureliumSkillsPlayer(PlayerData playerData, com.archyx.aureliumskills.data.PlayerData rpgPlayerData) {
+        public PlayerWrapper(PlayerData playerData, com.archyx.aureliumskills.data.PlayerData rpgPlayerData) {
             super(playerData);
 
             info = rpgPlayerData;
@@ -150,19 +150,17 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
         @Override
         public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+            final int requirement = item.getInteger(this.getNBTPath());
+            if (requirement <= 0) return true;
 
             final int skillLevel = AureliumAPI.getSkillLevel(player.getPlayer(), skill);
-            final int required = item.getInteger("MMOITEMS_REQUIRED_" + skill.name());
+            if (skillLevel >= requirement || player.getPlayer().hasPermission("mmoitems.bypass.level")) return true;
 
-            if (skillLevel < required && !player.getPlayer().hasPermission("mmoitems.bypass.level")) {
-                if (message) {
-                    Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", skill.getDisplayName(Locale.getDefault())).send(player.getPlayer());
-                    player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-                }
-                return false;
+            if (message) {
+                Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", skill.getDisplayName(Locale.getDefault())).send(player.getPlayer());
+                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
             }
-
-            return true;
+            return false;
         }
     }
 }

@@ -41,11 +41,6 @@ public class FormattedMessage {
 
     @NotNull
     public FormattedMessage format(ChatColor prefix, String... toReplace) {
-
-        // Compatibility with #send(Player)
-        if (message.isEmpty())
-            return this;
-
         message = prefix + message;
         for (int j = 0; j < toReplace.length; j += 2)
             message = message.replace(toReplace[j], toReplace[j + 1]);
@@ -59,7 +54,7 @@ public class FormattedMessage {
      * @param player Player receiving the message
      */
     public void send(Player player) {
-        if (message.isEmpty())
+        if (ChatColor.stripColor(message).isEmpty())
             return;
 
         if (actionBar) {

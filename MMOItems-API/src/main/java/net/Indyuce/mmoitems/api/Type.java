@@ -10,12 +10,18 @@ import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.util.PostLoadAction;
 import io.lumine.mythic.lib.util.PreloadedObject;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.interaction.*;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Lute;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Musket;
 import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +29,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 @SuppressWarnings("unused")
 public class Type implements CooldownObject, PreloadedObject {
@@ -43,11 +50,11 @@ public class Type implements CooldownObject, PreloadedObject {
     public static final Type STAFF = new Type("STAFF", ModifierSource.RANGED_WEAPON);
     public static final Type BOW = new Type("BOW", ModifierSource.RANGED_WEAPON);
     public static final Type CROSSBOW = new Type("CROSSBOW", ModifierSource.RANGED_WEAPON);
-    public static final Type MUSKET = new Type("MUSKET", ModifierSource.RANGED_WEAPON);
-    public static final Type LUTE = new Type("LUTE", ModifierSource.RANGED_WEAPON);
+    public static final Type MUSKET = new Type("MUSKET", ModifierSource.RANGED_WEAPON, Musket::new);
+    public static final Type LUTE = new Type("LUTE", ModifierSource.RANGED_WEAPON, Lute::new);
 
     // Other weapons
-    public static final Type TOOL = new Type("TOOL", ModifierSource.MELEE_WEAPON);
+    public static final Type TOOL = new Type("TOOL", ModifierSource.MELEE_WEAPON, Tool::new);
 
     // Hand Accessories
     public static final Type CATALYST = new Type("CATALYST", ModifierSource.HAND_ITEM);
@@ -57,15 +64,16 @@ public class Type implements CooldownObject, PreloadedObject {
     // Other
     public static final Type ORNAMENT = new Type("ORNAMENT", ModifierSource.VOID);
     public static final Type ARMOR = new Type("ARMOR", ModifierSource.ARMOR);
-    public static final Type CONSUMABLE = new Type("CONSUMABLE", ModifierSource.MAINHAND_ITEM);
+    public static final Type CONSUMABLE = new Type("CONSUMABLE", ModifierSource.MAINHAND_ITEM, Consumable::new);
     public static final Type MISCELLANEOUS = new Type("MISCELLANEOUS", ModifierSource.MAINHAND_ITEM);
-    public static final Type GEM_STONE = new Type("GEM_STONE", ModifierSource.VOID);
-    public static final Type SKIN = new Type("SKIN", ModifierSource.VOID);
+    public static final Type GEM_STONE = new Type("GEM_STONE", ModifierSource.VOID, GemStone::new);
+    public static final Type SKIN = new Type("SKIN", ModifierSource.VOID, ItemSkin::new);
     public static final Type ACCESSORY = new Type("ACCESSORY", ModifierSource.ACCESSORY);
     public static final Type BLOCK = new Type("BLOCK", ModifierSource.VOID);
 
     private final String id;
     private final ModifierSource modifierSource;
+    private final BiFunction<PlayerData, NBTItem, UseItem> interactionProvider;
 
     private String name;
 
@@ -112,13 +120,18 @@ public class Type implements CooldownObject, PreloadedObject {
         onEntityInteract = config.contains("on-entity-interact") ? MythicLib.plugin.getSkills().loadSkillHandler(config.get("on-entity-interact")) : null;
     });
 
-    /**
-     * Hard-coded type with given parameters. Can be used by other plugins
-     * to create types using MMOItems API.
-     */
     public Type(@NotNull String id, @NotNull ModifierSource modifierSource) {
+        this(id, modifierSource, modifierSource.isWeapon() ? Weapon::new : UseItem::new);
+    }
+
+    /**
+     * Hard-coded type with given parameters. Can be used
+     * by other plugins to create types using MMOItems API.
+     */
+    public Type(@NotNull String id, @NotNull ModifierSource modifierSource, @NotNull BiFunction<PlayerData, NBTItem, UseItem> interactionProvider) {
         this.id = UtilityMethods.enumName(id);
         this.modifierSource = modifierSource;
+        this.interactionProvider = interactionProvider;
     }
 
     /**
@@ -128,6 +141,7 @@ public class Type implements CooldownObject, PreloadedObject {
         id = UtilityMethods.enumName(config.getName());
         parent = manager.get(config.getString("parent", "").toUpperCase().replace("-", "_").replace(" ", "_"));
         modifierSource = config.contains("modifier-source") ? ModifierSource.valueOf(UtilityMethods.enumName(config.getString("modifier-source"))) : (parent != null ? parent.modifierSource : ModifierSource.OTHER);
+        interactionProvider = parent.interactionProvider;
     }
 
     public void load(@NotNull ConfigurationSection config) {
@@ -150,6 +164,16 @@ public class Type implements CooldownObject, PreloadedObject {
 
     public boolean isDisplayed() {
         return !hideInGame;
+    }
+
+    @NotNull
+    public UseItem toUseItem(@NotNull Player player, @NotNull NBTItem item) {
+        return toUseItem(PlayerData.get(player), item);
+    }
+
+    @NotNull
+    public UseItem toUseItem(@NotNull PlayerData playerData, @NotNull NBTItem item) {
+        return interactionProvider.apply(playerData, item);
     }
 
     /**

@@ -59,7 +59,7 @@ public class ItemUse implements Listener {
          * animation and are handled there {@link #handleVanillaEatenConsumables(PlayerItemConsumeEvent)}
          */
         final Player player = event.getPlayer();
-        final UseItem useItem = UseItem.getItem(player, item, itemType);
+        final UseItem useItem = itemType.toUseItem(player, item);
         if (useItem instanceof Consumable && ((Consumable) useItem).hasVanillaEating()) return;
 
         // (BUG FIX) Cancel the event to prevent things like shield blocking
@@ -138,7 +138,7 @@ public class ItemUse implements Listener {
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
         if (!item.hasType()) return;
 
-        Tool tool = new Tool(player, item);
+        Tool tool = new Tool(PlayerData.get(player), item);
         if (!tool.checkItemRequirements()) {
             event.setCancelled(true);
             return;
@@ -160,11 +160,11 @@ public class ItemUse implements Listener {
         if (!UtilityMethods.canTarget(player, target, InteractionType.OFFENSE_ACTION)) return;
 
         // Check for usability
-        final UseItem usableItem = UseItem.getItem(player, item, itemType);
+        final UseItem usableItem = itemType.toUseItem(player, item);
         if (!usableItem.checkItemRequirements()) return;
 
         // Apply type-specific entity interactions
-        final SkillHandler onEntityInteract = usableItem.getMMOItem().getType().onEntityInteract();
+        final SkillHandler<?> onEntityInteract = usableItem.getMMOItem().getType().onEntityInteract();
         if (onEntityInteract != null) {
             SpecialWeaponAttackEvent called = new SpecialWeaponAttackEvent(usableItem.getPlayerData(), (Weapon) usableItem, target);
             Bukkit.getPluginManager().callEvent(called);
@@ -183,7 +183,7 @@ public class ItemUse implements Listener {
         final Type type = Type.get(item);
         if (type == null) return;
 
-        final UseItem useItem = UseItem.getItem(player, item, type);
+        final UseItem useItem = type.toUseItem(player, item);
         if (!useItem.checkItemRequirements()) return;
 
         if (useItem instanceof ItemSkin) {
@@ -269,7 +269,7 @@ public class ItemUse implements Listener {
         if (itemType == null) return;
 
         Player player = event.getPlayer();
-        UseItem useItem = UseItem.getItem(player, item, itemType);
+        UseItem useItem = itemType.toUseItem(player, item);
         if (!useItem.checkItemRequirements()) {
             event.setCancelled(true);
             return;

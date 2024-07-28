@@ -138,7 +138,10 @@ public class MMOItems extends MMOPlugin {
             statManager.register(AdvancedEnchantmentsHook.DISABLE_ADVANCED_ENCHANTMENTS);
         });
         PluginUtils.hookDependencyIfPresent("MythicEnchants", u -> enchantPlugins.add(new MythicEnchantsSupport()));
-        PluginUtils.isDependencyPresent("Heroes", u -> statManager.register(HeroesHook.MAX_STAMINA));
+        PluginUtils.isDependencyPresent("Heroes", u -> {
+            statManager.register(HeroesHook.MAX_STAMINA);
+            statManager.register(HeroesHook.REQUIRED_SECONDARY_HERO_LEVEL);
+        });
     }
 
     @Override

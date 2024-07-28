@@ -6,9 +6,6 @@ import io.lumine.mythic.lib.comp.flags.CustomFlag;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Lute;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Musket;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.CommandData;
@@ -123,14 +120,8 @@ public class UseItem {
         return getItem(player, item, Type.get(type));
     }
 
+    @Deprecated
     public static UseItem getItem(@NotNull Player player, @NotNull NBTItem item, @NotNull Type type) {
-        final PlayerData playerData = PlayerData.get(player);
-        if (type.corresponds(Type.CONSUMABLE)) return new Consumable(playerData, item);
-        if (type.corresponds(Type.SKIN)) return new ItemSkin(playerData, item);
-        if (type.corresponds(Type.GEM_STONE)) return new GemStone(playerData, item);
-        if (type.corresponds(Type.MUSKET)) return new Musket(playerData, item);
-        if (type.corresponds(Type.LUTE)) return new Lute(playerData, item);
-
-        return type.isWeapon() ? new Weapon(playerData, item) : new UseItem(playerData, item);
+        return type.toUseItem(PlayerData.get(player), item);
     }
 }

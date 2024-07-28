@@ -83,7 +83,7 @@ public class AuraSkillsHook implements RPGHandler, Listener {
 
         double currentMaxMana = user.getMaxMana();
 
-        if(user.getMana() > currentMaxMana) {
+        if (user.getMana() > currentMaxMana) {
             user.setMana(currentMaxMana);
         }
 
@@ -106,13 +106,13 @@ public class AuraSkillsHook implements RPGHandler, Listener {
     public void a(UserLoadEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.get(player);
-        playerData.setRPGPlayer(new AuraSkillsPlayer(playerData, event.getUser()));
+        playerData.setRPGPlayer(new PlayerWrapper(playerData, event.getUser()));
     }
 
-    public static class AuraSkillsPlayer extends RPGPlayer {
+    private static class PlayerWrapper extends RPGPlayer {
         private final SkillsUser info;
 
-        public AuraSkillsPlayer(PlayerData playerData, SkillsUser rpgPlayerData) {
+        public PlayerWrapper(PlayerData playerData, SkillsUser rpgPlayerData) {
             super(playerData);
 
             info = rpgPlayerData;
@@ -149,7 +149,7 @@ public class AuraSkillsHook implements RPGHandler, Listener {
         }
     }
 
-    public class RequiredProfessionStat extends RequiredLevelStat {
+    private class RequiredProfessionStat extends RequiredLevelStat {
         private final Skill skill;
 
         public RequiredProfessionStat(Skills skill) {
@@ -161,19 +161,17 @@ public class AuraSkillsHook implements RPGHandler, Listener {
 
         @Override
         public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+            final int requirement = item.getInteger(this.getNBTPath());
+            if (requirement <= 0) return true;
 
             final int skillLevel = aSkills.getUser(player.getPlayer().getUniqueId()).getSkillLevel(skill);
-            final int required = item.getInteger("MMOITEMS_REQUIRED_" + skill.name());
+            if (skillLevel >= requirement || player.getPlayer().hasPermission("mmoitems.bypass.level")) return true;
 
-            if (skillLevel < required && !player.getPlayer().hasPermission("mmoitems.bypass.level")) {
-                if (message) {
-                    Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", skill.getDisplayName(Locale.getDefault())).send(player.getPlayer());
-                    player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-                }
-                return false;
+            if (message) {
+                Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", skill.getDisplayName(Locale.getDefault())).send(player.getPlayer());
+                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
             }
-
-            return true;
+            return false;
         }
     }
 }

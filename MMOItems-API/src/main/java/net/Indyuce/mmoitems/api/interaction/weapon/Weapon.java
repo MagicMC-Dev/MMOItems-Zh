@@ -33,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class Weapon extends UseItem {
-
     @Deprecated
     public Weapon(Player player, NBTItem item) {
         this(PlayerData.get(player), item);
@@ -45,13 +44,19 @@ public class Weapon extends UseItem {
 
     @Override
     public boolean checkItemRequirements() {
+
+        // Light checks first
         if (playerData.isEncumbered()) {
             Message.HANDS_TOO_CHARGED.format(ChatColor.RED).send(getPlayer());
             return false;
         }
 
         // Check for class, level... then flags
-        return playerData.getRPG().canUse(getNBTItem(), true) && MythicLib.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MI_WEAPONS);
+        return playerData.getRPG().canUse(getNBTItem(), true) && MythicLib.plugin.getFlags().isFlagAllowed(getPlayer(), getUseFlag());
+    }
+
+    public CustomFlag getUseFlag() {
+        return CustomFlag.MI_WEAPONS;
     }
 
     /**
@@ -233,6 +238,7 @@ public class Weapon extends UseItem {
         return WeaponAttackResult.SUCCESS;
     }
 
+    @Deprecated
     protected Location getGround(Location loc) {
         for (int j = 0; j < 20; j++) {
             if (loc.getBlock().getType().isSolid()) return loc;

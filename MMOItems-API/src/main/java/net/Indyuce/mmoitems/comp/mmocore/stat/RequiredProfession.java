@@ -1,53 +1,37 @@
 package net.Indyuce.mmoitems.comp.mmocore.stat;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.experience.Profession;
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import net.Indyuce.mmoitems.stat.type.ItemRestriction;
+import net.Indyuce.mmoitems.stat.type.RequiredLevelStat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.jetbrains.annotations.NotNull;
 
-public class RequiredProfession extends DoubleStat implements ItemRestriction, GemStoneStat {
+public class RequiredProfession extends RequiredLevelStat {
     private final Profession profession;
 
-    // TODO merge with RequiredLevelStat
     public RequiredProfession(Profession profession) {
-        super("PROFESSION_" + profession.getId().toUpperCase().replace("-", "_"), Material.PINK_DYE, profession.getName() + " Requirement (MMOCore)",
-                new String[]{"Amount of " + profession.getName() + " levels the", "player needs to use the item."}, new String[]{"!block", "all"});
+        super(true, "PROFESSION_" + UtilityMethods.enumName(profession.getId()), Material.PINK_DYE, profession.getName() + " Level (MMOCore)", new String[]{"Amount of " + profession.getName() + " levels the", "player needs to use the item."});
 
         this.profession = profession;
     }
 
     @Override
     public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+        final int requirement = item.getInteger(this.getNBTPath());
+        if (requirement <= 0) return true;
+
         final PlayerData mmocorePlayerData = PlayerData.get(player.getPlayer());
-        if (mmocorePlayerData.getCollectionSkills().getLevel(this.profession) < item.getStat(getId())) {
-            if (message) {
-                Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", profession.getName()).send(player.getPlayer());
-                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-            }
-            return false;
+        if (mmocorePlayerData.getCollectionSkills().getLevel(this.profession) >= requirement) return true;
+
+        if (message) {
+            Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", profession.getName()).send(player.getPlayer());
+            player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
         }
-        return true;
-    }
-
-    @Override
-    @Deprecated
-    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
-
-        // Lore Management
-        int lvl = (int) Math.round(data.getValue());
-        item.getLore().insert(getPath(), DoubleStat.formatPath(getPath(), getGeneralStatFormat(), false, false, lvl));
-
-        // Insert NBT
-        item.addItemTag(getAppliedNBT(data));
+        return false;
     }
 }

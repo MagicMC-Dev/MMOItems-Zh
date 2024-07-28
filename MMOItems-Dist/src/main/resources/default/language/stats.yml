@@ -148,7 +148,7 @@ additional-dexterity: '&3 &7■ 额外敏捷: &f<plus>{value}'
 additional-strength: '&3 &7■ 额外力量: &f<plus>{value}'
 additional-intelligence: '&3 &7■ 额外智慧: &f<plus>{value}'
 
-# Professions
+# MMOCore Professions
 profession-alchemy: '&e炼金等级: &c{value}'
 profession-enchanting: '&e附魔等级: &c{value}'
 profession-farming: '&e农业等级: &c{value}'
@@ -157,6 +157,9 @@ profession-mining: '&e采矿等级: &c{value}'
 profession-smelting: '&e锻造等级: &c{value}'
 profession-smithing: '&e冶炼等级: &c{value}'
 profession-woodcutting: '&e伐木等级: &c{value}'
+
+# Heroes stats
+required-secondary-hero-level: '&e第二英雄要求等级: {value}'
 
 # Elemental Stat Formats
 element:

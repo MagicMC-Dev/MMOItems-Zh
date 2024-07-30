@@ -25,7 +25,7 @@ Official repository for MMOItems Dev-build Premium
 
 [actions-link]: https://github.com/MagicMC-Dev/MMOItems-Zh/actions/workflows/build-apk.yml
 
-[releases]: https://img.shields.io/github/v/release/MagicMC-Dev/MMOItems-Zh?style=for-the-badge
+[releases]: https://img.shields.io/github/v/release/MagicMC-Dev/MMOItems-Zh?include_prereleases&style=for-the-badge
 
 [releases-link]: https://github.com/MagicMC-Dev/MMOItems-Zh/releases
 

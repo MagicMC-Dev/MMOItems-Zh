@@ -20,6 +20,7 @@ import net.Indyuce.mmoitems.api.interaction.projectile.ArrowParticles;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -247,7 +248,7 @@ public class ItemUse implements Listener {
             final ProjectileMetadata proj = ProjectileMetadata.create(playerData.getMMOPlayerData(), bowSlot, ProjectileType.ARROW, event.getProjectile());
             proj.setSourceItem(item);
             proj.setCustomDamage(true);
-            proj.setDamageMultiplier(event.getForce());
+            proj.setDamageMultiplier(MMOUtils.getForce(event));
             if (item.hasTag("MMOITEMS_ARROW_PARTICLES"))
                 new ArrowParticles((AbstractArrow) event.getProjectile(), item);
             final AbstractArrow arrow = (AbstractArrow) event.getProjectile();

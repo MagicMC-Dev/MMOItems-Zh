@@ -8,6 +8,8 @@ import net.Indyuce.mmoitems.api.block.CustomBlock;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
+import java.util.Objects;
+
 public class MMOItemsBlockType implements BlockType {
 	private final int id;
 
@@ -51,5 +53,18 @@ public class MMOItemsBlockType implements BlockType {
 	@Override
 	public boolean breakRestrictions(Block block) {
 		return true;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MMOItemsBlockType that = (MMOItemsBlockType) o;
+		return id == that.id;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

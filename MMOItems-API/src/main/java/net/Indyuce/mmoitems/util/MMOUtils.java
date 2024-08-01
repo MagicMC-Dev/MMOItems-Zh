@@ -7,6 +7,7 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
 import io.lumine.mythic.lib.version.VPotionEffectType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -18,6 +19,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -34,6 +36,12 @@ public class MMOUtils {
 
     public static boolean isColorable(@NotNull Particle particle) {
         return particle.getDataType() == Particle.DustOptions.class;
+    }
+
+    @BackwardsCompatibility(version = "1.21")
+    public static double getForce(@NotNull EntityShootBowEvent event) {
+        final double force = event.getForce();
+        return MythicLib.plugin.getVersion().isUnder(1, 21) ? force : force / 3;
     }
 
     /**

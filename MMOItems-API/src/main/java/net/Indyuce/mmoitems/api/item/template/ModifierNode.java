@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -247,7 +247,6 @@ public class ModifierNode implements PreloadedObject {
         return node;
     }
 
-    @NotNull
     private int rollModifier(@NotNull List<ModifierNode> children) {
 
         // Calculate cumulated weights and total weight

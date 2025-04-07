@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.util;
 
 import net.Indyuce.mmoitems.api.Type;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

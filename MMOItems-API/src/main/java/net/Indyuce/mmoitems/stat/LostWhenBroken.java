@@ -1,16 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.Material;
-
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.stat.data.BooleanData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.Material;
 
 public class LostWhenBroken extends BooleanStat {
 	public LostWhenBroken() {
-		super("WILL_BREAK", Material.SHEARS, "耐久用尽后消失", new String[] { "如果设置为 true，一旦耐久", "度达到 0，该物品就会丢失" }, new String[] { "!block", "all" });
+		super("WILL_BREAK", Material.SHEARS, "耐久用尽后消失?", new String[] {"带有自定义耐久度的物品在耐久度降至0时默认不会破损。", "请开启此选项以使您的物品破损。默认情况下，", "普通物品在耐久度降至0时会破损。请开启此选项以使其保持完好。" }, new String[] { "!block", "all" });
 	}
 }

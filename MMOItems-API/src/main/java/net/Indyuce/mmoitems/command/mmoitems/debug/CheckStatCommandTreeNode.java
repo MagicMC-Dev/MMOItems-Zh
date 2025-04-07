@@ -24,14 +24,14 @@ public class CheckStatCommandTreeNode extends CommandTreeNode {
 			return CommandResult.FAILURE;
 		}
 
-		ItemStat stat = MMOItems.plugin.getStats().get(args[2].toUpperCase().replace("-", "_"));
+		ItemStat<?, ?> stat = MMOItems.plugin.getStats().get(args[2].toUpperCase().replace("-", "_"));
 		if (stat == null) {
 			sender.sendMessage(ChatColor.RED + "Couldn't find the stat called " + args[2].toUpperCase().replace("-", "_") + ".");
 			return CommandResult.FAILURE;
 		}
 
 		Player player = (Player) sender;
-		player.sendMessage("Found stat with ID " + stat.getId() + " = " + PlayerData.get((Player) sender).getStats().getStat(stat));
+		player.sendMessage("Found stat with ID " + stat.getId() + " = " + PlayerData.get((Player) sender).getStat(stat));
 		return CommandResult.SUCCESS;
 	}
 }

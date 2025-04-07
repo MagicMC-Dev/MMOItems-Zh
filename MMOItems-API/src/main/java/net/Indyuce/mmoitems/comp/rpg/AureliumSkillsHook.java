@@ -61,8 +61,7 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
     @EventHandler
     public void a(SkillLevelUpEvent event) {
         OfflinePlayer player = event.getPlayer();
-        if (player.isOnline())
-            PlayerData.get(player).getInventory().scheduleUpdate();
+        if (player.isOnline()) PlayerData.get(player).resolveModifiersLater();
     }
 
     /**
@@ -76,7 +75,7 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
     @Override
     public void refreshStats(PlayerData data) {
-        statExtra.forEach((stat, miStat) -> AureliumAPI.addStatModifier(data.getPlayer(), MODIFIER_KEY_PREFIX + stat.name(), stat, data.getStats().getStat(miStat)));
+        statExtra.forEach((stat, miStat) -> AureliumAPI.addStatModifier(data.getPlayer(), MODIFIER_KEY_PREFIX + stat.name(), stat, data.getStat(miStat)));
     }
 
     @Override

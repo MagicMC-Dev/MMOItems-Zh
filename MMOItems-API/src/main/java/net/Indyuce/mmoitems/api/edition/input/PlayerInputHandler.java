@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.edition.input;
 
 import net.Indyuce.mmoitems.api.edition.Edition;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

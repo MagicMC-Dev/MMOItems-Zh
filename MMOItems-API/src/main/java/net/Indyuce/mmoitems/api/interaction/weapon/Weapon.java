@@ -43,7 +43,7 @@ public class Weapon extends UseItem {
     }
 
     @Override
-    public boolean checkItemRequirements() {
+    public boolean checkItemRequirements(boolean message) {
 
         // Light checks first
         if (playerData.isEncumbered()) {
@@ -52,11 +52,7 @@ public class Weapon extends UseItem {
         }
 
         // Check for class, level... then flags
-        return playerData.getRPG().canUse(getNBTItem(), true) && MythicLib.plugin.getFlags().isFlagAllowed(getPlayer(), getUseFlag());
-    }
-
-    public CustomFlag getUseFlag() {
-        return CustomFlag.MI_WEAPONS;
+        return playerData.getRPG().canUse(getNBTItem(), message) && flagCheck(MMOItems.plugin.getLanguage().weaponFlagChecks, CustomFlag.MI_WEAPONS);
     }
 
     /**
@@ -175,7 +171,7 @@ public class Weapon extends UseItem {
         if (handler == null) return WeaponAttackResult.NO_ATTACK;
 
         // Check for attack effect conditions
-        final SkillMetadata meta = new TriggerMetadata(getPlayerData().getMMOPlayerData(), TriggerType.API).toSkillMetadata(new SimpleSkill(handler));
+        final SkillMetadata meta = new TriggerMetadata(getPlayerData().getMMOPlayerData(), TriggerType.API, actionHand, null, null, null, null, null).toSkillMetadata(new SimpleSkill(handler));
         final SkillResult result = handler.getResult(meta);
         if (!result.isSuccessful()) return WeaponAttackResult.NO_ATTACK;
 
@@ -184,7 +180,6 @@ public class Weapon extends UseItem {
         if (durItem != null && durItem.isBroken()) return WeaponAttackResult.DURABILITY;
 
         // Apply weapon instantaneous costs
-        PlayerMetadata stats = getPlayerData().getStats().newTemporary(actionHand);
         if (!checkWeaponCosts(true)) return WeaponAttackResult.WEAPON_COSTS;
 
         // Check for Bukkit event
@@ -194,7 +189,7 @@ public class Weapon extends UseItem {
 
         // Attack is ready to be performed.
         // Apply weapon costs
-        final double attackDelay = 1 / requireNonZero(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
+        final double attackDelay = 1 / requireNonZero(meta.getCaster().getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
         applyWeaponCosts(attackDelay);
 
         // Apply weapon attack effect
@@ -216,7 +211,7 @@ public class Weapon extends UseItem {
         if (durItem != null && durItem.isBroken()) return WeaponAttackResult.DURABILITY;
 
         // Apply weapon instantaneous costs
-        PlayerMetadata stats = getPlayerData().getStats().newTemporary(actionHand);
+        PlayerMetadata stats = playerData.getMMOPlayerData().getStatMap().cache(actionHand);
         if (!checkWeaponCosts(true)) return WeaponAttackResult.WEAPON_COSTS;
 
         // Check for Bukkit event
@@ -230,8 +225,7 @@ public class Weapon extends UseItem {
         applyWeaponCosts(attackDelay);
 
         // Apply weapon attack effect
-        final PlayerMetadata caster = playerData.getMMOPlayerData().getStatMap().cache(actionHand);
-        ((LegacyWeapon) this).applyAttackEffect(caster, actionHand);
+        ((LegacyWeapon) this).applyAttackEffect(stats, actionHand);
 
         // Apply durability loss
         if (durItem != null) durItem.decreaseDurability(1).updateInInventory();

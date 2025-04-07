@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.crafting.output;
 import io.lumine.mythic.lib.util.configobject.ConfigObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -30,6 +31,8 @@ public class MMOItemRecipeOutput extends RecipeOutput {
 
     @Override
     public ItemStack getPreview() {
-        return template.newBuilder().build().newBuilder().build();
+        ItemStackBuilder builder = template.newBuilder().build().newBuilder();
+        builder.getContext().setTooltip(null);
+        return builder.build();
     }
 }

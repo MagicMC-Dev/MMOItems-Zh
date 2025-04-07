@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang3.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;

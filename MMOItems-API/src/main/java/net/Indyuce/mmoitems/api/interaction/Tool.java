@@ -11,8 +11,10 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.BouncingCrackBlockBreakEvent;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -34,8 +36,16 @@ public class Tool extends Weapon {
     }
 
     @Override
-    public CustomFlag getUseFlag() {
-        return CustomFlag.MI_TOOLS;
+    public boolean checkItemRequirements(boolean message) {
+
+        // Light checks first
+        if (playerData.isEncumbered()) {
+            Message.HANDS_TOO_CHARGED.format(ChatColor.RED).send(getPlayer());
+            return false;
+        }
+
+        // Check for class, level... then flags
+        return playerData.getRPG().canUse(getNBTItem(), message) && flagCheck(MMOItems.plugin.getLanguage().toolFlagChecks, CustomFlag.MI_TOOLS);
     }
 
     private static final BlockFace[] NEIGHBORS = {BlockFace.NORTH, BlockFace.DOWN, BlockFace.EAST, BlockFace.UP, BlockFace.WEST, BlockFace.SOUTH};

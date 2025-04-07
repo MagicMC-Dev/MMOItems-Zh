@@ -18,7 +18,7 @@ import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_Experience;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_HideFromBook;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.BurningRecipeInformation;
 import net.Indyuce.mmoitems.manager.RecipeManager;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

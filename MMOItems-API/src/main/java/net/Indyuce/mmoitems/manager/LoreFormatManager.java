@@ -1,22 +1,18 @@
 package net.Indyuce.mmoitems.manager;
 
+import io.lumine.mythic.lib.util.FileUtils;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.tooltip.TooltipTexture;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
+import net.Indyuce.mmoitems.tooltip.TooltipTexture;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 public class LoreFormatManager implements Reloadable {
     private final Map<String, List<String>> formats = new HashMap<>();
@@ -26,24 +22,22 @@ public class LoreFormatManager implements Reloadable {
         formats.clear();
         tooltips.clear();
 
-        File dir = new File(MMOItems.plugin.getDataFolder() + "/language/lore-formats");
-        for (File file : dir.listFiles())
-            try {
-                YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-                Validate.isTrue(config.isList("lore-format"), "Invalid lore-format! (" + file.getName() + ")");
-                formats.put(file.getName().substring(0, file.getName().length() - 4), config.getStringList("lore-format"));
-            } catch (IllegalArgumentException exception) {
-                MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load layout '" + file.getName() + "': " + exception.getMessage());
-            }
+        // Read lore formats
+        FileUtils.loadObjectsFromFolder(MMOItems.plugin, "language/lore-formats", true, (key, config) -> {
+            Validate.isTrue(config.isList("lore-format"), "Invalid lore-format! (" + key + ")");
+            formats.put(key, config.getStringList("lore-format"));
+        }, "Could not load layout '%s' from file '%s': %s");
 
-        final ConfigurationSection tooltipsConfig = new ConfigFile("tooltips").getConfig();
-        for (String key : tooltipsConfig.getKeys(false))
-            try {
-                final TooltipTexture tooltip = new TooltipTexture(tooltipsConfig.getConfigurationSection(key));
-                tooltips.put(tooltip.getId(), tooltip);
-            } catch (Exception exception) {
-                MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load tooltip '" + key + "': " + exception.getMessage());
-            }
+        // Initialize tooltips folder
+        if (!FileUtils.getFile(MMOItems.plugin, "tooltips").exists()) {
+            FileUtils.copyDefaultFile(MMOItems.plugin, "tooltips/example_tooltips.yml");
+        }
+
+        // Load tooltips
+        FileUtils.loadObjectsFromFolder(MMOItems.plugin, "tooltips", false, (name, config) -> {
+            final TooltipTexture tooltip = new TooltipTexture(config);
+            tooltips.put(tooltip.getId(), tooltip);
+        }, "Could not load tooltip '%s' from file '%s': %s");
     }
 
     public boolean hasFormat(@NotNull String id) {

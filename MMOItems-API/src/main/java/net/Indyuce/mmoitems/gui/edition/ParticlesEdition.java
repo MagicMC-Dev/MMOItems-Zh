@@ -3,18 +3,17 @@ package net.Indyuce.mmoitems.gui.edition;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.gui.Navigator;
+import io.lumine.mythic.lib.player.particle.ParticleEffectType;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,9 +41,9 @@ public class ParticlesEdition extends EditionInventory {
         int[] slots = {37, 38, 39, 40, 41, 42, 43};
         int n = 0;
 
-        @Nullable ParticleType particleType = null;
+        @Nullable ParticleEffectType particleType = null;
         try {
-            particleType = ParticleType.valueOf(getEditedSection().getString("item-particles.type"));
+            particleType = ParticleEffectType.get(getEditedSection().getString("item-particles.type"));
         } catch (Exception ignored) {
         }
 
@@ -57,7 +56,7 @@ public class ParticlesEdition extends EditionInventory {
         particleTypeItemLore.add(ChatColor.GRAY + "形成的形状.");
         particleTypeItemLore.add("");
         particleTypeItemLore.add(ChatColor.GRAY + "当前值: "
-                + (particleType == null ? ChatColor.RED + "未选择类型." : ChatColor.GOLD + particleType.getDefaultName()));
+                + (particleType == null ? ChatColor.RED + "未选择类型." : ChatColor.GOLD + particleType.getName()));
         if (particleType != null) {
             particleTypeItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + particleType.getDescription());
         }
@@ -79,7 +78,7 @@ public class ParticlesEdition extends EditionInventory {
                 modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "调整粒子模式.");
                 modifierItemLore.add("");
                 modifierItemLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD
-                        + (psection.contains(modifier) ? psection.getDouble(modifier) : particleType.getModifier(modifier)));
+                        + (psection.contains(modifier) ? psection.getDouble(modifier) : particleType.getDefaultModifierValue(modifier)));
                 modifierItemMeta.setLore(modifierItemLore);
                 modifierItemMeta.getPersistentDataContainer().set(PATTERN_MODIFIED_KEY, PersistentDataType.STRING, modifier);
                 modifierItem.setItemMeta(modifierItemMeta);
@@ -184,8 +183,8 @@ public class ParticlesEdition extends EditionInventory {
                 new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle-type").enable("在聊天栏中输入您想要的粒子模式");
                 player.sendMessage("");
                 player.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "可用的粒子模式");
-                for (ParticleType type : ParticleType.values())
-                    player.sendMessage("* " + ChatColor.GREEN + type.name());
+                for (ParticleEffectType type : ParticleEffectType.getAll())
+                    player.sendMessage("* " + ChatColor.GREEN + type.getId());
             }
 
             if (event.getAction() == InventoryAction.PICKUP_HALF) {

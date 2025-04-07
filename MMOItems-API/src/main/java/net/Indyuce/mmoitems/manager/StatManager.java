@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.stat.annotation.HasCategory;
 import net.Indyuce.mmoitems.stat.category.StatCategory;
 import net.Indyuce.mmoitems.stat.type.*;
 import net.Indyuce.mmoitems.util.ElementStatType;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;

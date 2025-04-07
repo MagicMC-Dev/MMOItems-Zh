@@ -22,7 +22,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -88,22 +87,6 @@ public class DisableInteractions implements Listener {
     @EventHandler
     public void furnaceInteractions(FurnaceSmeltEvent event) {
         if (isDisabled(NBTItem.get(event.getSource()), "smelt"))
-            event.setCancelled(true);
-    }
-
-    /**
-     * Disables both click interactions if the corresponding
-     * option was found on the item
-     * <p>
-     * Also prevents interactions with UNIDENTIFIED items
-     */
-    @EventHandler(priority = EventPriority.LOW)
-    public void clickInteractions(PlayerInteractEvent event) {
-        if (!event.hasItem())
-            return;
-
-        NBTItem item = NBTItem.get(event.getItem());
-        if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION") || item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM"))
             event.setCancelled(true);
     }
 

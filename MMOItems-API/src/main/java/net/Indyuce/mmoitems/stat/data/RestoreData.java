@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.stat.data;
 
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 
 public class RestoreData implements StatData, Mergeable<RestoreData> {

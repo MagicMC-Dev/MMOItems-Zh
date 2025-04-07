@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.api.crafting.output;
 
 import io.lumine.mythic.lib.util.configobject.ConfigObject;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import io.th0rgal.oraxen.api.OraxenItems;
 import io.th0rgal.oraxen.items.ItemBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 

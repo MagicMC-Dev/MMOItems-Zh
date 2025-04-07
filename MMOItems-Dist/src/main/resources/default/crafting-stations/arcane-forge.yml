@@ -12,9 +12,11 @@ max-queue-size: 10
 # 这是可选的。自定义打开UI的命令
 # 删除这个config的部分以禁用。
 #
-# 除非是一些高端的特权，否则我们不建议使用这个。
-# 使用 NPC 的 /mi stations open <station> <player> 命令在游戏玩法上效果更好
-# 
+# 这些命令有已知的限制。如果您更改命令名称或移除制作站，
+# 则需要重新启动服务器以注销或移除未使用或之前的命令，
+# 因为Bukkit不允许在服务器运行时注销命令。除非这是一个高端特权，
+# 否则我们不建议使用这一功能；从游戏玩法的角度来看，
+# 通常使用来自NPC的`/mi stations open <station> <player>`命令会更有效。
 command:
   name: 'arcaneforge'                                   # 命令本身
   description: 'Open the arcane forge'                  # 命令描述
@@ -146,6 +148,12 @@ gui-layout:
       function: recipe
       slots: [ 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25 ]
       delay_format: 'smhdMy'
+      #delay_format:
+      #  format: 'smhdMy' # Format of time left
+      #  threshold: '<1 second' # When the time left is less than 1 second
+      #  each: '%s%s ' # First %s is for the amount, second %s is for the unit
+      #  translate: 'sec min hours days months years' # Translation of the units
+      #  #translate: 'smhdMy' #This format works too
 
       # 如何展示制作配方
       craft:
@@ -160,7 +168,7 @@ gui-layout:
           - '{ingredients}&8配方:'
           - '{lore}'
           - ''
-          - '&e► 左键点击制作！
+          - '&e► 左键点击制作！'
           - '&e► 右键单击预览！'
 
       # 如何显示升级配方
@@ -176,12 +184,12 @@ gui-layout:
           - '&e► 左键点击升级！'
           - '&e► 右键单击预览！'
 
-      当没有配方时
+      # 当没有配方时
       none:
         item: GRAY_STAINED_GLASS_PANE # Can be set to AIR
         name: '&6没有配方'
 
-如果你在之前的UI布局配置中关闭了`enable_right_click_preview`选项，可以完全删除这个配置部分。
+# 如果你在之前的UI布局配置中关闭了`enable_right_click_preview`选项，可以完全删除这个配置部分。
 preview-gui-layout:
   name: '预览'
   slots: 45

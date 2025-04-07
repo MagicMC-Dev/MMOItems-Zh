@@ -20,7 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class Consumable extends UseItem {
@@ -35,8 +34,8 @@ public class Consumable extends UseItem {
     }
 
     @Override
-    public boolean checkItemRequirements() {
-        return MythicLib.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_CONSUMABLES) && playerData.getRPG().canUse(getNBTItem(), true);
+    public boolean checkItemRequirements(boolean message) {
+        return playerData.getRPG().canUse(getNBTItem(), message) && flagCheck(MMOItems.plugin.getLanguage().consumableFlagChecks, CustomFlag.MI_CONSUMABLES);
     }
 
     /**
@@ -93,7 +92,7 @@ public class Consumable extends UseItem {
             // Decrease amount of uses
             if (usesLeft > 1) {
 
-                // TODO weird MI7 stuff to fix using PDC's
+                // TODO weird MI7 stuff to fix when switching to using PDC's
                 ItemStack oldItem = nbtItem.getItem();
                 oldItem.setItemMeta(oldItem.getItemMeta().clone());
 
@@ -104,7 +103,7 @@ public class Consumable extends UseItem {
                 final String format = MythicLib.inst().parseColors(ItemStats.MAX_CONSUME.getGeneralStatFormat());
                 final String old = format.replace("{value}", String.valueOf(usesLeft + 1));
                 final String replaced = format.replace("{value}", String.valueOf(usesLeft));
-                ItemStack newItem = new LoreUpdate(nbtItem.toItem(), old, replaced).updateLore();
+                ItemStack newItem = new LoreUpdate(nbtItem.toItem(), null, nbtItem, old, replaced).updateLore();
 
                 // This fixes the issue when players right click stacked consumables
                 if (oldItem.getAmount() > 1) {

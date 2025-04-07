@@ -15,22 +15,6 @@
     <!-- Dependencies -->
     <dependencies>
 
-        <!-- Paper API -->
-        <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.21.1-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>com.mojang</groupId>
-                    <artifactId>brigadier</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- MMOItems API -->
         <dependency>
             <groupId>net.Indyuce</groupId>

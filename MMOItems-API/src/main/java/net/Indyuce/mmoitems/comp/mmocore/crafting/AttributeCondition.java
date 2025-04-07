@@ -5,7 +5,7 @@ import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 
 public class AttributeCondition extends Condition {
     private final PlayerAttribute attribute;

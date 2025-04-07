@@ -98,7 +98,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
         MMOItems.plugin.getCrafting().reload();
         sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded the crafting stations..");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-                + MMOItems.plugin.getCrafting().getAll().size() + ChatColor.GRAY + " Crafting Stations");
+                + MMOItems.plugin.getCrafting().getStations().size() + ChatColor.GRAY + " Crafting Stations");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
                 + MMOItems.plugin.getCrafting().countRecipes() + ChatColor.GRAY + " Recipes");
     }

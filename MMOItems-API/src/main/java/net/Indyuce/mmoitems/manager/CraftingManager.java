@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.manager;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.util.FileUtils;
 import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
 import io.lumine.mythic.lib.util.configobject.ConfigObject;
 import io.lumine.mythic.lib.util.configobject.ConfigSectionObject;
@@ -10,6 +11,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
+import net.Indyuce.mmoitems.api.crafting.CraftingStationCommand;
 import net.Indyuce.mmoitems.api.crafting.LoadedCraftingObject;
 import net.Indyuce.mmoitems.api.crafting.condition.*;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
@@ -23,11 +25,10 @@ import net.Indyuce.mmoitems.api.crafting.output.MMOItemRecipeOutput;
 import net.Indyuce.mmoitems.api.crafting.output.RecipeOutput;
 import net.Indyuce.mmoitems.api.crafting.output.VanillaRecipeOutput;
 import net.Indyuce.mmoitems.api.crafting.trigger.*;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -45,6 +46,7 @@ public class CraftingManager implements Reloadable {
     private final Map<String, LoadedCraftingObject<Trigger>> triggers = new HashMap<>();
 
     private final Map<String, CraftingStation> stations = new HashMap<>();
+    private final Map<String, CraftingStationCommand> stationCommands = new HashMap<>();
 
     public CraftingManager() {
 
@@ -76,6 +78,7 @@ public class CraftingManager implements Reloadable {
     public void reload() {
         stations.clear();
 
+        // Load language files
         ConfigFile language = new ConfigFile("/language", "crafting-stations");
 
         for (LoadedCraftingObject<Condition> condition : getConditions()) {
@@ -101,15 +104,11 @@ public class CraftingManager implements Reloadable {
         language.save();
 
         // Initialize crafting stations
-        for (File file : new File(MMOItems.plugin.getDataFolder() + "/crafting-stations").listFiles())
-            try {
-                CraftingStation station = new CraftingStation(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file));
-                stations.put(station.getId(), station);
-            } catch (RuntimeException exception) {
-                MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load station '" + file.getName() + "': " + exception.getMessage());
-            }
+        FileUtils.loadObjectsFromFolder(MMOItems.plugin, "crafting-stations", true, (name, config) -> {
+            registerStation(new CraftingStation(name, config));
+        }, "Could not load crafting station '%s': %s");
 
-        // Load crafting stations
+        // Post-load crafting stations
         for (CraftingStation station : stations.values())
             try {
                 station.getPostLoadAction().performAction();
@@ -117,6 +116,9 @@ public class CraftingManager implements Reloadable {
                 MMOItems.plugin.getLogger().log(Level.SEVERE,
                         "Could not post-load station '" + station.getId() + "': " + exception.getMessage());
             }
+
+        // Reload crafting station commands
+        reloadStationCommands();
     }
 
     public int countRecipes() {
@@ -124,6 +126,36 @@ public class CraftingManager implements Reloadable {
         for (CraftingStation station : stations.values())
             t += station.getRecipes().size();
         return t;
+    }
+
+    /**
+     * The problem is that Bukkit does not allow to unregister
+     * commands when the plugin is running.
+     */
+    private void reloadStationCommands() {
+
+        for (CraftingStationCommand entry : stationCommands.values()) {
+            CraftingStation candidate = entry.getStation() != null ? getStation(entry.getStation().getId()) : null;
+            if (candidate != null) entry.updateStation(candidate);
+            else {
+                entry.updateStation(null);
+                MMOItems.plugin.getLogger().log(Level.WARNING, String.format("Crafting station command '%s' is left hanging. Please restart your server to remove it.", entry.getName()));
+            }
+        }
+    }
+
+    public void registerStation(@NotNull CraftingStation station) {
+        stations.put(station.getId(), station);
+
+        // Command
+        if (station.getCommand() != null) {
+            CraftingStationCommand existingCommand = stationCommands.get(station.getCommand().getName());
+            if (existingCommand != null) existingCommand.updateStation(station);
+            else {
+                stationCommands.put(station.getCommand().getName(), station.getCommand());
+                Bukkit.getCommandMap().register(MMOItems.plugin.getName(), station.getCommand());
+            }
+        }
     }
 
     public boolean hasStation(String id) {
@@ -279,6 +311,11 @@ public class CraftingManager implements Reloadable {
         triggers.put(obj.getId(), obj);
     }
 
+    /**
+     * @see #getStations()
+     * @deprecated
+     */
+    @Deprecated
     public Collection<CraftingStation> getAll() {
         return stations.values();
     }

@@ -1,8 +1,10 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import io.lumine.mythic.lib.version.Sounds;
 import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;
@@ -17,9 +19,9 @@ import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -53,7 +55,9 @@ public class UpgradingRecipe extends Recipe {
 			return false;
 
 		// Update item
-		recipe.getUpgradeData().upgrade(recipe.getMMOItem());
+		@Nullable UpgradeTemplate template = recipe.getUpgradeData().getTemplate();
+		Validate.notNull(template, "Could not find upgrade template");
+		template.upgrade(recipe.getMMOItem());
 		recipe.getUpgraded().setItemMeta(recipe.getMMOItem().newBuilder().build().getItemMeta());
 
 		Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(recipe.getUpgraded())).send(data.getPlayer());

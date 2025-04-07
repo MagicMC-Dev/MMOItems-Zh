@@ -56,14 +56,23 @@ public class UseItem {
         return mmoitem.getNBT().getItem();
     }
 
+    public boolean checkItemRequirements() {
+        return checkItemRequirements(true);
+    }
+
+    protected boolean flagCheck(boolean flagCheck, CustomFlag customFlag) {
+        // Performance option, WG flags can sometimes be expensive in performance
+        return !flagCheck || MythicLib.plugin.getFlags().isFlagAllowed(getPlayer(), customFlag);
+    }
+
     /**
      * Apply item costs and requirements. This method should be overriden to
      * check for WorldGuard flags as well as the two-handed restriction.
      *
      * @return If the item can be used
      */
-    public boolean checkItemRequirements() {
-        return playerData.getRPG().canUse(mmoitem.getNBT(), true);
+    public boolean checkItemRequirements(boolean message) {
+        return playerData.getRPG().canUse(mmoitem.getNBT(), message);
     }
 
     /**
@@ -71,7 +80,7 @@ public class UseItem {
      * this does NOT check for the command cooldown.
      */
     public void executeCommands() {
-        if (MythicLib.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_COMMANDS) && mmoitem.hasData(ItemStats.COMMANDS))
+        if (mmoitem.hasData(ItemStats.COMMANDS) && flagCheck(MMOItems.plugin.getLanguage().commandFlagChecks, CustomFlag.MI_COMMANDS))
             ((CommandListData) mmoitem.getData(ItemStats.COMMANDS)).getCommands().forEach(this::scheduleCommandExecution);
     }
 

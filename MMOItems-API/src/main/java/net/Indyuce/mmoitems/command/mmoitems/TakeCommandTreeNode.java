@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.command.api.Parameter;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

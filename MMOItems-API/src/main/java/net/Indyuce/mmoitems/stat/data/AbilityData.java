@@ -14,7 +14,7 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -33,12 +33,12 @@ import java.util.Set;
  */
 public class AbilityData extends Skill {
     private final RegisteredSkill ability;
+    private final TriggerType triggerType;
     @NotNull
     private final Map<String, Double> modifiers = new HashMap<>();
 
     public AbilityData(@NotNull JsonObject object) {
-        super(MMOUtils.backwardsCompatibleTriggerType(object.get("CastMode").getAsString()));
-
+        triggerType = MMOUtils.backwardsCompatibleTriggerType(object.get("CastMode").getAsString());
         ability = MMOItems.plugin.getSkills().getSkill(object.get("Id").getAsString());
 
         JsonObject modifiers = object.getAsJsonObject("Modifiers");
@@ -46,10 +46,9 @@ public class AbilityData extends Skill {
     }
 
     public AbilityData(@NotNull ConfigurationSection config) {
-        super(MMOUtils.backwardsCompatibleTriggerType(UtilityMethods.enumName(Objects.requireNonNull(config.getString("mode"), "Ability is missing mode"))));
-
         Validate.isTrue(config.contains("type"), "Ability is missing type");
 
+        triggerType = MMOUtils.backwardsCompatibleTriggerType(UtilityMethods.enumName(Objects.requireNonNull(config.getString("mode"), "Ability is missing mode")));
         String abilityFormat = UtilityMethods.enumName(config.getString("type"));
         Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(abilityFormat), "Could not find ability called '" + abilityFormat + "'");
         ability = MMOItems.plugin.getSkills().getSkill(abilityFormat);
@@ -60,13 +59,17 @@ public class AbilityData extends Skill {
     }
 
     public AbilityData(RegisteredSkill ability, TriggerType triggerType) {
-        super(triggerType);
-
+        this.triggerType = triggerType;
         this.ability = ability;
     }
 
     public RegisteredSkill getAbility() {
         return ability;
+    }
+
+    @Override
+    public TriggerType getTrigger() {
+        return triggerType;
     }
 
     public Set<String> getModifiers() {

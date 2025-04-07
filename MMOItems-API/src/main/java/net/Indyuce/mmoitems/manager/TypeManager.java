@@ -4,7 +4,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;

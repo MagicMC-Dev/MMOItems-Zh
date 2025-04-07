@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.md_5.bungee.api.ChatColor;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

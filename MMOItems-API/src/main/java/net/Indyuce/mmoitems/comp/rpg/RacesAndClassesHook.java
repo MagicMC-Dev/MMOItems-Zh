@@ -16,7 +16,7 @@ public class RacesAndClassesHook implements RPGHandler, Listener {
     public void refreshStats(PlayerData data) {
         RaCPlayer info = RaCPlayerManager.get().getPlayer(data.getPlayer());
         info.getManaManager().removeMaxManaBonus("MMOItems");
-        info.getManaManager().addMaxManaBonus("MMOItems", data.getStats().getStat(ItemStats.MAX_MANA));
+        info.getManaManager().addMaxManaBonus("MMOItems", data.getStat(ItemStats.MAX_MANA));
     }
 
     @Override
@@ -30,12 +30,12 @@ public class RacesAndClassesHook implements RPGHandler, Listener {
      */
     @EventHandler
     public void a(LevelUpEvent event) {
-        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+        PlayerData.get(event.getPlayer()).resolveModifiersLater();
     }
 
     @EventHandler
     public void b(LevelDownEvent event) {
-        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+        PlayerData.get(event.getPlayer()).resolveModifiersLater();
     }
 
     public static class RacePlayer extends RPGPlayer {

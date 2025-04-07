@@ -5,7 +5,7 @@ import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.random.UpdatableRandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 

@@ -5,7 +5,7 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;

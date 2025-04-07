@@ -13,6 +13,7 @@ import io.lumine.mythic.lib.skill.SimpleSkill;
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.SpecialWeaponAttackEvent;
 import net.Indyuce.mmoitems.api.interaction.*;
@@ -47,11 +48,33 @@ public class ItemUse implements Listener {
 
     @EventHandler
     public void rightClickEffects(PlayerInteractEvent event) {
-        if (!event.hasItem())
-            // || event.getHand() != EquipmentSlot.HAND
-            return;
 
-        final NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
+        final NBTItem item = NBTItem.get(event.getItem());
+
+        // PlayerInteracts cancellability are a little bit trickier
+        if (event.useItemInHand() == Event.Result.DENY) return;
+
+        /*
+         * Disables both clicks if corresponding option is found on the item.
+         * Also disabled interactions with unidentified items.
+         *
+         * This does NOT prevent further MMOItems interactions, which is why this
+         * flag set is located here and not in another event listener.
+         */
+        if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION") || item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM"))
+            event.setUseItemInHand(Event.Result.DENY);
+
+        // [WTF BUKKIT] Ignore interacts that are due to pressing Q (dropping items)
+        final PlayerData playerData = PlayerData.get(event.getPlayer());
+        if (playerData.getMMOPlayerData().lastDrop + 50 > System.currentTimeMillis()) return;
+
+        // [WTF BUKKIT] When hitting entities, `event.getItem()` is set to `null`
+        ItemStack eventItem;
+        if (event.hasItem()) eventItem = event.getItem();
+        else if (event.getHand() != null) eventItem = event.getPlayer().getInventory().getItem(event.getHand());
+        else return;
+        if (UtilityMethods.isAir(eventItem)) return;
+
         final Type itemType = Type.get(item);
         if (itemType == null) return;
 
@@ -60,10 +83,19 @@ public class ItemUse implements Listener {
          * animation and are handled there {@link #handleVanillaEatenConsumables(PlayerItemConsumeEvent)}
          */
         final Player player = event.getPlayer();
-        final UseItem useItem = itemType.toUseItem(player, item);
-        if (useItem instanceof Consumable && ((Consumable) useItem).hasVanillaEating()) return;
+        final UseItem useItem = itemType.toUseItem(playerData, item);
+        if (useItem instanceof Consumable) {
 
-        // (BUG FIX) Cancel the event to prevent things like shield blocking
+            // Vanilla eating is handled within another event
+            if (((Consumable) useItem).hasVanillaEating()) return;
+
+            // Disable clicks on interactable blocks
+            if (event.hasBlock()
+                    && MMOItems.plugin.getLanguage().disableConsumableBlockClicks
+                    && MMOUtils.isInteractable(event.getClickedBlock())) return;
+        }
+
+        // Disable most interactions (shield blocking, eating...)
         if (!useItem.checkItemRequirements()) {
             event.setUseItemInHand(Event.Result.DENY);
             return;
@@ -160,9 +192,14 @@ public class ItemUse implements Listener {
         final LivingEntity target = (LivingEntity) event.getRightClicked();
         if (!UtilityMethods.canTarget(player, target, InteractionType.OFFENSE_ACTION)) return;
 
-        // Check for usability
+        /*
+         * Checks for usability
+         *
+         * This is actually a silent check, because Spigot always calls PlayerInteractEvent at the same
+         * time. If the item is not usable, this event will already send a message. Fixes MMOItems#1680
+         */
         final UseItem usableItem = itemType.toUseItem(player, item);
-        if (!usableItem.checkItemRequirements()) return;
+        if (!usableItem.checkItemRequirements(false)) return;
 
         // Apply type-specific entity interactions
         final SkillHandler<?> onEntityInteract = usableItem.getMMOItem().getType().onEntityInteract();

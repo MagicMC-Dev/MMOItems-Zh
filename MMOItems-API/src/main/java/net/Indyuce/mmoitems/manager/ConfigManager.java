@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
@@ -10,7 +11,6 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.util.LanguageFile;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -43,6 +43,8 @@ public class ConfigManager implements Reloadable {
 
     // Cached config options
     public boolean replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate, opStatsEnabled, disableRemovedItems;
+    public boolean disableConsumableBlockClicks, weaponFlagChecks, consumableFlagChecks, toolFlagChecks, commandFlagChecks;
+    public int itemDurabilityLossCap;
     public double soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
     public NumericStatFormula defaultItemCapacity;
     public ReforgeOptions revisionOptions, gemRevisionOptions, phatLootsOptions;
@@ -174,6 +176,13 @@ public class ConfigManager implements Reloadable {
         levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
         disableRemovedItems = MMOItems.plugin.getConfig().getBoolean("disable-removed-items");
         defaultTierName = MMOItems.plugin.getConfig().getString("default-tier-name");
+        disableConsumableBlockClicks = MMOItems.plugin.getConfig().getBoolean("consumables.disable_clicks_on_blocks");
+        itemDurabilityLossCap = MMOItems.plugin.getConfig().getInt("durability.loss_cap");
+
+        commandFlagChecks = MMOItems.plugin.getConfig().getBoolean("enable_flag_checks.commands");
+        weaponFlagChecks = MMOItems.plugin.getConfig().getBoolean("enable_flag_checks.weapons");
+        consumableFlagChecks = MMOItems.plugin.getConfig().getBoolean("enable_flag_checks.consumables");
+        toolFlagChecks = MMOItems.plugin.getConfig().getBoolean("enable_flag_checks.tools");
 
         NumericStatFormula.RELATIVE_SPREAD = !MMOItems.plugin.getConfig().getBoolean("additive-spread-formula", false);
 

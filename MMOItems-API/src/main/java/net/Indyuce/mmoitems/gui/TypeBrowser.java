@@ -29,7 +29,7 @@ public class TypeBrowser extends MMOItemsInventory {
 
     private static final int[] SLOTS = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
     private static final NamespacedKey TYPE_ID_KEY = new NamespacedKey(MMOItems.plugin, "type_id");
-    private static final String CUSTOM_RP_DOWNLOAD_LINK = "https://www.dropbox.com/s/90w9pvdbfeyxu94/MICustomBlockPack.zip?dl=1";
+    private static final String CUSTOM_RP_DOWNLOAD_LINK = "https://gitlab.com/phoenix-dvpmt/mmoitems-default-resource-pack/-/archive/main/mmoitems-default-resource-pack-main.zip";
 
     public TypeBrowser(Navigator navigator) {
         super(navigator);

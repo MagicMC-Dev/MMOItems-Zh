@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.api.interaction.util;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.api.event.item.VanillaDurabilityDamage;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
+import io.lumine.mythic.lib.util.lang3.Validate;
+import net.Indyuce.mmoitems.ItemStats;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -43,12 +43,28 @@ public class VanillaDurabilityItem extends DurabilityItem {
     }
 
     @Override
+    public void updateInInventory(@NotNull PlayerItemDamageEvent event) {
+
+        // Just skip if the item is not broken. Useless performance hit.
+        if (!isBroken()) return;
+
+        super.updateInInventory(event);
+    }
+
+    @Override
     public boolean isBroken() {
         return damage >= maxDamage;
     }
 
+    @Deprecated
     public boolean wouldBreak(int extraDamage) {
         return damage + extraDamage >= maxDamage;
+    }
+
+    @Override
+    public boolean isLostWhenBroken() {
+        // [BACKWARDS COMPATIBILITY] The opposite of custom durability, to mimic vanilla behaviour.
+        return !nbtItem.getBoolean(ItemStats.WILL_BREAK.getNBTPath());
     }
 
     @Override
@@ -69,14 +85,6 @@ public class VanillaDurabilityItem extends DurabilityItem {
 
     @Override
     public void onDurabilityDecrease(int loss) {
-
-        if (player != null) {
-            VanillaDurabilityDamage called = new VanillaDurabilityDamage(this, loss);
-            Bukkit.getPluginManager().callEvent(called);
-            if (called.isCancelled()) return;
-            loss = called.getDamage();
-        }
-
         damage += loss;
     }
 }

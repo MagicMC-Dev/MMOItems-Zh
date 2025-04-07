@@ -18,8 +18,8 @@ public class YAMLDataHandler extends YAMLSynchronizedDataHandler<PlayerData, Def
 
     @Override
     public void saveInSection(PlayerData playerData, ConfigurationSection config) {
+        //config.set("permissions-from-items", new ArrayList<>(playerData.getInventory().getPermissions()));
         config.createSection("crafting-queue");
-        config.set("permissions-from-items", new ArrayList<>(playerData.getPermissions()));
         playerData.getCrafting().save(config.getConfigurationSection("crafting-queue"));
     }
 

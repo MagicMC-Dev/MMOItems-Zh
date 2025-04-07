@@ -15,7 +15,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
  */
 public class BiomeChangeListener implements Listener {
 
-
     /**
      * This listener goal is to update the player inventory when he changes biome.
      *
@@ -27,7 +26,6 @@ public class BiomeChangeListener implements Listener {
             return;
         final Biome lastBiome = e.getFrom().getBlock().getBiome();
         final Biome biome = e.getTo().getBlock().getBiome();
-        if (biome != lastBiome)
-            PlayerData.get(e.getPlayer()).getInventory().scheduleUpdate();
+        if (biome != lastBiome) PlayerData.get(e.getPlayer()).resolveModifiersLater();
     }
 }

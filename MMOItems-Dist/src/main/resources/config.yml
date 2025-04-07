@@ -36,7 +36,34 @@ inventory-update-delay: 10
 # 物品等级始终在区间 [玩家等级 - spread, 玩家等级 + spread] 中。
 item-level-spread: 2
 
-# 当前存在客户端Minecraft的问题，左键点击会导致
+# 使用WorldGuard时，这些标志检查有时可能会消耗性能。
+# 如果您正在运行WorldGuard但未使用这些标志中的某些，
+# 您可以在此处关闭检查以提高性能。有关WorldGuard标志的更多信息：
+# https://gitlab.com/phoenix-dvpmt/mythiclib/-/wikis/Plugin-Compatibility#flag-plugins
+enable_flag_checks:
+    commands: true
+    weapons: true
+    consumables: true
+    tools: true
+
+consumables:
+
+    # 默认情况下为关闭状态。当设置为真时，如果玩家正在查看可交互的方块（箱子、工作台等），
+    # 右键单击可消耗物品将不会消耗它。仅在 Spigot 1.21 及以上版本可用。
+    disable_clicks_on_blocks: false
+
+durability:
+
+    # 盔甲耐久度的扣除如下：
+    # 玩家承受每4点伤害时，物品会损失1点耐久度。
+    # 一次性扣除的耐久度没有上限。虽然这在原版Minecraft中是可以接受的，
+    # 但在进行超级炫酷的技能，造成大量伤害时，盔甲部件可能会在一次攻击中被破坏，
+    # 从而导致严重的游戏问题。此选项限制一次性损失的耐久度。
+    # 将其设置为0以禁用此选项。默认情况下禁用此选项，以不干扰默认的原版行为。
+    # 关于在Minecraft维基上执行特定操作时损失多少耐久度的信息： https://minecraft.fandom.com/wiki/Durability
+    loss_cap: 0
+
+# 目前存在一个客户端Minecraft问题，即左键单击一个
 fix-left-click-interact: false
 
 # 没有层的项目将使用此层名称作为其默认层名称。
@@ -51,7 +78,7 @@ default-item-capacity:
 
 # 更改某些属性的默认值。这主要用于没有特定目标的武器，如法杖、步枪等。
 default:
-    attack-speed: 0.67
+    attack-speed: 0.67 # For legacy ranged weapons only (lutes and muskets...). Will be removed in the future
     range: 16
     recoil: 0.1
 

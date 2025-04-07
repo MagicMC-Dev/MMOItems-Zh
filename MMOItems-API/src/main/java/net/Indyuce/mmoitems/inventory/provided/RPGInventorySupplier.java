@@ -1,24 +1,46 @@
-package net.Indyuce.mmoitems.comp.inventory;
+package net.Indyuce.mmoitems.inventory.provided;
 
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import net.Indyuce.mmoitems.inventory.InventorySupplier;
+import net.Indyuce.mmoitems.inventory.InventoryWatcher;
+import net.Indyuce.mmoitems.inventory.ItemUpdate;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.rpginventory.api.InventoryAPI;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
-/**
- * Tells MMOItems where to find additional equipment.
- * <p></p>
- * RPGInventory stuff - Passive Items
- */
+public class RPGInventorySupplier implements InventorySupplier {
+
+    @NotNull
+    @Override
+    public InventoryWatcher supply(@NotNull PlayerData playerData) {
+        return new Watcher(playerData);
+    }
+
+    private static class Watcher implements InventoryWatcher {
+        private final PlayerData playerData;
+
+        public Watcher(PlayerData playerData) {
+            this.playerData = playerData;
+        }
+
+        @Override
+        public void watchAll(@NotNull Consumer<ItemUpdate> callback) {
+
+        }
+
+        @Override
+        public ItemUpdate watchSingle(@NotNull EquipmentSlot slot, int index, @NotNull Optional<ItemStack> newItem) {
+            throw new RuntimeException("TODO");
+        }
+    }
+}
+
+/*
+
+@Deprecated
 public class RPGInventoryHook implements PlayerInventory, Listener {
 
     @Override
@@ -52,3 +74,5 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
         }
     }
 }
+
+ */

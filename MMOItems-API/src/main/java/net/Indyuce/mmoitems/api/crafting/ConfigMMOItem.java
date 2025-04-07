@@ -1,11 +1,12 @@
 package net.Indyuce.mmoitems.api.crafting;
 
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -54,12 +55,19 @@ public class ConfigMMOItem {
 		return template;
 	}
 
-	/**
-	 * Result from this method is cached.
-	 */
-	public ItemStack getPreview() {
-		return preview == null ? (preview = new MMOItemBuilder(template, 0, null, true).build().newBuilder().build(true)).clone() : preview.clone();
-	}
+    /**
+     * Result from this method is cached.
+     */
+    public ItemStack getPreview() {
+
+        if (preview == null) {
+            ItemStackBuilder builder = new MMOItemBuilder(template, 0, null, true).build().newBuilder();
+			builder.getContext().setTooltip(null);
+            preview = builder.build();
+        }
+
+        return preview.clone();
+    }
 
 	public int getAmount() { return amount; }
 }

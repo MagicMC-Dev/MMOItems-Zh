@@ -421,3 +421,42 @@ YANISDARK_SWORD:
       - §e特别礼物，
       - §2永不损坏，比你还持久。
     unbreakable: true
+
+TOOLTIP_COPPER_SWORD:
+  base:
+    material: WOODEN_SWORD
+    name: Copper Shortsword
+    attack-damage: 10.0
+    attack-speed: 1.6
+    tooltip: COPPER
+    element:
+      fire:
+        damage: 3.0
+    required-class:
+      - Warrior
+
+TOOLTIP_SILVER_SWORD:
+  base:
+    material: IRON_SWORD
+    name: Silver Shortsword
+    attack-damage: 10.0
+    attack-speed: 1.6
+    tooltip: SILVER
+    element:
+      fire:
+        damage: 3.0
+    required-class:
+      - Warrior
+
+TOOLTIP_GOLD_SWORD:
+  base:
+    material: GOLDEN_SWORD
+    name: Gold Shortsword
+    attack-damage: 10.0
+    attack-speed: 1.6
+    tooltip: GOLD
+    element:
+      fire:
+        damage: 3.0
+    required-class:
+      - Warrior

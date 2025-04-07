@@ -23,7 +23,7 @@ public class TestCommandTreeNode extends CommandTreeNode {
         ItemStack stack = new ItemStack(Material.DIAMOND);
         ItemMeta meta = stack.getItemMeta();
         List<String> lore = new ArrayList<>();
-        for (int i = 0; i < 30; i++) lore.add(ChatColor.WHITE + "\u0274" + UtilityMethods.getFontSpace(i) + "\u0274" + " -> " + i);
+        for (int i = 0; i < 30; i++) lore.add(ChatColor.WHITE + "\u0274" + UtilityMethods.getSpaceFont(i) + "\u0274" + " -> " + i);
         meta.setLore(lore);
         stack.setItemMeta(meta);
 

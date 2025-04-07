@@ -149,7 +149,7 @@ public class ItemSkin extends UseItem {
         final ItemMeta skinMeta = nbtSkin.getItem().getItemMeta();
         if (skinMeta != null && meta != null) {
 
-            // TODO SkinStat interface
+            // TODO refactor this code using StatHistory
 
             // Custom model data
             if (skinMeta.hasCustomModelData()) meta.setCustomModelData(skinMeta.getCustomModelData());
@@ -166,11 +166,12 @@ public class ItemSkin extends UseItem {
                 ((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) skinMeta).getColor());
 
             // Armor trim
-            if (skinMeta instanceof ArmorMeta && meta instanceof ArmorMeta) {
-                ((ArmorMeta) meta).setTrim(((ArmorMeta) skinMeta).getTrim());
-                if (skinMeta.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
-                else meta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
-            }
+            if (MythicLib.plugin.getVersion().isAbove(1, 20))
+                if (skinMeta instanceof ArmorMeta && meta instanceof ArmorMeta) {
+                    ((ArmorMeta) meta).setTrim(((ArmorMeta) skinMeta).getTrim());
+                    if (skinMeta.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+                    else meta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+                }
 
             // Skull texture
             if (volSkin.hasData(ItemStats.SKULL_TEXTURE)

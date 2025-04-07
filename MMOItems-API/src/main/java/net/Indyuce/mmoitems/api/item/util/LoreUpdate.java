@@ -1,9 +1,13 @@
 package net.Indyuce.mmoitems.api.item.util;
 
 
+import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.util.AdventureUtils;
+import net.Indyuce.mmoitems.ItemStats;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -23,45 +27,58 @@ import java.util.List;
  */
 public class LoreUpdate {
     private final ItemStack item;
-    private final String old, replace;
+    private final ItemMeta meta;
+    private final String pattern, replace;
     private final List<String> lore;
+
+    @ApiStatus.Experimental
+    private final boolean hasTooltip;
 
     /**
      * Used to handle live lore updates.
      *
      * @param item    The NBTItem to update
-     * @param old     The old lore line that needs to be replaced
+     * @param pattern The old lore line that needs to be replaced
      * @param replace The new lore line
      */
-    public LoreUpdate(ItemStack item, String old, String replace) {
+    public LoreUpdate(ItemStack item, @Nullable ItemMeta meta, @Nullable NBTItem nbtItem, String pattern, String replace) {
         this.item = item;
-        this.old = old;
+        this.meta = meta == null ? item.getItemMeta() : meta;
         this.replace = replace;
+        this.pattern = pattern.toLowerCase();
         this.lore = item.getItemMeta().getLore();
+        this.hasTooltip = nbtItem.hasTag(ItemStats.TOOLTIP.getNBTPath());
+    }
+
+    @Nullable
+    private String getResult(String line, String pattern) {
+
+        if (hasTooltip) {
+            final int index = line.toLowerCase().indexOf(pattern);
+            if (index == -1) return null;
+            // Replace substring with new one
+            return line.substring(0, index) + replace + line.substring(index + pattern.length());
+        }
+
+        /*
+         * There is this weird issue where when generating the item
+         * and getting its lore again via the Bukkit ItemMeta, color
+         * codes are now UPPERCASE, which make the strings not match
+         * anymore unless we use equalsIgnoreCase().
+         */
+        return line.equalsIgnoreCase(pattern) ? replace : null;
     }
 
     public ItemStack updateLore() {
 
-        // Possible that the item has no lore
-        if (lore == null || lore.isEmpty())
-            return item;
+        // If item has no lore
+        if (lore == null || lore.isEmpty()) return item;
 
         for (int i = 0; i < lore.size(); i++) {
+            String lineResult = getResult(lore.get(i), pattern);
+            if (lineResult != null) {
+                lore.set(i, lineResult);
 
-            /*
-             * Finds the old line in the old lore.
-             *
-             * There is this weird issue where when generating the item
-             * and getting its lore again via the Bukkit ItemMeta, color
-             * codes are now UPPERCASE, which make the strings not match
-             * anymore unless we use equalsIgnoreCase().
-             *
-             * In theory, equals() would have been sufficient.
-             */
-            if (lore.get(i).equalsIgnoreCase(old)) {
-                lore.set(i, replace);
-
-                ItemMeta meta = item.getItemMeta();
                 AdventureUtils.setLore(meta, lore);
                 item.setItemMeta(meta);
 

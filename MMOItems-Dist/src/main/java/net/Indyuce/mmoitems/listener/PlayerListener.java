@@ -28,11 +28,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -53,15 +49,21 @@ public class PlayerListener implements Listener {
         // Supports NPCs
         if (!PlayerData.has(event.getEntity())) return;
 
+        final PlayerData playerData = PlayerData.get(event.getEntity());
+        final Player player = event.getPlayer();
+
         // See description of DelayedDeathDowngrade child class for full explanation
-        new DelayedDeathDowngrade(event).runTaskLater(MMOItems.plugin, 3L);
+        new DelayedDeathDowngrade(playerData, player).runTaskLater(MMOItems.plugin, 3L);
     }
 
+    /**
+     * Fixes <a href="https://gitlab.com/phoenix-dvpmt/mmocore/-/issues/545">MMOCore#545</a>
+     */
     @EventHandler
-    public void fullSync(SynchronizedDataLoadEvent event) {
+    public void resolveInvWhenDataLoaded(SynchronizedDataLoadEvent event) {
         if (event.syncIsFull()) {
             final PlayerData playerData = PlayerData.get(event.getHolder().getUniqueId());
-            playerData.updateInventory();
+            playerData.resolveInventory(); // For safety
         }
     }
 
@@ -159,66 +161,6 @@ public class PlayerListener implements Listener {
     }
 
     /**
-     * Fixes an issue where quickly swapping items in hand just
-     * does not update the player's inventory which can make the
-     * player cast abilities or attacks with not the correct stats
-     *
-     * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
-     */
-    @Deprecated
-    @EventHandler
-    public void registerInventoryUpdates1(PlayerSwapHandItemsEvent event) {
-        // TODO
-        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-    }
-
-    /**
-     * Fixes an issue where quickly swapping items in hand just
-     * does not update the player's inventory which can make the
-     * player cast abilities or attacks with not the correct stats
-     *
-     * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
-     */
-    @Deprecated
-    @EventHandler
-    public void registerInventoryUpdates2(PlayerItemHeldEvent event) {
-        // TODO
-        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-    }
-
-    /**
-     * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
-     */
-    @Deprecated
-    @EventHandler
-    public void registerInventoryUpdates3(PlayerDropItemEvent event) {
-        // TODO
-        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-    }
-
-    /**
-     * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
-     */
-    @Deprecated
-    @EventHandler
-    public void registerInventoryUpdates4(InventoryCloseEvent event) {
-        // TODO
-        if (event.getPlayer() instanceof Player) {
-            try {
-                // Sometimes the event is called after the player logs off?
-                PlayerData playerData = PlayerData.get((Player) event.getPlayer());
-                playerData.getInventory().scheduleUpdate();
-            } catch (Exception exception) {
-                // Ignore for now
-            }
-        }
-    }
-
-    /**
      * Some plugins like to interfere with dropping items when the
      * player dies, or whatever of that sort.
      * <p>
@@ -234,18 +176,19 @@ public class PlayerListener implements Listener {
      */
     private static class DelayedDeathDowngrade extends BukkitRunnable {
 
-        @NotNull
-        final PlayerDeathEvent event;
+        final PlayerData playerData;
+        final Player player;
 
-        DelayedDeathDowngrade(@NotNull PlayerDeathEvent event) {
-            this.event = event;
+        DelayedDeathDowngrade(@NotNull PlayerData playerData, @NotNull Player player) {
+            this.player = player;
+            this.playerData = playerData;
         }
 
         @Override
         public void run() {
 
             // Downgrade player's inventory
-            DeathDowngrading.playerDeathDowngrade(event.getEntity());
+            DeathDowngrading.playerDeathDowngrade(playerData, player);
         }
     }
 }

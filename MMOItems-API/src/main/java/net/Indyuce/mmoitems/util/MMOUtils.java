@@ -8,13 +8,14 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import io.lumine.mythic.lib.version.Attributes;
 import io.lumine.mythic.lib.version.VPotionEffectType;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import org.apache.commons.lang.Validate;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -53,7 +54,7 @@ public class MMOUtils {
         try {
             return valueOfFunction.apply(input);
         } catch (Exception exception) {
-            throw new RuntimeException(String.format(messageFormat, input));
+            throw new IllegalArgumentException(String.format(messageFormat, input));
         }
     }
 
@@ -148,6 +149,18 @@ public class MMOUtils {
         return foundNbt != null && foundNbt.contains(player.getUniqueId().toString());
     }
 
+    public static String substringBetween(@NotNull String str, @NotNull String open, @NotNull String close) {
+        int start = str.indexOf(open);
+        if (start != -1) {
+            int end = str.indexOf(close, start + open.length());
+            if (end != -1) {
+                return str.substring(start + open.length(), end);
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Should cancel interaction if one of the two cases:
      * - the item type no longer exists
@@ -215,16 +228,19 @@ public class MMOUtils {
         return MMOItems.plugin.getLanguage().getDefaultPickaxePower(item);
     }
 
+    public static boolean isInteractable(@NotNull Block block) {
+        // BlockTypes don't exist until 1.21
+        if (MythicLib.plugin.getVersion().isUnder(1, 21)) return false;
+        return block.getType().asBlockType().isInteractable();
+    }
+
     /**
      * @param name The trigger name that may be in old format
      * @return The trigger type this represents
      * @throws IllegalArgumentException If this does not match any trigger type
      */
     @NotNull
-    @Deprecated
     public static TriggerType backwardsCompatibleTriggerType(@NotNull String name) throws IllegalArgumentException {
-        if (name == null) throw new IllegalArgumentException("Trigger cannot be null");
-
         switch (name) {
             case "ON_HIT":
                 return TriggerType.ATTACK;

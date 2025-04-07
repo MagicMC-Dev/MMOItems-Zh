@@ -55,4 +55,13 @@ public class PotionEffectData {
     public int hashCode() {
         return Objects.hash(type, duration, level);
     }
+
+	@Override
+	public String toString() {
+		return "PotionEffectData{" +
+				"type=" + type +
+				", duration=" + duration +
+				", level=" + level +
+				'}';
+	}
 }

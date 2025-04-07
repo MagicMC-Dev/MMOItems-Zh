@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.util.Pair;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -209,10 +209,8 @@ public class MMOItem implements ItemReference {
         return found != null ? MMOItems.plugin.getTiers().get(found.toString()) : null;
     }
 
-    /**
-     * @return Tooltip texture of this item, if it has any
-     */
     @Nullable
+    @Deprecated
     public TooltipTexture getTooltip() {
         final StatData found = stats.get(ItemStats.TOOLTIP);
         return found != null ? MMOItems.plugin.getLore().getTooltip(found.toString()) : null;
@@ -273,6 +271,7 @@ public class MMOItem implements ItemReference {
 
             // Scale damage
             Material mat = hasData(ItemStats.MATERIAL) ? ((MaterialData) getData(ItemStats.MATERIAL)).getMaterial() : Material.GOLD_INGOT;
+            // TODO does not take into account 1.20.5+ max durability
             double multiplier = ((double) damage) * ((double) mat.getMaxDurability()) / ((double) maxDurability);
             if (multiplier == 0) return;
 

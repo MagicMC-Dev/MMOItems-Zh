@@ -11,7 +11,7 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.explorer.*;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.crafting.ingredient.inventory;
 
 import com.nexomc.nexo.api.NexoItems;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 
 public class NexoPlayerIngredient extends PlayerIngredient {
     private final String id;

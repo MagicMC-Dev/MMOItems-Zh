@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.api.MMOLineConfig;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 
 import java.util.logging.Level;
 

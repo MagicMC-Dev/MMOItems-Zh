@@ -9,7 +9,7 @@ import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;

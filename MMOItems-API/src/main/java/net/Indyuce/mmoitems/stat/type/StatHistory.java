@@ -18,7 +18,7 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

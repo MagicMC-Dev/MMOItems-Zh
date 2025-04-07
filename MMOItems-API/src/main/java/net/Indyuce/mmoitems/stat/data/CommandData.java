@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 
 public class CommandData {
 	private final String command;

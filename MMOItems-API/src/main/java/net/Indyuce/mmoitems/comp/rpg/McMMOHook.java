@@ -28,12 +28,12 @@ public class McMMOHook implements RPGHandler, Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void a(McMMOPlayerLevelUpEvent event) {
-		PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+		PlayerData.get(event.getPlayer()).resolveModifiersLater();
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void b(McMMOPlayerLevelDownEvent event) {
-		PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+		PlayerData.get(event.getPlayer()).resolveModifiersLater();
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.block.WorldGenTemplate;
 import net.Indyuce.mmoitems.api.world.MMOBlockPopulator;
 import net.Indyuce.mmoitems.listener.WorldGenerationListener;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;

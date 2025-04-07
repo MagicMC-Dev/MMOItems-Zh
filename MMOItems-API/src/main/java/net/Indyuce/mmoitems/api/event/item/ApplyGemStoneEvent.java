@@ -5,7 +5,7 @@ import net.Indyuce.mmoitems.api.interaction.GemStone;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.event.HandlerList;
 
 public class ApplyGemStoneEvent extends PlayerDataEvent {

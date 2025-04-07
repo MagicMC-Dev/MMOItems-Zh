@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.util.lang3.NotImplementedException;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -10,7 +11,6 @@ import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;

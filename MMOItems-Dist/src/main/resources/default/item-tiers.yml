@@ -17,6 +17,14 @@ TRASH:
 COMMON:
     name: '&7&l普通'
     parent: TRASH
+
+    # Any item with this tier will inherit from this tooltip
+    # Has precedence over type-specific tooltip
+    # Does not have precedence over item-specific tooltip
+    # https://gitlab.com/phoenix-dvpmt/mmoitems/-/wikis/Item-Tooltips
+    # This tooltip does not exist
+    #tooltip: COMMON
+
     unidentification:
         range: 6
         name: '普通'
@@ -24,7 +32,13 @@ COMMON:
     # 此品质没有指定生成选项。
     # 在这种情况下，它将使用config.yml中设置的默认值。
 UNCOMMON:
-    name: '&8&l罕见'
+
+    # 物品传说中显示的等级名称. 
+    name: '&8&lUNCOMMON'
+
+    #tooltip: UNCOMMON # 不存在
+    
+    # 未识别的项显示项等级.
     unidentification:
         name: '罕见'
         range: 6
@@ -55,7 +69,7 @@ RARE:
     unidentification:
         name: '稀有'
         prefix: '&6'
-        range: 6
+    #tooltip: RARE # 不存在
     generation:
         chance: 0.06
         capacity:
@@ -80,6 +94,7 @@ VERY_RARE:
         name: '非常稀有'
         prefix: '&e'
         range: 6
+    #tooltip: VERY_RARE # 不存在
     deconstruct-item:
         success:
             coef: 1
@@ -104,6 +119,7 @@ LEGENDARY:
         name: '传奇'
         prefix: '&b'
         range: 6
+    #tooltip: LEGENDARY # 不存在
     deconstruct-item:
         success:
             coef: 1

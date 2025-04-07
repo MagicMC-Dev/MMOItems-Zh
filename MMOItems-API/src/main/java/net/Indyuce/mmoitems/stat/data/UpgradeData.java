@@ -159,6 +159,7 @@ public class UpgradeData implements StatData, RandomStatData<UpgradeData> {
 	/**
 	 *  Upgrade this MMOItem by 1 Level
 	 */
+	@Deprecated
 	public void upgrade(@NotNull MMOItem mmoitem) {
 
 		/*

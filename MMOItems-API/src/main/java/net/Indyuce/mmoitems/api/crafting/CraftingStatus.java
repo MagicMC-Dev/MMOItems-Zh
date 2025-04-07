@@ -6,7 +6,7 @@ import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.QueueItem;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

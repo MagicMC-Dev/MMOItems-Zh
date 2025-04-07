@@ -22,7 +22,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;

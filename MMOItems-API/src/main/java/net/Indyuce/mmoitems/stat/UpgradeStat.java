@@ -10,6 +10,7 @@ import io.lumine.mythic.lib.version.Sounds;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.event.item.UpgradeItemEvent;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -26,7 +27,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -198,12 +199,14 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 
 			MMOItem targetMMO = new LiveMMOItem(target);
 			UpgradeData targetSharpening = (UpgradeData) targetMMO.getData(ItemStats.UPGRADE);
-			if (targetSharpening.isWorkbench())
-				return false;
+			UpgradeTemplate template = targetSharpening.getTemplate();
+            if (template == null) return false;
 
-			if (!targetSharpening.canLevelUp()) {
-				Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(player);
-				player.playSound(player.getLocation(), Sounds.ENTITY_VILLAGER_NO, 1, 2);
+            if (targetSharpening.isWorkbench()) return false;
+
+            if (!targetSharpening.canLevelUp()) {
+                Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(player);
+                player.playSound(player.getLocation(), Sounds.ENTITY_VILLAGER_NO, 1, 2);
 				return false;
 			}
 
@@ -219,7 +222,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 			if (called.isCancelled())
 				return false;
 
-			targetSharpening.upgrade(targetMMO);
+			template.upgrade(targetMMO);
 			NBTItem result = targetMMO.newBuilder().buildNBT();
 
 			/*

@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.comp.enchants;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.util.lang3.NotImplementedException;
 import me.badbones69.crazyenchantments.Methods;
 import me.badbones69.crazyenchantments.api.CrazyEnchantments;
 import me.badbones69.crazyenchantments.api.objects.CEnchantment;
@@ -10,7 +11,6 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;

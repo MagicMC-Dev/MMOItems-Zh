@@ -5,7 +5,7 @@ import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.crafting.ingredient.inventory;
 
 import dev.lone.itemsadder.api.CustomStack;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 
 public class ItemsAdderPlayerIngredient extends PlayerIngredient {
     private final String id;

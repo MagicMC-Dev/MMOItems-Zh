@@ -14,10 +14,12 @@ import net.Indyuce.mmoitems.api.event.GenerateLoreEvent;
 import net.Indyuce.mmoitems.api.event.ItemBuildEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.item.build.BuildMetadata;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.Previewable;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
+import net.Indyuce.mmoitems.tooltip.TooltipTexture;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,6 +29,7 @@ import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,6 +49,11 @@ public class ItemStackBuilder {
     private final LoreBuilder lore;
     private final List<ItemTag> tags = new ArrayList<>();
 
+    private final BuildMetadata context = new BuildMetadata();
+
+    @ApiStatus.Experimental
+    private TooltipTexture tooltip;
+
     /**
      * @deprecated Temp fix before MI7
      */
@@ -60,6 +68,7 @@ public class ItemStackBuilder {
      * @param mmoitem The mmoitem you want to build
      */
     public ItemStackBuilder(@NotNull MMOItem mmoitem) {
+        context.markMMOItemBuilt();
 
         // Reference to source MMOItem
         this.mmoitem = mmoitem;
@@ -68,7 +77,7 @@ public class ItemStackBuilder {
         item = new ItemStack(mmoitem.hasData(ItemStats.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStats.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
 
         // Gets a lore builder, which will be used to apply the chosen lore format (Choose with the lore format stat, or the default one if unspecified)
-        lore = new LoreBuilder(mmoitem);
+        lore = new LoreBuilder(this);
 
         // Gets the meta, and hides attributes
         meta = item.getItemMeta();
@@ -79,8 +88,19 @@ public class ItemStackBuilder {
         tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
     }
 
+    @ApiStatus.Experimental
+    public BuildMetadata getContext() {
+        return context;
+    }
+
     public LoreBuilder getLore() {
         return lore;
+    }
+
+    @Nullable
+    @ApiStatus.Experimental
+    public TooltipTexture getTooltip() {
+        return tooltip;
     }
 
     @NotNull
@@ -90,10 +110,10 @@ public class ItemStackBuilder {
 
     /**
      * @return Does NOT return the built item stack. It returns only returns the
-     * default item stack with material applied. Built item stack is given
-     * by build(). This method should only be used to check if the item is
-     * of a specific material (like the Shield Pattern stat which checks if
-     * the item is a shield)
+     *         default item stack with material applied. Built item stack is given
+     *         by build(). This method should only be used to check if the item is
+     *         of a specific material (like the Shield Pattern stat which checks if
+     *         the item is a shield)
      */
     @NotNull
     public ItemStack getItemStack() {
@@ -222,6 +242,9 @@ public class ItemStackBuilder {
                 builtMMOItem.getStats().contains(ItemStats.DISPLAYED_TYPE) ? builtMMOItem.getData(ItemStats.DISPLAYED_TYPE)
                         .toString() : builtMMOItem.getType().getName()));
 
+        // Finally roll tooltip texture !! before building lore !!
+        tooltip = context.resolveTooltip(this);
+
         // Calculate and apply item lore
         List<String> unparsedLore = lore.getLore();
         List<String> parsedLore = lore.build();
@@ -231,13 +254,14 @@ public class ItemStackBuilder {
         AdventureUtils.setLore(meta, event.getParsedLore());
         if (meta.hasDisplayName()) {
 
-            // Apply tooltip top
+            // Display name with NO texture
             String displayName = meta.getDisplayName();
-            if (lore.hasTooltip()) displayName = lore.getTooltip().getTop() + displayName;
             displayName = MythicLib.plugin.getPlaceholderParser().parse(null, displayName);
             displayName = lore.applySpecialPlaceholders(displayName);
-            if (lore.hasTooltip() && lore.getTooltip().getCenteringOptions() != null && lore.getTooltip().getCenteringOptions().displayName())
-                displayName = lore.getTooltip().getCenteringOptions().centerName(displayName);
+
+            // Apply tooltip (centering?)
+            if (tooltip != null) displayName = tooltip.bakeItemName(displayName);
+
             AdventureUtils.setDisplayName(meta, ChatColor.WHITE + displayName);
         }
 

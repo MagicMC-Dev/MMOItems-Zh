@@ -16,7 +16,7 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -9,7 +9,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.advancedplugins.ae.api.AEAPI;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

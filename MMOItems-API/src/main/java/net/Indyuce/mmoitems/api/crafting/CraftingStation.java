@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.crafting;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.util.PostLoadAction;
 import io.lumine.mythic.lib.util.PreloadedObject;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
@@ -11,9 +12,6 @@ import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe.RecipeOption;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +35,11 @@ public class CraftingStation implements PreloadedObject {
     /**
      * A station inherits from the recipes of its parent station.
      */
+    @Nullable
     private CraftingStation parent;
+
+    @Nullable
+    private final CraftingStationCommand registeredCommand;
 
     private final PostLoadAction postLoadAction = new PostLoadAction(config -> {
         if (!config.contains("parent")) return;
@@ -48,7 +50,12 @@ public class CraftingStation implements PreloadedObject {
         parent = MMOItems.plugin.getCrafting().getStation(id);
     });
 
+    @Deprecated
     public CraftingStation(@NotNull String id, @NotNull FileConfiguration config) {
+        this(id, (ConfigurationSection) config);
+    }
+
+    public CraftingStation(@NotNull String id, @NotNull ConfigurationSection config) {
         postLoadAction.cacheConfig(config);
 
         this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
@@ -58,8 +65,11 @@ public class CraftingStation implements PreloadedObject {
 
         // Setup command if required
         // A reload is required to flush older commands
-        if (config.contains("command"))
-            setupCommand(config.getConfigurationSection("command"));
+        if (config.isConfigurationSection("command")) {
+            ConfigurationSection commandConfig = config.getConfigurationSection("command");
+            String commandName = Objects.requireNonNull(commandConfig.getString("name"), "Command name not found");
+            registeredCommand = new CraftingStationCommand(this, commandName, commandConfig);
+        } else registeredCommand = null;
 
         editableView.reload(MMOItems.plugin, config.getConfigurationSection("gui-layout"));
         if (config.isConfigurationSection("preview-gui-layout")) // Confirm GUI is now optional
@@ -90,6 +100,7 @@ public class CraftingStation implements PreloadedObject {
         this.parent = parent;
         this.editableView = editableView;
         this.editablePreview = editablePreview;
+        this.registeredCommand = null;
     }
 
     @NotNull
@@ -102,16 +113,9 @@ public class CraftingStation implements PreloadedObject {
         return id;
     }
 
-    private void setupCommand(ConfigurationSection config) {
-        Validate.notNull(config, "Command config is null");
-
-        CommandMap commandMap = Bukkit.getServer().getCommandMap();
-        String name = Objects.requireNonNull(config.getString("name"), "Command name not found");
-
-        // Command already exists
-        if (commandMap.getCommand(name) != null) return;
-
-        commandMap.register(MMOItems.plugin.getName(), new CraftingStationCommand(this, name, config));
+    @Nullable
+    public CraftingStationCommand getCommand() {
+        return registeredCommand;
     }
 
     public EditableCraftingStationView getEditableView() {

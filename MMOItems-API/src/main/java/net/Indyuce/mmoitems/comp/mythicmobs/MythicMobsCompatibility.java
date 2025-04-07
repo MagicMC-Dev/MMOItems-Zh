@@ -87,7 +87,7 @@ public class MythicMobsCompatibility implements Listener {
         // Reload the abilities of online players...
         for (Player p : Bukkit.getOnlinePlayers()) {
             PlayerData data = PlayerData.get(p);
-            data.updateInventory();
+            data.resolveInventory();
         }
     }
 

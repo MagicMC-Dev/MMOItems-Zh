@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;

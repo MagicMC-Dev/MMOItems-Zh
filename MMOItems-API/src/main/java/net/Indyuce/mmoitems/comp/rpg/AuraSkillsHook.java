@@ -61,8 +61,7 @@ public class AuraSkillsHook implements RPGHandler, Listener {
     @EventHandler
     public void a(SkillLevelUpEvent event) {
         OfflinePlayer player = event.getPlayer();
-        if (player.isOnline())
-            PlayerData.get(player).getInventory().scheduleUpdate();
+        if (player.isOnline()) PlayerData.get(player).resolveModifiersLater();
     }
 
     /**
@@ -79,7 +78,7 @@ public class AuraSkillsHook implements RPGHandler, Listener {
         SkillsUser user = aSkills.getUser(data.getPlayer().getUniqueId());
 
         user.addTraitModifier(
-                new TraitModifier(MODIFIER_KEY_PREFIX + "max_mana", Traits.MAX_MANA, data.getStats().getStat(ItemStats.MAX_MANA)));
+                new TraitModifier(MODIFIER_KEY_PREFIX + "max_mana", Traits.MAX_MANA, data.getStat(ItemStats.MAX_MANA)));
 
         double currentMaxMana = user.getMaxMana();
 
@@ -87,13 +86,13 @@ public class AuraSkillsHook implements RPGHandler, Listener {
             user.setMana(currentMaxMana);
         }
 
-        statExtra.forEach((stat, miStat) -> aSkills.getUser(data.getPlayer().getUniqueId()).addStatModifier(new StatModifier(MODIFIER_KEY_PREFIX + stat.name(), stat, data.getStats().getStat(miStat))));
+        statExtra.forEach((stat, miStat) -> aSkills.getUser(data.getPlayer().getUniqueId()).addStatModifier(new StatModifier(MODIFIER_KEY_PREFIX + stat.name(), stat, data.getStat(miStat))));
     }
 
     @Override
     public RPGPlayer getInfo(PlayerData data) {
 
-        /**
+        /*
          * AuraSkills does not load player data directly on startup, instead we have to
          * listen to the PlayerDataLoadEvent before caching the rpg player data instance.
          *

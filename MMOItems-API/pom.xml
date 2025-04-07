@@ -123,21 +123,6 @@
     the first wins when multiple classpaths match
     -->
     <dependencies>
-        <!-- Spigot API -->
-        <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.21.3-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>com.mojang</groupId>
-                    <artifactId>brigadier</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
         <dependency>
@@ -153,6 +138,15 @@
             <groupId>net.Indyuce</groupId>
             <artifactId>MMOCore-API</artifactId>
             <version>1.12.1-SNAPSHOT</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- MMOCore API -->
+        <dependency>
+            <groupId>net.Indyuce</groupId>
+            <artifactId>MMOInventory</artifactId>
+            <version>1.9.1-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -276,6 +270,13 @@
             <version>1.7</version>
             <scope>provided</scope>
             <optional>true</optional>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Fabled -->
         <dependency>

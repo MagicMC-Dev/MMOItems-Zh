@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.loot.droptable.dropitem.DropItem;

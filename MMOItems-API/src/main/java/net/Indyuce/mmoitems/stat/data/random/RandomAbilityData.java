@@ -7,7 +7,7 @@ import java.util.Set;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;

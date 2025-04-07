@@ -4,6 +4,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemSet;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,7 +45,8 @@ public class SetManager implements Reloadable {
         return itemSets.values();
     }
 
+    @Nullable
     public ItemSet get(String id) {
-        return itemSets.getOrDefault(id, null);
+        return itemSets.get(id);
     }
 }

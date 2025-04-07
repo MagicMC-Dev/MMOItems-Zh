@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;

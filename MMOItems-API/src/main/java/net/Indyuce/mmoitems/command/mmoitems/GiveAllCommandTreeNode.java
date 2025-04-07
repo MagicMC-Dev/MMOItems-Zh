@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

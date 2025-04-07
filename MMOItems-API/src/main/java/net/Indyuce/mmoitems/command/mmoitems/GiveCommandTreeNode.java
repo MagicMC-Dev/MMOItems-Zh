@@ -15,7 +15,7 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

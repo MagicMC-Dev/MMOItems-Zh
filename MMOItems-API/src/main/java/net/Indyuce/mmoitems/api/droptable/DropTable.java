@@ -6,7 +6,7 @@ import net.Indyuce.mmoitems.api.droptable.item.BlockDropItem;
 import net.Indyuce.mmoitems.api.droptable.item.DropItem;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 

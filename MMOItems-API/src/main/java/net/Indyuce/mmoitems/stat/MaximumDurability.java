@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MaximumDurability extends DoubleStat implements ItemRestriction, GemStoneStat, Upgradable {
     public MaximumDurability() {
-        super("MAX_DURABILITY", Material.SHEARS, "最大耐久", new String[]{"您的物品变得无法使用/损坏", "之前的使用次数"}, new String[]{"!block", "all"});
+        super("MAX_DURABILITY", Material.SHEARS, "最大自定义耐久", new String[]{"不建议在 1.20.5+ 上使用", "您的物品变得无法使用/损坏", "之前的使用次数"}, new String[]{"!block", "all"});
     }
 
     @Override

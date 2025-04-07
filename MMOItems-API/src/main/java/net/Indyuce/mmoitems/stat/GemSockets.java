@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;

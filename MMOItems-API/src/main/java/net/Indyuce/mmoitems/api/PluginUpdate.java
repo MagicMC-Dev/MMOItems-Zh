@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.api;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.Consumer;
 

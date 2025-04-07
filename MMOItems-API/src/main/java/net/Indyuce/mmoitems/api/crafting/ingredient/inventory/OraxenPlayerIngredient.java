@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.crafting.ingredient.inventory;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.th0rgal.oraxen.api.OraxenItems;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 
 public class OraxenPlayerIngredient extends PlayerIngredient {
     private final String id;

@@ -8,6 +8,7 @@ import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.util.PostLoadAction;
 import io.lumine.mythic.lib.util.PreloadedObject;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.*;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
@@ -17,8 +18,8 @@ import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.tooltip.TooltipTexture;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -62,7 +63,7 @@ public class Type implements CooldownObject, PreloadedObject {
     public static final Type MAIN_CATALYST = new Type("MAIN_CATALYST", ModifierSource.MAINHAND_ITEM);
 
     // Other
-    public static final Type ORNAMENT = new Type("ORNAMENT", ModifierSource.VOID);
+    public static final Type ORNAMENT = new Type("ORNAMENT", ModifierSource.ORNAMENT);
     public static final Type ARMOR = new Type("ARMOR", ModifierSource.ARMOR);
     public static final Type CONSUMABLE = new Type("CONSUMABLE", ModifierSource.MAINHAND_ITEM, Consumable::new);
     public static final Type MISCELLANEOUS = new Type("MISCELLANEOUS", ModifierSource.MAINHAND_ITEM);
@@ -99,10 +100,9 @@ public class Type implements CooldownObject, PreloadedObject {
      */
     private final Type parent;
 
+    private TooltipTexture tooltip;
     private UnidentifiedItem unidentifiedTemplate;
-
     private SkillHandler<?> onLeftClick, onRightClick, onAttack, onEntityInteract;
-
     private boolean meleeAttacks, hideInGame;
 
     /**
@@ -153,6 +153,7 @@ public class Type implements CooldownObject, PreloadedObject {
         attackCooldownKey = config.getString("attack-cooldown-key", "default");
         meleeAttacks = !config.getBoolean("disable-melee-attacks");
         hideInGame = config.getBoolean("hide-in-game");
+        tooltip = config.contains("tooltip") ? MMOUtils.friendlyValueOf(MMOItems.plugin.getLore()::getTooltip, config.getString("tooltip"), "Could not find tooltip with ID '%s'") : null;
     }
 
     @NotNull
@@ -194,6 +195,11 @@ public class Type implements CooldownObject, PreloadedObject {
 
     public String getName() {
         return name;
+    }
+
+    @Nullable
+    public TooltipTexture getTooltip() {
+        return tooltip;
     }
 
     @NotNull
@@ -258,7 +264,7 @@ public class Type implements CooldownObject, PreloadedObject {
 
     /**
      * @return Either if the two types are the same,
-     * or if this type is a subtype of the given type.
+     *         or if this type is a subtype of the given type.
      */
     public boolean corresponds(Type type) {
         return getSupertype().equals(type);
@@ -266,8 +272,8 @@ public class Type implements CooldownObject, PreloadedObject {
 
     /**
      * @return The collection of all stats which can be applied onto this
-     * specific item type. This list is cached when types are being
-     * loaded and is a PRETTY GOOD performance improvement.
+     *         specific item type. This list is cached when types are being
+     *         loaded and is a PRETTY GOOD performance improvement.
      */
     public List<ItemStat> getAvailableStats() {
         return available;
@@ -275,7 +281,7 @@ public class Type implements CooldownObject, PreloadedObject {
 
     /**
      * @return Finds the /item config file corresponding to the item type and
-     * loads it
+     *         loads it
      */
     public ConfigFile getConfigFile() {
         return new ConfigFile("/item", getId().toLowerCase());
@@ -389,7 +395,7 @@ public class Type implements CooldownObject, PreloadedObject {
 
     /**
      * @deprecated Type is no longer an enum so that external plugins
-     * can register their own types. Use getId() instead
+     *         can register their own types. Use getId() instead
      */
     @Deprecated
     public String name() {

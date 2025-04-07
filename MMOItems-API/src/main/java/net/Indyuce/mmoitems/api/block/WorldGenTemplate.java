@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.block;
 
 import io.lumine.mythic.lib.version.VersionUtils;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;

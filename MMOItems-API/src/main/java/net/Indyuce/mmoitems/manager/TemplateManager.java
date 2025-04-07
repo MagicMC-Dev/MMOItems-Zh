@@ -3,6 +3,8 @@ package net.Indyuce.mmoitems.manager;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.util.FileUtils;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -11,13 +13,10 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.ModifierNode;
 import net.Indyuce.mmoitems.api.util.TemplateMap;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -183,7 +182,7 @@ public class TemplateManager implements Reloadable {
 
     /**
      * @return Collects all existing MMOItems templates into a set
-     * so that it can be filtered afterward to generate random loot
+     *         so that it can be filtered afterward to generate random loot
      */
     public Collection<MMOItemTemplate> collectTemplates() {
         return templates.collectValues();
@@ -237,9 +236,9 @@ public class TemplateManager implements Reloadable {
     /**
      * @param playerLevel Input player level
      * @return Generates a randomly chosen item level. The level
-     * spread (editable in the main config file)
-     * corresponding to the standard deviation of a gaussian
-     * distribution centered on the player level (input)
+     *         spread (editable in the main config file)
+     *         corresponding to the standard deviation of a gaussian
+     *         distribution centered on the player level (input)
      */
     public int rollLevel(int playerLevel) {
         double spread = MMOItems.plugin.getLanguage().levelSpread;
@@ -276,17 +275,11 @@ public class TemplateManager implements Reloadable {
 
         ffp.activatePrefix(true, "Template Modifiers");
         ffp.log(FriendlyFeedbackCategory.INFORMATION, "Preloading template modifiers, please wait..");
-        for (File file : new File(MMOItems.plugin.getDataFolder() + "/modifiers").listFiles()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            ffp.activatePrefix(true, "Modifiers \u00a78($r" + file.getPath() + "\u00a78)");
-            for (String key : config.getKeys(false))
-                try {
-                    final ModifierNode node = ModifierNode.fromConfig(key, config.get(key));
-                    modifierNodes.put(node.getId(), node);
-                } catch (RuntimeException exception) {
-                    ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load '{0}': {1}", key, exception.getMessage());
-                }
-        }
+
+        FileUtils.loadObjectsFromFolder(MMOItems.plugin, "modifiers", false, (key, config) -> {
+            final ModifierNode node = ModifierNode.fromConfig(key, config);
+            modifierNodes.put(node.getId(), node);
+        }, "Could not load modifier '%s' from file '%s': %s");
 
         ffp.activatePrefix(true, "Item Templates");
         ffp.log(FriendlyFeedbackCategory.INFORMATION, "Preloading item templates, please wait..");

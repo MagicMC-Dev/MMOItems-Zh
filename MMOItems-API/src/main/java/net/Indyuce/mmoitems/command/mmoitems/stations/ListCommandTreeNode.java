@@ -16,7 +16,7 @@ public class ListCommandTreeNode extends CommandTreeNode {
 	public CommandResult execute(CommandSender sender, String[] args) {
 		sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Crafting Stations "
 				+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
-		for (CraftingStation station : MMOItems.plugin.getCrafting().getAll())
+		for (CraftingStation station : MMOItems.plugin.getCrafting().getStations())
 			sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.WHITE + station.getId());
 		return CommandResult.SUCCESS;
 	}

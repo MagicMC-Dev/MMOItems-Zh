@@ -9,21 +9,21 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class TooltipStat extends StringStat implements GemStoneStat {
     public TooltipStat() {
-        super("TOOLTIP", Material.BIRCH_SIGN, "工具提示", new String[]{"您要使用的自定义工具提示纹理的标识符。", "使用方法请查看维基百科！",
-                "&9工具提示在 tooltips.yml 文件中设置"}, new String[0]);
+        super("TOOLTIP", Material.BIRCH_SIGN, "Tooltip", new String[]{"您要使用的自定义工具提示纹理的标识符。", "使用方法请查看维基百科！"}, new String[0]);
     }
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
         final String format = UtilityMethods.enumName(data.toString());
-        final TooltipTexture texture = MMOItems.plugin.getLore().getTooltip(format);
-        Validate.notNull(texture, "找不到 ID 为 '" + format + "' 的工具提示");
+        final @Nullable TooltipTexture texture = MMOItems.plugin.getLore().getTooltip(format);
+        Validate.notNull(texture, "找不到 ID 为 '" + format + "' 的 Tooltip");
         item.addItemTag(new ItemTag("MMOITEMS_TOOLTIP", texture.getId()));
     }
 

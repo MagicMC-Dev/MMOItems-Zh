@@ -1,65 +1,52 @@
 package net.Indyuce.mmoitems.tooltip;
 
 import io.lumine.mythic.lib.UtilityMethods;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class CenteringOptions {
 
-    // Display name
-    private final boolean name;
-    private final double nameFontSize;
-    private final int nameSpan;
-    private final String namePrefix;
-
-    // Lore
+    private final boolean displayName;
+    private final int[] span, fontSize;
     private final int loreLines;
-    private final List<Double> loreFontSize;
-    private final List<Integer> loreSpan;
 
+    // Char settings
+    private final Map<Character, Integer> charSizeExceptions = new HashMap<>();
     private final Pattern regex;
 
-    private static final String DEFAULT_REGEX = "(?i)[^&§][a-z][a-z ]*[a-z]";
-    private static final double SEPARATOR_SPACE = 1;
-
     public CenteringOptions(@NotNull ConfigurationSection config) {
+        this.displayName = config.getBoolean("display_name");
+        this.fontSize = intArray(Objects.requireNonNull(config.get("default_char_size"), "Could not find font size"));
+        this.span = intArray(Objects.requireNonNull(config.get("span"), "Could not find span"));
+        this.loreLines = config.getInt("lore_lines");
+        this.regex = Pattern.compile(Objects.requireNonNull(config.getString("regex"), "Could not find char pattern"));
 
-        this.name = config.getBoolean("display_name.enabled");
-        this.nameFontSize = config.getDouble("display_name.font_size");
-        this.nameSpan = config.getInt("display_name.span");
-        this.namePrefix = config.getString("display_name.prefix", "");
+        if (config.contains("char_size")) {
+            List<String> list = config.getStringList("char_size");
+            for (String charSize : list) {
+                char character = charSize.charAt(0);
+                int size = Integer.parseInt(charSize.substring(1));
+                charSizeExceptions.put(character, size);
+            }
+        }
 
-        this.loreLines = config.getInt("lore.lines");
-        this.loreFontSize = config.getDoubleList("lore.font_size");
-        this.loreSpan = config.getIntegerList("lore.span");
-
-        Validate.isTrue(name || loreLines > 0, "必须为至少一个 Lore 行或显示名称启用居中设置");
+        Validate.isTrue(displayName || loreLines > 0, "必须为至少一行说明文本或显示名称启用居中功能。");
 
         // Lore validation
-        Validate.isTrue(loreLines >= 0, "Lore 行数必须为正");
-        if (loreLines > 0) {
-            Validate.isTrue(!loreFontSize.isEmpty(), "您必须提供至少一种 Lore 字体大小");
-            Validate.isTrue(!loreSpan.isEmpty(), "您必须提供至少一个 Lore 范围");
-            for (double d : loreFontSize) Validate.isTrue(d > 0, "字体大小必须为正值");
-            for (double d : loreSpan) Validate.isTrue(d > 0, "字体大小必须为正值");
-        }
-
-        // Name validation
-        if (name) {
-            Validate.isTrue(nameFontSize > 0, "字体大小必须为正值");
-            Validate.isTrue(nameSpan > 0, "范围必须是正数");
-        }
-
-        this.regex = Pattern.compile(config.getString("regex", DEFAULT_REGEX));
+        for (double d : fontSize) Validate.isTrue(d > 0, "字体大小必须为正");
+        for (int i : span) Validate.isTrue(i > 0, "跨度必须是正的");
     }
 
     public boolean displayName() {
-        return name;
+        return displayName;
     }
 
     public int getLoreLines() {
@@ -68,41 +55,111 @@ public class CenteringOptions {
 
     @NotNull
     public String centerLore(int j, String line) {
-        return center(line, "", loreFontSize.get(Math.min(j, loreFontSize.size() - 1)), loreSpan.get(Math.min(j, loreSpan.size() - 1)));
+        return center(line, fontSize(1 + j), span(1 + j));
     }
 
     @NotNull
     public String centerName(@NotNull String line) {
-        return center(line, namePrefix, nameFontSize, nameSpan);
+        return center(line, fontSize(0), span(0));
     }
 
     @NotNull
-    private String center(@NotNull String line, @NotNull String prefix, double fontSize, int span) {
-
-        // Find what to center
-        final Matcher matcher = regex.matcher(line);
-        if (!matcher.find()) return line;
-
-        final int start = matcher.start(), end = matcher.end();
-        // Average character size + 1 pixel per space
-        final int length = (int) (fontSize * (end - start) + SEPARATOR_SPACE * countSeparators(line.substring(start, end)));
-
-        // Cannot center as it's too big
-        if (length >= span) return line;
-
-        // Either ceil or floor, not really important
-        final int offset = (span - length) / 2;
-        return line.substring(0, start) + UtilityMethods.getFontSpace(offset) + prefix + line.substring(start);
+    private String center(@NotNull String line, int fontSize, int span) {
+        final int length = (int) Math.round(lengthApprox(line, fontSize)); // Approximate line length
+        if (length >= span) return line; // Cannot center as it's too big
+        final int offset = (span - length) / 2; // Either ceil or floor, not really important
+        return UtilityMethods.getSpaceFont(offset) + line;
     }
 
-    private int countSeparators(@NotNull String str) {
-        int count = 0;
-        boolean prevSpace = true;
-        for (int i = 0; i < str.length(); i++) {
-            final boolean space = str.charAt(i) == ' ';
-            if (!prevSpace && !space) count++;
-            prevSpace = space;
+    /**
+     * Size in between two characters. I don't see how this is not
+     * a constant in any font.
+     */
+    private static final double SEPARATOR_SIZE = 1;
+
+    /**
+     * Linear state machine that tries to approximate the length of a string
+     * inside a tooltip. This is needed to then compute how many spaces are
+     * required to center the item name at the middle of the lore tooltip.
+     *
+     * @param input String input
+     * @return Approximate length of string input
+     */
+    private double lengthApprox(@NotNull String input, int fontSize) {
+
+        double length = 0;
+        boolean _isSpace = true;
+        boolean _isColor = false;
+        boolean _notEmpty = false;
+        for (char next : input.toCharArray()) {
+
+            // Ignore consecutive spaces
+            final boolean isSpace = next == ' ';
+            if (_isSpace && isSpace) continue;
+            _isSpace = isSpace;
+
+            // Ignore color codes
+            // TODO change that when handling display name using components
+            final boolean isColor = next == '§';
+            if (_isColor && !isColor) {
+                _isColor = false;
+                continue;
+            }
+            _isColor = isColor;
+
+            // Ignore non matching characters
+            if (!this.regex.matcher(String.valueOf(next)).matches()) continue;
+
+            if (_notEmpty) length += SEPARATOR_SIZE;
+            length += charSize(next, fontSize);
+            _notEmpty = true;
         }
-        return count;
+        return length;
     }
+
+    private int charSize(char character, int defaultFontSize) {
+        @Nullable Integer found = charSizeExceptions.get(character);
+        return found != null ? found : defaultFontSize;
+    }
+
+    private int span(int index) {
+        return this.span[Math.min(index, this.span.length - 1)];
+    }
+
+    private int fontSize(int index) {
+        return this.fontSize[Math.min(index, this.fontSize.length - 1)];
+    }
+
+    //region Reading from config
+
+    private int[] intArray(Object obj) {
+        if (obj instanceof Number) {
+            return new int[]{((Number) obj).intValue()};
+        }
+        if (obj instanceof List) {
+            List cast = (List) obj;
+            int[] arr = new int[cast.size()];
+            for (int i = 0; i < arr.length; i++)
+                arr[i] = ((Number) cast.get(i)).intValue();
+            return arr;
+        }
+        throw new RuntimeException("Expecting either an integer or integer list");
+    }
+
+    @Deprecated
+    private String[] stringArray(Object obj) {
+        if (obj instanceof String)
+            return new String[]{(String) obj};
+
+        if (obj instanceof List) {
+            List cast = (List) obj;
+            String[] arr = new String[cast.size()];
+            for (int i = 0; i < arr.length; i++)
+                arr[i] = String.valueOf(cast.get(i));
+            return arr;
+        }
+        throw new RuntimeException("Expecting either a string or string list");
+    }
+
+    //endregion
 }

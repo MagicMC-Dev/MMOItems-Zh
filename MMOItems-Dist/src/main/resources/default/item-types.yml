@@ -36,6 +36,12 @@ SWORD:
 
     on-attack: slashing_attack_effect
 
+    # Any item of this type will inherit from this tooltip
+    # Does not have precedence over item- or tier-specific tooltip
+    # https://gitlab.com/phoenix-dvpmt/mmoitems/-/wikis/Item-Tooltips
+    # This tooltip does not exist
+    #tooltip: COMMON
+
 DAGGER:
     display: STONE_SWORD
     name: '匕首'

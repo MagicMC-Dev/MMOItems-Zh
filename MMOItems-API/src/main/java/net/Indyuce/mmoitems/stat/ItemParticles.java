@@ -6,18 +6,18 @@ import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.gson.JsonParser;
 import io.lumine.mythic.lib.gson.JsonSyntaxException;
+import io.lumine.mythic.lib.player.particle.ParticleEffectType;
 import io.lumine.mythic.lib.version.VParticle;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ParticlesEdition;
-import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -80,7 +80,7 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 
 	@NotNull
 	@Override
-	public ParticleData getClearStatData() { return new ParticleData(ParticleType.AURA, VParticle.LARGE_EXPLOSION.get()); }
+	public ParticleData getClearStatData() { return new ParticleData(ParticleEffectType.AURA, VParticle.LARGE_EXPLOSION.get()); }
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
@@ -88,12 +88,12 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 
 		String format = message.toUpperCase().replace("-", "_").replace(" ", "_");
 		if (edited.equals("particle-type")) {
-			ParticleType particleType = ParticleType.valueOf(format);
+			ParticleEffectType particleType = ParticleEffectType.get(format);
 
-			inv.getEditedSection().set("item-particles.type", particleType.name());
+			inv.getEditedSection().set("item-particles.type", particleType.getId());
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子类型成功设置为 " + ChatColor.GOLD
-					+ particleType.getDefaultName() + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子类型成功设置为" + ChatColor.GOLD
+					+ particleType.getId() + ChatColor.GRAY + ".");
 			return;
 		}
 

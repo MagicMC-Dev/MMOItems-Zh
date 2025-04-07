@@ -5,9 +5,10 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.droptable.DropTable;
-import net.Indyuce.mmoitems.tooltip.TooltipTexture;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.tooltip.TooltipTexture;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -69,7 +70,7 @@ public class ItemTier {
             glowColor = null;
         }
 
-        tooltip = config.isConfigurationSection("tooltip") ? new TooltipTexture(config.getConfigurationSection("tooltip")) : null;
+        tooltip = config.contains("tooltip") ? MMOUtils.friendlyValueOf(MMOItems.plugin.getLore()::getTooltip, config.getString("tooltip"), "Could not find tooltip with ID '%s'") : null;
 
         // What are the chances?
         chance = config.getDouble("generation.chance");

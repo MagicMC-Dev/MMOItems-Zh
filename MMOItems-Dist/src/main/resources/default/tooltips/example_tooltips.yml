@@ -1,0 +1,36 @@
+
+copper:
+  top:    "{-41sp}\u4076{-166sp}"
+  middle: "{-41sp}\u4077{-166sp}"
+  bottom: "{-41sp}\u4078"
+  center_top:
+    display_name: true
+    span: 161
+    default_char_size: 5
+    char_size: [f4, i1, k4, l2, t3, I3, "'1", ' 3', ',1', '(3', ')3']
+    regex: "[a-zA-Z0-9 ',()+]"
+
+silver:
+  top:    "{-41sp}\u4073{-166sp}"
+  middle: "{-41sp}\u4074{-166sp}"
+  bottom: "{-41sp}\u4075"
+  center_top:
+    display_name: true
+    span: 161
+    default_char_size: 5
+    char_size: [f4, i1, k4, l2, t3, I3, "'1", ' 3', ',1', '(3', ')3']
+    regex: "[a-zA-Z0-9 ',()+]"
+
+gold:
+  top:    "{-41sp}\u4070{-166sp}"
+  middle: "{-41sp}\u4071{-166sp}"
+  bottom: "{-41sp}\u4072"
+  lore_header:
+    - '&6{tier} {type}'
+  center_top:
+    display_name: true
+    span: 161
+    default_char_size: 5
+    lore_lines: 1
+    char_size: [f4, i1, k4, l2, t3, I3, "'1", ' 3', ',1', '(3', ')3']
+    regex: "[a-zA-Z0-9 ',()+]"

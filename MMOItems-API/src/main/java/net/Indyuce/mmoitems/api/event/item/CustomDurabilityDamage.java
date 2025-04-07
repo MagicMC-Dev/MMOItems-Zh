@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.event.item;
 
 import net.Indyuce.mmoitems.api.interaction.util.CustomDurabilityItem;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -18,7 +19,20 @@ public class CustomDurabilityDamage extends Event implements Cancellable {
         durabilityDecrease = impendingDamage; }
 
     public int getDurabilityDecrease() { return durabilityDecrease; }
-    @NotNull public CustomDurabilityItem getSourceItem() { return sourceItem; }
+
+    @NotNull
+    public CustomDurabilityItem getItem() {
+        return sourceItem;
+    }
+
+    /**
+     * @see #getItem()
+     * @deprecated
+     */
+    @Deprecated
+    public DurabilityItem getSourceItem() {
+        return sourceItem;
+    }
 
     @Override public boolean isCancelled() { return cancelled; }
     @Override public void setCancelled(boolean b) { cancelled = b; }

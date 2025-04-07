@@ -24,7 +24,7 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.RequiredLevelStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -83,9 +83,9 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
     public void refreshStats(PlayerData data) {
         Hero hero = Heroes.getInstance().getCharacterManager().getHero(data.getPlayer());
         hero.removeMaxMana("MMOItems");
-        hero.addMaxMana("MMOItems", (int) data.getStats().getStat(ItemStats.MAX_MANA));
+        hero.addMaxMana("MMOItems", (int) data.getStat(ItemStats.MAX_MANA));
         hero.removeMaxStamina("MMOItems");
-        hero.addMaxStamina("MMOItems", (int) data.getStats().getStat(MAX_STAMINA));
+        hero.addMaxStamina("MMOItems", (int) data.getStat(MAX_STAMINA));
 
         // Backwards compatibility. Max health is operated by MythicLib
         hero.removeMaxHealth("MMOItems");
@@ -102,7 +102,7 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
      */
     @EventHandler
     public void a(HeroChangeLevelEvent event) {
-        PlayerData.get(event.getHero().getPlayer()).getInventory().scheduleUpdate();
+        PlayerData.get(event.getHero().getPlayer()).resolveModifiersLater();
     }
 
     /**
@@ -111,7 +111,7 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
      */
     @EventHandler
     public void b(ClassChangeEvent event) {
-        PlayerData.get(event.getHero().getPlayer()).getInventory().scheduleUpdate();
+        PlayerData.get(event.getHero().getPlayer()).resolveModifiersLater();
     }
 
     private static class PlayerWrapper extends RPGPlayer {

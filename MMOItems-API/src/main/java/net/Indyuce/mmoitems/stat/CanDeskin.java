@@ -19,7 +19,7 @@ import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -78,11 +78,13 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
             if (targetItemMeta instanceof LeatherArmorMeta && originalItemMeta instanceof LeatherArmorMeta)
                 ((LeatherArmorMeta) targetItemMeta).setColor(((LeatherArmorMeta) originalItemMeta).getColor());
 
-            if (targetItemMeta instanceof ArmorMeta && originalItemMeta instanceof ArmorMeta) {
-                ((ArmorMeta) targetItemMeta).setTrim(((ArmorMeta) originalItemMeta).getTrim());
-                if (originalItemMeta.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) targetItemMeta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
-                else targetItemMeta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
-            }
+            if (MythicLib.plugin.getVersion().isAbove(1, 20))
+                if (targetItemMeta instanceof ArmorMeta && originalItemMeta instanceof ArmorMeta) {
+                    ((ArmorMeta) targetItemMeta).setTrim(((ArmorMeta) originalItemMeta).getTrim());
+                    if (originalItemMeta.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM))
+                        targetItemMeta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+                    else targetItemMeta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+                }
 
             if (target.hasTag("SkullOwner") && (targetItem.getType() == Material.PLAYER_HEAD)
                     && (originalItem.getType() == Material.PLAYER_HEAD))

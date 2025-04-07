@@ -9,7 +9,7 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.StringListStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	public GrantedPermissions() {
 		super("GRANTED_PERMISSIONS", Material.NAME_TAG, "授予的权限",
-				new String[] { "持有物品将授予的权限列表" }, new String[0]);
+				new String[] { "持有物品将授予的权限列表" }, null);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.stat.data.random;
 
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffectType;
 

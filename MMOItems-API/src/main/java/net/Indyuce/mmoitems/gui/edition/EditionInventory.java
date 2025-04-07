@@ -15,7 +15,7 @@ import net.Indyuce.mmoitems.gui.MMOItemsInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -48,7 +48,7 @@ public abstract class EditionInventory extends MMOItemsInventory {
      * Config file being edited. It is cached when the edition inventory is
      * opened and can only be accessed through the getEditedSection() method
      */
-    private final ConfigFile configFile;
+    private ConfigFile configFile;
 
     private final boolean displaysBack;
 
@@ -80,7 +80,6 @@ public abstract class EditionInventory extends MMOItemsInventory {
 
         // For building the Inventory
         this.template = template;
-        this.configFile = template.getType().getConfigFile();
         final VInventoryView open = VersionUtils.getOpen(player);
         if (open.getTopInventory().getHolder() instanceof EditionInventory)
             this.cachedItem = ((EditionInventory) open.getTopInventory().getHolder()).cachedItem;
@@ -100,6 +99,8 @@ public abstract class EditionInventory extends MMOItemsInventory {
      */
     public void refreshInventory() {
         Validate.notNull(inventory, "Inventory has never been opened");
+
+        configFile = template.getType().getConfigFile(); // Update config file
         inventory.clear();
         // updateCachedItem();
         addEditionItems();
@@ -126,6 +127,7 @@ public abstract class EditionInventory extends MMOItemsInventory {
     @Override
     public void open() {
         if (inventory == null) inventory = Bukkit.createInventory(this, 54, getName());
+        configFile = template.getType().getConfigFile(); // Update config file
         addEditionItems();
         arrangeInventory();
         super.open();

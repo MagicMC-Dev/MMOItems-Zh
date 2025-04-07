@@ -2,6 +2,8 @@ package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.util.lang3.NotImplementedException;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -10,8 +12,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ColorData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;

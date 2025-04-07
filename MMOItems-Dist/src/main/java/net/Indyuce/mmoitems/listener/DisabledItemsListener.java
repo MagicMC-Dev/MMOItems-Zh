@@ -5,12 +5,12 @@ import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.damage.MeleeAttackMetadata;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,8 +22,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * mmoitems
@@ -41,11 +39,11 @@ public class DisabledItemsListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void rightClickEffects(PlayerInteractEvent event) {
-        if (!event.hasItem())
-            return;
+        if (!event.hasItem()) return;
+
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
         if (MMOUtils.hasBeenRemoved(item))
-            event.setCancelled(true);
+            event.setUseItemInHand(Event.Result.DENY);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

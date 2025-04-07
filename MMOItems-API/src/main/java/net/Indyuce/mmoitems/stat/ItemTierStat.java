@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Material;
 
 import net.Indyuce.mmoitems.MMOItems;

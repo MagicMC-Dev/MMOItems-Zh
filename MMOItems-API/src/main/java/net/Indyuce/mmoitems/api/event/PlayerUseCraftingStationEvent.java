@@ -6,7 +6,7 @@ import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 

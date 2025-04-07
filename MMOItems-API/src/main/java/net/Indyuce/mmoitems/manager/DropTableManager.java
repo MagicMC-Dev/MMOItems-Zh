@@ -83,15 +83,16 @@ public class DropTableManager implements Listener, Reloadable {
 		if (killer != null && killer.hasMetadata("NPC"))
 			return;
 
-		if (monsters.containsKey(entity.getType())) {
-			List<ItemStack> drops = monsters.get(entity.getType()).read(killer != null ? PlayerData.get(killer) : null, false);
-			ItemDropEvent called = new ItemDropEvent(killer, drops, entity);
-			Bukkit.getPluginManager().callEvent(called);
-			if (called.isCancelled())
-				return;
+		DropTable dropTable = monsters.get(entity.getType());
+		if (dropTable == null) return;
 
-			event.getDrops().addAll(drops);
-		}
+		List<ItemStack> drops = dropTable.read(killer != null ? PlayerData.get(killer) : null, false);
+		ItemDropEvent called = new ItemDropEvent(killer, drops, entity);
+		Bukkit.getPluginManager().callEvent(called);
+		if (called.isCancelled())
+			return;
+
+		event.getDrops().addAll(drops);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

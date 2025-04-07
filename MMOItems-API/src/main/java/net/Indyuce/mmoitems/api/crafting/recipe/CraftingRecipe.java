@@ -102,7 +102,7 @@ public class CraftingRecipe extends Recipe {
     @NotNull
     public ItemStack getPreviewItemStack() {
 
-        // [Backwards Compatibility] UI Filters
+        // [Backwards Compatibility] UI Filters. Does not support build metadata though so it's fucking shit
         if (legacyUiFilter != null) {
             // Generate from ProvidedUIFilter, guaranteed to not be null don't listen to the inspection.
             //return output.getParent().getDisplayStack(output.getArgument(), output.getData(), null);

@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.comp.mmocore.crafting;
 
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.experience.EXPSource;

@@ -8,7 +8,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;

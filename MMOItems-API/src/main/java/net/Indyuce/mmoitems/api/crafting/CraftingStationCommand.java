@@ -6,10 +6,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class CraftingStationCommand extends Command {
-    private final CraftingStation station;
     private final String permission, noPerm, notAPlayer;
+
+    @Nullable(value = "null when unregistered")
+    private CraftingStation station;
 
     public CraftingStationCommand(CraftingStation station, String command, ConfigurationSection config) {
         super(command,
@@ -21,6 +26,15 @@ public class CraftingStationCommand extends Command {
         this.permission = config.getString("permission");
         this.noPerm = message(config, "no-perm");
         this.notAPlayer = message(config, "players-only");
+    }
+
+    @Nullable
+    public CraftingStation getStation() {
+        return station;
+    }
+
+    public void updateStation(@Nullable CraftingStation station) {
+        this.station = station;
     }
 
     private String message(ConfigurationSection config, String path) {
@@ -43,7 +57,7 @@ public class CraftingStationCommand extends Command {
         }
 
         // Open
-        station.getEditableView().generate((Player) sender).open();
+        Objects.requireNonNull(station, "Internal error").getEditableView().generate((Player) sender).open();
         return true;
     }
 }

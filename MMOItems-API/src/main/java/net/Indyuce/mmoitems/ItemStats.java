@@ -191,7 +191,7 @@ public class ItemStats {
     LUTE_ATTACK_SOUND = new LuteAttackSoundStat(),
             LUTE_ATTACK_EFFECT = new LuteAttackEffectStat(),
             NOTE_WEIGHT = new DoubleStat("NOTE_WEIGHT", Material.MUSIC_DISC_MALL, "音符重量", new String[]{"定义你的琴产生的投射物", "向下倾斜的程度"}, new String[]{"lute"}),
-            REMOVE_ON_CRAFT = new BooleanStat("REMOVE_ON_CRAFT", Material.GLASS_BOTTLE, "合成时移除", new String[]{"如果物品在合成时应该完全", "移除, 或者变成一个空瓶子或空桶"}, new String[0], Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET),
+            //REMOVE_ON_CRAFT = new BooleanStat("REMOVE_ON_CRAFT", Material.GLASS_BOTTLE, "Remove on Craft", new String[]{"If the item should be completely", "removed when used in a recipe,", "or if it should become an", "empty bottle or bucket."}, new String[0], Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET),
             COMPATIBLE_TYPES = new CompatibleTypes(),
             COMPATIBLE_IDS = new CompatibleIds(),
             COMPATIBLE_MATERIALS = new CompatibleMaterials(),

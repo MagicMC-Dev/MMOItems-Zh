@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
-import io.lumine.mythic.lib.api.event.SynchronizedDataLoadEvent;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
@@ -67,27 +66,12 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
     @EventHandler
     public void updateInventoryOnLevelUp(PlayerLevelUpEvent event) {
-        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+        PlayerData.get(event.getPlayer()).resolveModifiersLater();
     }
 
     @EventHandler
     public void updateInventoryOnClassChange(PlayerChangeClassEvent event) {
-        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-    }
-
-    /**
-     * Updates inventory when player data has finished loading. This may
-     * cause issues because in some cases the MMOCore player data is done
-     * loading before MI data is even initialized in which case MI should
-     * not do anymore.
-     * <p>
-     * Fixes https://gitlab.com/phoenix-dvpmt/mmocore/-/issues/545
-     */
-    @EventHandler
-    public void updateInventoryOnLoad(SynchronizedDataLoadEvent event) {
-        if (event.getManager().getOwningPlugin().equals(MMOCore.plugin))
-            if (PlayerData.has(event.getHolder().getPlayer()))
-                PlayerData.get(event.getHolder().getPlayer()).getInventory().scheduleUpdate();
+        PlayerData.get(event.getPlayer()).resolveModifiersLater();
     }
 
     public static class MMOCoreRPGPlayer extends RPGPlayer {

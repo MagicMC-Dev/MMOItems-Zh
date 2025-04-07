@@ -167,10 +167,11 @@ public class EnchantListData implements StatData, Mergeable<EnchantListData> {
             //RFG//MMOItems.log(" \u00a73  <=: \u00a77Updated \u00a7f" + updated);
 
             // 3: Is it at an unobtainable level? Then its Original
-            if (updated > e.getMaxLevel() || !e.getItemTarget().includes(mat)) {
-                //RFG//MMOItems.log(" \u00a7bType-3 \u00a77Original Identification ~ Impossible through vanilla");
-
-                continue;
+            try {
+                if (updated > e.getMaxLevel() ) continue;
+                if (!e.getItemTarget().includes(mat)) continue;
+            } catch(Exception exception) {
+                // TODO MI7
             }
 
             // 4: Is it at a lesser level? Player must have enchanted, take them as External

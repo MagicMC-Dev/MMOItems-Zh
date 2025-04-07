@@ -21,7 +21,7 @@ public class ConsumableConsumedEvent extends PlayerDataEvent {
     private final Consumable useItem;
 
     @Nullable
-    private Boolean consumed = true;
+    private Boolean consumed;
 
     private static final HandlerList handlers = new HandlerList();
 

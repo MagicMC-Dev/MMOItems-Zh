@@ -5,7 +5,7 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 

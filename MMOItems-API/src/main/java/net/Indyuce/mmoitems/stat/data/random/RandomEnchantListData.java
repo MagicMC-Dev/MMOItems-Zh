@@ -5,7 +5,7 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 

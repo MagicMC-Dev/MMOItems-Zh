@@ -16,7 +16,7 @@ import net.Indyuce.mmoitems.api.item.template.explorer.TypeFilter;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;

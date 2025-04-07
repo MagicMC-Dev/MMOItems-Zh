@@ -8,9 +8,8 @@ import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
-import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.inventory.EquippedItem;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
@@ -21,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -31,67 +29,38 @@ public class DeathDowngrading {
     /**
      * This will go through the following steps:
      *
-     *  #1 Evaluate the list of equipped items {@link InventoryUpdateHandler#getEquipped()} to
+     *  #1 Evaluate the list of equipped items {@link net.Indyuce.mmoitems.inventory.InventoryResolver#getEquipped()} to
      *     find those that can be death-downgraded.
      *
      *  #2 Roll for death downgrade chances, downgrading the items
-     *
-     * @param player Player whose inventory is to be death-downgraded.
      */
-    public static void playerDeathDowngrade(@NotNull Player player) {
-
-        // Get Player
-        final PlayerData data = PlayerData.get(player);
+    public static void playerDeathDowngrade(@NotNull PlayerData data, @NotNull Player player) {
 
         // Get total downgrade chance, anything less than zero is invalid
-        double deathChance = data.getStats().getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
+        double deathChance = data.getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE) / 100;
         //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Current chance:\u00a7b " + deathChance);
-        if (deathChance <= 0) { return; }
+        if (deathChance <= 0) return;
 
         // Make sure the equipped items list is up to date and retrieve it
-        data.updateInventory();
-        final List<EquippedItem> equipped = data.getInventory().getEquipped();
-        for (Iterator<EquippedItem> ite = equipped.iterator(); ite.hasNext(); ) {
-            EquippedItem next = ite.next();
-            if (next == null || !canDeathDowngrade(next.getCached()))
-                ite.remove();
-        }
+        data.resolveInventory();
+        final List<EquippedItem> candidates = new ArrayList<>();
+        for (EquippedItem equipped : data.getInventory().getEquipped())
+            if (canDeathDowngrade(equipped.reader())) candidates.add(equipped);
 
         // Nothing to perform operations? Snooze
-        if (equipped.size() == 0) {
-            //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 No items to downgrade. ");
-            return;
-        }
-
-        // Degrade those items!
-        while (deathChance >= 100 && equipped.size() > 0) {
-
-            // Decrease
-            deathChance -= 100;
-
-            // The item was randomly chosen, we must downgrade it by one level.
-            int deathChosen = RANDOM.nextInt(equipped.size());
-            EquippedItem equip = equipped.get(deathChosen);
-
-            // Downgrade and remove from list
-            equip.setItem(downgrade(new LiveMMOItem(equip.getNBT()), player));
-            equipped.remove(deathChosen);
-
-            //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Autodegrading\u00a7a " + mmo.getData(ItemStats.NAME));
-        }
+        if (candidates.isEmpty()) return;
 
         // If there is chance, and there is size, and there is chance success
-        if (deathChance > 0 && equipped.size() > 0 && RANDOM.nextInt(100) < deathChance) {
+        while (deathChance > 0 && RANDOM.nextDouble() < deathChance) {
+            deathChance -= 1; // Support multiple death downgrades if chance is above 100%
 
             // Downgrade random item
-            int d = RANDOM.nextInt(equipped.size());
-            EquippedItem equip = equipped.get(d);
+            int randomIndex = RANDOM.nextInt(candidates.size());
+            EquippedItem equip = candidates.get(randomIndex);
 
             // Downgrade and remove from list
-            equip.setItem(downgrade(new LiveMMOItem(equip.getNBT()), player));
-            equipped.remove(d);
-
-            //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Chancedegrade\u00a7a " + mmo.getData(ItemStats.NAME));
+            equip.setItem(downgrade(new LiveMMOItem(equip.getItem()), player));
+            candidates.remove(randomIndex);
         }
     }
 
@@ -241,7 +210,7 @@ public class DeathDowngrading {
         PlayerData data = PlayerData.get(player);
 
         // Get total downgrade chance, anything less than zero is invalid
-        return data.getStats().getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
+        return data.getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
     }
 
     /**

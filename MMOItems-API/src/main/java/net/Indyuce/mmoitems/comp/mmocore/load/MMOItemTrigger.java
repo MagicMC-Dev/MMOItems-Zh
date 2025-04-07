@@ -7,7 +7,7 @@ import net.Indyuce.mmocore.api.quest.trigger.Trigger;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.inventory.ItemStack;
 
 public class MMOItemTrigger extends Trigger {

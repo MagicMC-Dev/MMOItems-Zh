@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.comp.mmocore.load;
 
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import org.apache.commons.lang.Validate;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.loot.LootBuilder;

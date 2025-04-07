@@ -3,11 +3,11 @@ package net.Indyuce.mmoitems.api.interaction.util;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.event.item.CustomDurabilityDamage;
 import net.Indyuce.mmoitems.api.event.item.ItemCustomRepairEvent;
 import net.Indyuce.mmoitems.api.item.util.LoreUpdate;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -97,6 +97,11 @@ public class CustomDurabilityItem extends DurabilityItem {
         durability = Math.max(0, Math.min(durability - loss, maxDurability));
     }
 
+    @Override
+    public boolean isLostWhenBroken() {
+        return nbtItem.getBoolean(ItemStats.WILL_BREAK.getNBTPath());
+    }
+
     @NotNull
     @Override
     protected ItemStack applyChanges() {
@@ -106,6 +111,7 @@ public class CustomDurabilityItem extends DurabilityItem {
 
         // Apply the NBT tag
         ItemStack item = nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability)).toItem();
+        final ItemMeta meta = item.getItemMeta();
 
         /*
          * Cross multiplication to display the current item durability on the
@@ -118,7 +124,6 @@ public class CustomDurabilityItem extends DurabilityItem {
          * enchant.
          */
         if (!barHidden && item.getType().getMaxDurability() > 0) {
-            final ItemMeta meta = item.getItemMeta();
             final int maxDamage = retrieveMaxVanillaDurability(item, meta);
             final int damage = durability == maxDurability ? 0 : Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * maxDamage));
             ((Damageable) meta).setDamage(damage);
@@ -129,6 +134,6 @@ public class CustomDurabilityItem extends DurabilityItem {
         final String format = MythicLib.inst().parseColors(ItemStats.ITEM_DAMAGE.getGeneralStatFormat().replace("{max}", String.valueOf(maxDurability)));
         final String old = format.replace("{current}", String.valueOf(initialDurability));
         final String replaced = format.replace("{current}", String.valueOf(durability));
-        return new LoreUpdate(item, old, replaced).updateLore();
+        return new LoreUpdate(item, meta, nbtItem, old, replaced).updateLore();
     }
 }

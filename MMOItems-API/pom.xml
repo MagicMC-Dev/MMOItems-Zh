@@ -143,12 +143,19 @@
         </dependency>
 
         <!-- MMOCore API -->
-        <dependency>
+        <!-- <dependency>
             <groupId>net.Indyuce</groupId>
             <artifactId>MMOInventory</artifactId>
             <version>1.9.1-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
+        </dependency> -->
+        <dependency>
+            <groupId>net.Indyuce</groupId>
+            <artifactId>MMOInventory</artifactId>
+            <version>1.9.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/MMOInventory-1.9.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <!-- MythicEnchants -->
         <dependency>

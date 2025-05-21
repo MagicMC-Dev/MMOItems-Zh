@@ -1,39 +1,41 @@
 package net.Indyuce.mmoitems.inventory.provided;
 
-import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.inventory.InventoryResolver;
 import net.Indyuce.mmoitems.inventory.InventorySupplier;
 import net.Indyuce.mmoitems.inventory.InventoryWatcher;
 import net.Indyuce.mmoitems.inventory.ItemUpdate;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class RPGInventorySupplier implements InventorySupplier {
 
     @NotNull
     @Override
-    public InventoryWatcher supply(@NotNull PlayerData playerData) {
-        return new Watcher(playerData);
+    public InventoryWatcher supply(@NotNull InventoryResolver resolver) {
+        return new Watcher(resolver);
     }
 
-    private static class Watcher implements InventoryWatcher {
+    private static class Watcher extends InventoryWatcher {
         private final PlayerData playerData;
 
-        public Watcher(PlayerData playerData) {
-            this.playerData = playerData;
+        private final Map<ItemStack, Integer> itemHashes = new HashMap<>();
+
+        public Watcher(InventoryResolver resolver) {
+            this.playerData = resolver.getPlayerData();
         }
 
         @Override
         public void watchAll(@NotNull Consumer<ItemUpdate> callback) {
 
-        }
 
-        @Override
-        public ItemUpdate watchSingle(@NotNull EquipmentSlot slot, int index, @NotNull Optional<ItemStack> newItem) {
-            throw new RuntimeException("TODO");
+
+
+            // TODO
         }
     }
 }

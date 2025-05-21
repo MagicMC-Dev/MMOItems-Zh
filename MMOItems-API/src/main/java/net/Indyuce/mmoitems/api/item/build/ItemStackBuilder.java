@@ -59,6 +59,7 @@ public class ItemStackBuilder {
      */
     @Deprecated
     private List<Consumer<NBTItem>> futureActions;
+    private List<Consumer<ItemStack>> futureActionsItemstack;
 
     private static final AttributeModifier FAKE_MODIFIER = VersionUtils.attrMod(new NamespacedKey(MMOItems.plugin, "decoy"), 0, Operation.ADD_NUMBER);
 
@@ -132,6 +133,15 @@ public class ItemStackBuilder {
     public void addFutureAction(Consumer<NBTItem> action) {
         if (futureActions == null) futureActions = new ArrayList<>();
         futureActions.add(action);
+    }
+
+    /**
+     * @deprecated Temp fix before MI7
+     */
+    @Deprecated
+    public void addFutureActionItemstack(Consumer<ItemStack> action) {
+        if (futureActionsItemstack == null) futureActionsItemstack = new ArrayList<>();
+        futureActionsItemstack.add(action);
     }
 
     public void addItemTag(List<ItemTag> newTags) {
@@ -281,6 +291,8 @@ public class ItemStackBuilder {
         meta.addAttributeModifier(Attributes.ATTACK_SPEED, FAKE_MODIFIER);
 
         item.setItemMeta(meta);
+
+        if (futureActionsItemstack != null) futureActionsItemstack.forEach(a -> a.accept(item));
 
         NBTItem nbt = NBTItem.get(item).addTag(tags);
         if (futureActions != null) futureActions.forEach(a -> a.accept(nbt));

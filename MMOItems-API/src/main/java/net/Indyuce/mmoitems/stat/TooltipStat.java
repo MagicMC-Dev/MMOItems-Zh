@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class TooltipStat extends StringStat implements GemStoneStat {
     public TooltipStat() {
-        super("TOOLTIP", Material.BIRCH_SIGN, "Tooltip", new String[]{"您要使用的自定义工具提示纹理的标识符。", "使用方法请查看维基百科！"}, new String[0]);
+        super("TOOLTIP", Material.BIRCH_SIGN, "Custom Tooltip", new String[]{"您要使用的自定义工具提示纹理的标识符。", "使用方法请查看维基百科！"}, new String[0]);
     }
 
     @Override

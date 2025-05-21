@@ -1,7 +1,6 @@
 /bin/
 /target/
-MMOItems-API/target/
-MMOItems-Dist/target/
+*/target/
 /.settings/
 /.idea/
 /.m2/

@@ -36,8 +36,8 @@ public class VanillaDurabilityItem extends DurabilityItem {
 
         if (damage == initialDamage) return item;
 
-        // #setDamage throws an error if damage is too high
-        ((Damageable) meta).setDamage(Math.min(damage, maxDamage));
+        // #setDamage throws an error if damage negative or too high
+        ((Damageable) meta).setDamage(Math.max(0, Math.min(damage, maxDamage)));
         item.setItemMeta(meta);
         return item;
     }

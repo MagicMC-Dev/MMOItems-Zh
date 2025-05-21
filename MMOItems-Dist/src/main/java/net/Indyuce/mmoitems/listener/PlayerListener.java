@@ -50,7 +50,7 @@ public class PlayerListener implements Listener {
         if (!PlayerData.has(event.getEntity())) return;
 
         final PlayerData playerData = PlayerData.get(event.getEntity());
-        final Player player = event.getPlayer();
+        final Player player = event.getEntity();
 
         // See description of DelayedDeathDowngrade child class for full explanation
         new DelayedDeathDowngrade(playerData, player).runTaskLater(MMOItems.plugin, 3L);

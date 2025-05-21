@@ -80,6 +80,7 @@ public abstract class EditionInventory extends MMOItemsInventory {
 
         // For building the Inventory
         this.template = template;
+        this.configFile = template.getType().getConfigFile(); // Update config file
         final VInventoryView open = VersionUtils.getOpen(player);
         if (open.getTopInventory().getHolder() instanceof EditionInventory)
             this.cachedItem = ((EditionInventory) open.getTopInventory().getHolder()).cachedItem;

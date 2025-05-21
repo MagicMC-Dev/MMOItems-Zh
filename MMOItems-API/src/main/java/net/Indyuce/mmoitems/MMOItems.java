@@ -1,9 +1,11 @@
 package net.Indyuce.mmoitems;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.util.MMOPlugin;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import io.lumine.mythic.lib.version.SpigotPlugin;
 import net.Indyuce.mmoitems.api.DeathItemsHandler;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -37,8 +39,9 @@ import net.Indyuce.mmoitems.inventory.provided.OrnamentInventorySupplier;
 import net.Indyuce.mmoitems.inventory.provided.VanillaInventorySupplier;
 import net.Indyuce.mmoitems.manager.*;
 import net.Indyuce.mmoitems.manager.data.PlayerDataManager;
+import net.Indyuce.mmoitems.server.ServerAdapter;
+import net.Indyuce.mmoitems.server.SpigotServerAdapter;
 import net.Indyuce.mmoitems.util.PluginUtils;
-import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -71,8 +74,8 @@ public class MMOItems extends MMOPlugin {
     private final PlayerInventoryManager inventory = new PlayerInventoryManager();
     private final List<EnchantPlugin<?>> enchantPlugins = new ArrayList<>();
     private final StatManager statManager = new StatManager();
+    private final PlayerDataManager playerDataManager = new PlayerDataManager(this);
 
-    private PlayerDataManager playerDataManager;
     private DropTableManager dropTableManager;
     private WorldGenManager worldGenManager;
     private UpgradeManager upgradeManager;
@@ -81,6 +84,7 @@ public class MMOItems extends MMOPlugin {
     private TierManager tierManager;
     private SetManager setManager;
     private VaultSupport vaultSupport;
+    private ServerAdapter serverAdapter;
     private final List<RPGHandler> rpgPlugins = new ArrayList<>();
 
     /**
@@ -109,7 +113,11 @@ public class MMOItems extends MMOPlugin {
         getLogger().log(Level.INFO, "INFO   Source: phoenix-dvpmt/mmoitems    VERSION: 6.10");
         getLogger().log(Level.INFO, "       QQ: 3217962725     文件: " + getFile().getName());
         getLogger().log(Level.INFO, "       (禁止倒卖)");
-        
+
+        // Paper or Spigot support
+        if (MythicLib.plugin.getVersion().isPaper()) serverAdapter = ServerAdapter.paper();
+        else serverAdapter = new SpigotServerAdapter();
+
         PluginUtils.isDependencyPresent("WorldEdit", u -> {
             try {
                 new WorldEditSupport();
@@ -252,7 +260,6 @@ public class MMOItems extends MMOPlugin {
 		}*/
 
         // Compatibility with /reload
-        playerDataManager = new PlayerDataManager();
         playerDataManager.initialize(EventPriority.NORMAL, EventPriority.HIGHEST);
 
         // Amount and bukkit recipes
@@ -443,6 +450,10 @@ public class MMOItems extends MMOPlugin {
 
     public UpgradeManager getUpgrades() {
         return upgradeManager;
+    }
+
+    public ServerAdapter getServerAdapter() {
+        return serverAdapter;
     }
 
     public TemplateManager getTemplates() {

@@ -11,19 +11,20 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.EquippableComponent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-@VersionDependant(version = {1, 21, 2})
-public class EquippableModel extends StringStat implements GemStoneStat {
-    public EquippableModel() {
-        super("EQUIPPABLE_MODEL", Material.LEATHER_CHESTPLATE, "可装备模型",
-                new String[]{"装备时使用的模型名称空间键。", "仅在 1.21.2+上可用。"}, new String[0]);
+/**
+ * @author Jules
+ */
+@VersionDependant(version = {1, 21, 4})
+public class CameraOverlay extends StringStat implements GemStoneStat {
+    public CameraOverlay() {
+        super("CAMERA_OVERLAY", Material.GLASS, "纹理遮罩", new String[]{"camera_overlay 的命名空间键。", "仅在1.20.4及以上版本可用"}, new String[0]);
     }
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
         EquippableComponent comp = item.getMeta().getEquippable();
-        comp.setModel(NamespacedKey.fromString(data.getString()));
+        comp.setCameraOverlay(NamespacedKey.fromString(data.getString()));
         item.getMeta().setEquippable(comp);
     }
 
@@ -32,10 +33,9 @@ public class EquippableModel extends StringStat implements GemStoneStat {
         ItemMeta meta = mmoitem.getNBT().getItem().getItemMeta();
         if (!meta.hasEquippable()) return;
 
-        @NotNull EquippableComponent comp = mmoitem.getNBT().getItem().getItemMeta().getEquippable();
-        @Nullable NamespacedKey model = comp.getModel();
-        if (model == null) return;
+        var camOverlay = meta.getEquippable().getCameraOverlay();
+        if (camOverlay == null) return;
 
-        mmoitem.setData(this, new StringData(model.toString()));
+        mmoitem.setData(this, new StringData(camOverlay.toString()));
     }
 }

@@ -11,39 +11,33 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public interface InventoryWatcher {
-
-    public default ItemUpdate watchSingle(@NotNull EquipmentSlot slot) {
-        return watchSingle(slot, 0, Optional.empty());
-    }
-
-    public default ItemUpdate watchSingle(@NotNull EquipmentSlot slot, int index) {
-        return watchSingle(slot, index, Optional.empty());
-    }
-
-    public default ItemUpdate watchSingle(@NotNull EquipmentSlot slot, @NotNull Optional<ItemStack> newItem) {
-        return watchSingle(slot, 0, newItem);
-    }
-
-    /**
-     * @param slot    Slot to update
-     * @param index   Index of slot, if required (ornaments and accessories)
-     * @param newItem New item if this function is called ahead of time
-     * @return Nothing if the watcher did not detect any change, or the UUID of the unregistered
-     *         item, which can in turn be used by the inventory checker, to filter out old buffs.
-     */
-    @Nullable
-    public ItemUpdate watchSingle(@NotNull EquipmentSlot slot, int index, @NotNull Optional<ItemStack> newItem);
-
-    public void watchAll(@NotNull Consumer<ItemUpdate> callback);
+@Deprecated
+public abstract class InventoryWatcher {
 
     @Nullable
-    static ItemUpdate checkForUpdate(@Nullable ItemStack newItem, @Nullable EquippedItem existing, @NotNull EquipmentSlot slot) {
-        return checkForUpdate(newItem, existing, slot, 0);
+    public ItemUpdate watchInventory(int index, @NotNull Optional<ItemStack> newItem) {
+        return null;
     }
 
     @Nullable
-    static ItemUpdate checkForUpdate(@Nullable ItemStack newItem, @Nullable EquippedItem existing, @NotNull EquipmentSlot slot, int index) {
+    public ItemUpdate watchVanillaSlot(@NotNull EquipmentSlot slot, @NotNull Optional<ItemStack> newItem) {
+        return null;
+    }
+
+    public abstract void watchAll(@NotNull Consumer<ItemUpdate> callback);
+
+    @Nullable
+    protected ItemUpdate checkForUpdate(@Nullable ItemStack newItem, @Nullable EquippedItem existing, @NotNull EquipmentSlot slot) {
+        return checkForUpdate(newItem, existing, slot, 0, 0);
+    }
+
+    @Nullable
+    protected ItemUpdate checkForUpdate(@Nullable ItemStack newItem, @Nullable EquippedItem existing, @NotNull EquipmentSlot slot, int slotIndex) {
+        return checkForUpdate(newItem, existing, slot, slotIndex, 0);
+    }
+
+    @Nullable
+    protected ItemUpdate checkForUpdate(@Nullable ItemStack newItem, @Nullable EquippedItem existing, @NotNull EquipmentSlot slot, int slotIndex, int customInventoryId) {
 
         // Current item is non-existent
         if (existing == null) {
@@ -52,7 +46,7 @@ public interface InventoryWatcher {
             if (UtilityMethods.isAir(newItem)) return null;
 
             // null->some
-            return new ItemUpdate(slot, null, new EquippedItem(slot, index, NBTItem.get(newItem)));
+            return new ItemUpdate(slot, null, new EquippedItem(customInventoryId, slot, slotIndex, NBTItem.get(newItem)));
         }
 
         // some->null
@@ -69,15 +63,15 @@ public interface InventoryWatcher {
         if (existing.getItemHash() == newItem.hashCode()) return null;
 
         // some->some
-        return new ItemUpdate(slot, existing, new EquippedItem(slot, index, NBTItem.get(newItem)));
+        return new ItemUpdate(slot, existing, new EquippedItem(customInventoryId, slot, slotIndex, NBTItem.get(newItem)));
     }
 
     @NotNull
-    static Optional<ItemStack> optionalOf(@Nullable ItemStack stack) {
+    public static Optional<ItemStack> optionalOf(@Nullable ItemStack stack) {
         return Optional.of(stack == null ? new ItemStack(Material.AIR) : stack);
     }
 
-    static void callbackIfNotNull(@Nullable ItemUpdate update, @NotNull Consumer<ItemUpdate> callback) {
+    public static void callbackIfNotNull(@Nullable ItemUpdate update, @NotNull Consumer<ItemUpdate> callback) {
         if (update != null) callback.accept(update);
     }
 }

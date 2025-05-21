@@ -2,15 +2,13 @@ package net.Indyuce.mmoitems.inventory.provided;
 
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.util.Lazy;
+import io.lumine.mythic.lib.util.Pair;
 import net.Indyuce.inventory.MMOInventory;
-import net.Indyuce.inventory.api.event.ItemEquipEvent;
-import net.Indyuce.inventory.inventory.InventoryHandler;
-import net.Indyuce.inventory.slot.CustomSlot;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.inventory.EquippedItem;
-import net.Indyuce.mmoitems.inventory.InventorySupplier;
-import net.Indyuce.mmoitems.inventory.InventoryWatcher;
-import net.Indyuce.mmoitems.inventory.ItemUpdate;
+import net.Indyuce.inventory.api.event.InventoryUpdateEvent;
+import net.Indyuce.inventory.inventory.Inventory;
+import net.Indyuce.inventory.inventory.slot.CustomSlot;
+import net.Indyuce.inventory.player.PlayerData;
+import net.Indyuce.mmoitems.inventory.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -30,44 +27,43 @@ import static net.Indyuce.mmoitems.inventory.InventoryWatcher.optionalOf;
 public class MMOInventorySupplier implements InventorySupplier, Listener {
     @NotNull
     @Override
-    public InventoryWatcher supply(@NotNull PlayerData playerData) {
-        return new Watcher(playerData);
+    public InventoryWatcher supply(@NotNull InventoryResolver resolver) {
+        return new Watcher(resolver);
     }
 
-    private static class Watcher implements InventoryWatcher {
+    private static class Watcher extends InventoryWatcher {
         private final Player player;
 
-        private final Map<Integer, EquippedItem> equipped = new HashMap<>();
-        private final Lazy<InventoryHandler> handler;
+        private final Map<Pair<Integer, Integer>, EquippedItem> equipped = new HashMap<>();
+        private final Lazy<PlayerData> playerData;
 
-        private Watcher(PlayerData playerData) {
-            this.player = playerData.getPlayer();
-            this.handler = Lazy.persistent(() -> MMOInventory.plugin.getDataManager().get(player));
+        private Watcher(InventoryResolver resolver) {
+            this.player = resolver.getPlayerData().getPlayer();
+            this.playerData = Lazy.persistent(() -> MMOInventory.plugin.getDataManager().get(player));
         }
 
         @Nullable
-        @Override
-        public ItemUpdate watchSingle(@NotNull EquipmentSlot slot, int index, @NotNull Optional<ItemStack> newItem) {
-            if (slot != EquipmentSlot.ACCESSORY) return null;
-
-            // Find new item
-            ItemStack stack = newItem.orElse(handler.get().getItem(Objects.requireNonNull(MMOInventory.plugin.getSlotManager().get(index), "No slot with index " + index)));
-            ItemUpdate update = InventoryWatcher.checkForUpdate(stack, equipped.get(index), slot, index);
-            if (update != null) equipped.put(index, update.getNew());
+        public ItemUpdate watchAccessory(Inventory inventory, CustomSlot slot, @NotNull Optional<ItemStack> newItem) {
+            ItemStack stack = newItem.orElse(playerData.get().get(inventory).getItem(slot));
+            final Pair<Integer, Integer> uniqueMapKey = Pair.of(inventory.getIntegerId(), slot.getIndex());
+            ItemUpdate update = checkForUpdate(stack, equipped.get(uniqueMapKey), EquipmentSlot.ACCESSORY, slot.getIndex(), inventory.getIntegerId());
+            if (update != null) equipped.put(uniqueMapKey, update.getNew());
             return update;
         }
 
         @Override
         public void watchAll(@NotNull Consumer<ItemUpdate> callback) {
-            for (CustomSlot slot : MMOInventory.plugin.getSlotManager().getCustomSlots())
-                InventoryWatcher.callbackIfNotNull(watchSingle(EquipmentSlot.ACCESSORY, slot.getIndex()), callback);
+            for (Inventory inv : MMOInventory.plugin.getInventoryManager().getAll())
+                for (CustomSlot slot : inv.getSlots())
+                    if (slot.getType().isCustom())
+                        callbackIfNotNull(watchAccessory(inv, slot, Optional.empty()), callback);
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void click(ItemEquipEvent event) {
-        ItemStack equipped = event.getItem();
-        final int accessoryIndex = event.getSlot().getIndex();
-        PlayerData.get(event.getPlayer()).getInventory().watchSingle(EquipmentSlot.ACCESSORY, accessoryIndex, optionalOf(equipped));
+    public void click(InventoryUpdateEvent event) {
+        ItemStack equipped = event.getNewItem();
+        net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayerData().getPlayer()).getInventory()
+                .watch(Watcher.class, watcher -> watcher.watchAccessory(event.getInventory(), event.getSlot(), optionalOf(equipped)));
     }
 }

@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.comp.mythicmobs;
 
-import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicReloadedEvent;
@@ -20,25 +19,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerLoadEvent;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 public class MythicMobsCompatibility implements Listener {
 
     public MythicMobsCompatibility() {
-
-        // Gonna keep the try catch here for a safety net.
-        try {
-            for (String faction : this.getFactions())
-                MMOItems.plugin.getStats().register(new FactionDamage(faction));
-        } catch (Exception exception) {
-            MMOItems.plugin.getLogger().log(Level.WARNING, "Exception while enabling MythicMobs compatibility: " + exception.getMessage());
-        }
-
         Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 
         // Crafting Stations stuff
@@ -84,6 +72,9 @@ public class MythicMobsCompatibility implements Listener {
         // Update skills
         MMOItems.plugin.getSkills().initialize(true);
 
+        // Update faction stats
+        reloadFactionStats();
+
         // Reload the abilities of online players...
         for (Player p : Bukkit.getOnlinePlayers()) {
             PlayerData data = PlayerData.get(p);
@@ -91,17 +82,29 @@ public class MythicMobsCompatibility implements Listener {
         }
     }
 
-    private Set<String> getFactions() {
-        Set<String> allFactions = new HashSet<>();
+    @EventHandler
+    public void b(ServerLoadEvent event) {
+        reloadFactionStats();
+    }
+
+    private static void reloadFactionStats() {
+
+        // Unregister faction stats
+        MMOItems.plugin.getStats().unregisterIf(stat -> stat instanceof FactionDamage);
+
+        // Register new faction damage stats
+        for (String faction : getFactions()) MMOItems.plugin.getStats().register(new FactionDamage(faction));
+    }
+
+    // Using a set to kill duplicates
+    private static Set<String> getFactions() {
+        var allFactions = new HashSet<String>();
 
         // Collects all mythic mobs + edited vanilla mobs in mythic mobs.
-        List<MythicMob> mobs = new ArrayList<>(MythicBukkit.inst().getMobManager().getVanillaTypes());
-        mobs.addAll(MythicBukkit.inst().getMobManager().getMobTypes());
-        // Adds their faction to the set if it is set.
-
-        for (MythicMob mob : mobs)
-            // Checks if it has a faction.
-            if (mob.hasFaction()) allFactions.add(mob.getFaction());
+        for (var mob : MythicBukkit.inst().getMobManager().getVanillaTypes())
+            if (mob.hasFaction()) allFactions.add(mob.getFaction().toUpperCase());
+        for (var mob : MythicBukkit.inst().getMobManager().getMobTypes())
+            if (mob.hasFaction()) allFactions.add(mob.getFaction().toUpperCase());
 
         return allFactions;
     }

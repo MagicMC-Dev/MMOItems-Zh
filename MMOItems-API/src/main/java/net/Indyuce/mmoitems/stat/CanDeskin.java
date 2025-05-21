@@ -5,6 +5,7 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.SmartGive;
 import io.lumine.mythic.lib.gson.JsonObject;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -19,7 +20,6 @@ import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -67,17 +67,20 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
             final Integer originalCustomModelData = originalItemMeta.hasCustomModelData() ? originalItemMeta.getCustomModelData() : null;
             targetItemMeta.setCustomModelData(originalCustomModelData);
 
-            // TODO SkinStat
+            // TODO SkinStat. implement this with MI7
 
+            // unbreakable
             if (targetItemMeta.isUnbreakable()) {
                 targetItemMeta.setUnbreakable(originalItemMeta.isUnbreakable());
                 if (targetItemMeta instanceof Damageable && originalItemMeta instanceof Damageable)
                     ((Damageable) targetItemMeta).setDamage(((Damageable) originalItemMeta).getDamage());
             }
 
+            // leather armor color
             if (targetItemMeta instanceof LeatherArmorMeta && originalItemMeta instanceof LeatherArmorMeta)
                 ((LeatherArmorMeta) targetItemMeta).setColor(((LeatherArmorMeta) originalItemMeta).getColor());
 
+            // armor trim
             if (MythicLib.plugin.getVersion().isAbove(1, 20))
                 if (targetItemMeta instanceof ArmorMeta && originalItemMeta instanceof ArmorMeta) {
                     ((ArmorMeta) targetItemMeta).setTrim(((ArmorMeta) originalItemMeta).getTrim());
@@ -86,6 +89,24 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
                     else targetItemMeta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
                 }
 
+            // Equippable model
+            if (MythicLib.plugin.getVersion().isAbove(1, 21, 2)) {
+                if (targetItemMeta.hasEquippable()) {
+                    targetItemMeta.setEquippable(originalItemMeta.getEquippable());
+                }
+            }
+
+            // custom model data component
+            if (MythicLib.plugin.getVersion().isAbove(1, 21, 4)) {
+                targetItemMeta.setCustomModelDataComponent(originalItemMeta.getCustomModelDataComponent());
+            }
+
+            // item model
+            if (MythicLib.plugin.getVersion().isAbove(1, 21, 2)) {
+                targetItemMeta.setItemModel(originalItemMeta.getItemModel());
+            }
+
+            // TODO wtf is this
             if (target.hasTag("SkullOwner") && (targetItem.getType() == Material.PLAYER_HEAD)
                     && (originalItem.getType() == Material.PLAYER_HEAD))
                 MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta) targetItemMeta,

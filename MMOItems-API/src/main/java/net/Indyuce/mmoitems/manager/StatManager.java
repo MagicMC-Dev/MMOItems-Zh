@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.element.Element;
 import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -13,7 +14,6 @@ import net.Indyuce.mmoitems.stat.annotation.HasCategory;
 import net.Indyuce.mmoitems.stat.category.StatCategory;
 import net.Indyuce.mmoitems.stat.type.*;
 import net.Indyuce.mmoitems.util.ElementStatType;
-import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 public class StatManager {
@@ -119,6 +120,10 @@ public class StatManager {
      * TODO refactor with stat categories
      */
     public void loadElements() {
+
+        // TODO workaround, remove it with MI7
+        numericStats.removeIf(stat -> stat instanceof FakeElementalStat); // temporary fix, this is for elements TODO improve
+
         for (ElementStatType type : ElementStatType.values())
             for (Element element : MythicLib.plugin.getElements().getAll())
                 numericStats.add(new FakeElementalStat(element, type));
@@ -140,9 +145,9 @@ public class StatManager {
 
     /**
      * @return Collection of all numeric stats like atk damage, crit strike
-     * chance, max mana... which can be applied on a gem stone. This is
-     * used when applying gem stones to quickly access all the stats
-     * which needs to be applied
+     *         chance, max mana... which can be applied on a gem stone. This is
+     *         used when applying gem stones to quickly access all the stats
+     *         which needs to be applied
      */
     @NotNull
     public List<DoubleStat> getNumericStats() {
@@ -151,7 +156,7 @@ public class StatManager {
 
     /**
      * @return Collection of all stats which constitute an item restriction:
-     * required level, required class, soulbound..
+     *         required level, required class, soulbound..
      */
     @NotNull
     public List<ItemRestriction> getItemRestrictionStats() {
@@ -160,7 +165,7 @@ public class StatManager {
 
     /**
      * @return Collection of all stats implementing a consumable action like
-     * deconstructing, identifying...
+     *         deconstructing, identifying...
      */
     @NotNull
     public List<ConsumableItemInteraction> getConsumableActions() {
@@ -169,7 +174,7 @@ public class StatManager {
 
     /**
      * @return Collection of all stats implementing self consumable like
-     * restore health, mana, hunger...
+     *         restore health, mana, hunger...
      */
     @NotNull
     public List<PlayerConsumable> getPlayerConsumables() {
@@ -197,6 +202,14 @@ public class StatManager {
 
         // Non existing stat
         return null;
+    }
+
+    public void unregisterIf(Predicate<ItemStat<?, ?>> filter) {
+        stats.values().removeIf(filter);
+        numericStats.removeIf(filter);
+        itemRestrictions.removeIf(stat -> filter.test((ItemStat<?, ?>) stat));
+        consumableActions.removeIf(stat -> filter.test((ItemStat<?, ?>) stat));
+        playerConsumables.removeIf(stat -> filter.test((ItemStat<?, ?>) stat));
     }
 
     /**

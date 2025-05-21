@@ -150,6 +150,7 @@ public class ItemSkin extends UseItem {
         if (skinMeta != null && meta != null) {
 
             // TODO refactor this code using StatHistory
+            // TODO make it configurable what stats are being transferred over through skins
 
             // Custom model data
             if (skinMeta.hasCustomModelData()) meta.setCustomModelData(skinMeta.getCustomModelData());
@@ -179,6 +180,27 @@ public class ItemSkin extends UseItem {
                     && nbtSkin.getItem().getType() == Material.PLAYER_HEAD)
                 MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta) meta,
                         ((SkullTextureData) volSkin.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
+
+            // equippable model
+            if (MythicLib.plugin.getVersion().isAbove(1, 21, 4)) {
+                // !! WARNING !!
+                // There's currently a limitation with how the equippable slot
+                // is handled, Spigot basically always provides HEAD as default
+                // equippable slot, even for armors or weapons.
+                if (skinMeta.hasEquippable()) {
+                    meta.setEquippable(skinMeta.getEquippable());
+                }
+            }
+
+            // Custom model data component
+            if (MythicLib.plugin.getVersion().isAbove(1, 21, 4)) {
+                meta.setCustomModelDataComponent(skinMeta.getCustomModelDataComponent());
+            }
+
+            // Item model
+            if (MythicLib.plugin.getVersion().isAbove(1, 21, 2)) {
+                if (skinMeta.hasItemModel()) meta.setItemModel(skinMeta.getItemModel());
+            }
 
             item.setItemMeta(meta);
         }

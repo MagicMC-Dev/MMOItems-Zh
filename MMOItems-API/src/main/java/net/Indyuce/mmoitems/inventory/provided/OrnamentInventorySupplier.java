@@ -26,38 +26,34 @@ public class OrnamentInventorySupplier implements InventorySupplier, Listener {
 
     @NotNull
     @Override
-    public InventoryWatcher supply(@NotNull PlayerData playerData) {
-        return new Watcher(playerData);
+    public InventoryWatcher supply(@NotNull InventoryResolver resolver) {
+        return new Watcher(resolver);
     }
 
-    private static class Watcher implements InventoryWatcher {
+    private static class Watcher extends InventoryWatcher {
         private final Player player;
 
         private final EquippedItem[] matrixEquipped;
 
-        public Watcher(PlayerData playerData) {
-            this.player = playerData.getPlayer();
-            int inventorySize = playerData.getPlayer().getInventory().getContents().length;
+        public Watcher(InventoryResolver resolver) {
+            this.player = resolver.getPlayerData().getPlayer();
+            int inventorySize = player.getInventory().getContents().length;
             this.matrixEquipped = new EquippedItem[inventorySize];
+        }
+
+        @Nullable
+        @Override
+        public ItemUpdate watchInventory(int index, @NotNull Optional<ItemStack> newItem) {
+            ItemStack stack = newItem.orElse(player.getInventory().getContents()[index]);
+            ItemUpdate update = checkForUpdate(stack, matrixEquipped[index], EquipmentSlot.INVENTORY, index);
+            if (update != null) matrixEquipped[index] = update.getNew();
+            return update;
         }
 
         @Override
         public void watchAll(@NotNull Consumer<ItemUpdate> callback) {
             for (int i = 0; i < matrixEquipped.length; i++)
-                InventoryWatcher.callbackIfNotNull(watchSingle(EquipmentSlot.INVENTORY, i), callback);
-        }
-
-        @Nullable
-        @Override
-        public ItemUpdate watchSingle(@NotNull EquipmentSlot slot, int index, @NotNull Optional<ItemStack> newItem) {
-
-            // Not my job
-            if (slot != EquipmentSlot.INVENTORY) return null;
-
-            ItemStack stack = newItem.orElse(player.getInventory().getContents()[index]);
-            ItemUpdate update = InventoryWatcher.checkForUpdate(stack, matrixEquipped[index], EquipmentSlot.INVENTORY, index);
-            if (update != null) matrixEquipped[index] = update.getNew();
-            return update;
+                callbackIfNotNull(watchInventory(i, Optional.empty()), callback);
         }
     }
 

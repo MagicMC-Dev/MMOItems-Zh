@@ -2,10 +2,7 @@ package net.Indyuce.mmoitems.inventory.provided;
 
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.inventory.EquippedItem;
-import net.Indyuce.mmoitems.inventory.InventorySupplier;
-import net.Indyuce.mmoitems.inventory.InventoryWatcher;
-import net.Indyuce.mmoitems.inventory.ItemUpdate;
+import net.Indyuce.mmoitems.inventory.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,37 +18,37 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static net.Indyuce.mmoitems.inventory.InventoryWatcher.*;
+import static net.Indyuce.mmoitems.inventory.InventoryWatcher.optionalOf;
 
 public class VanillaInventorySupplier implements InventorySupplier, Listener {
 
     @NotNull
     @Override
-    public InventoryWatcher supply(@NotNull PlayerData playerData) {
-        return new Watcher(playerData);
+    public InventoryWatcher supply(@NotNull InventoryResolver resolver) {
+        return new Watcher(resolver);
     }
 
-    private static class Watcher implements InventoryWatcher {
+    private static class Watcher extends InventoryWatcher {
         private final Player player;
 
         private EquippedItem helmet, chestplate, leggings, boots, mainhand, offhand;
 
-        public Watcher(PlayerData playerData) {
-            this.player = playerData.getPlayer();
+        public Watcher(InventoryResolver resolver) {
+            this.player = resolver.getPlayerData().getPlayer();
         }
 
         @Override
         public void watchAll(@NotNull Consumer<ItemUpdate> callback) {
-            callbackIfNotNull(watchSingle(EquipmentSlot.HEAD), callback);
-            callbackIfNotNull(watchSingle(EquipmentSlot.CHEST), callback);
-            callbackIfNotNull(watchSingle(EquipmentSlot.LEGS), callback);
-            callbackIfNotNull(watchSingle(EquipmentSlot.FEET), callback);
-            callbackIfNotNull(watchSingle(EquipmentSlot.MAIN_HAND), callback);
-            callbackIfNotNull(watchSingle(EquipmentSlot.OFF_HAND), callback);
+            callbackIfNotNull(watchVanillaSlot(EquipmentSlot.HEAD, Optional.empty()), callback);
+            callbackIfNotNull(watchVanillaSlot(EquipmentSlot.CHEST, Optional.empty()), callback);
+            callbackIfNotNull(watchVanillaSlot(EquipmentSlot.LEGS, Optional.empty()), callback);
+            callbackIfNotNull(watchVanillaSlot(EquipmentSlot.FEET, Optional.empty()), callback);
+            callbackIfNotNull(watchVanillaSlot(EquipmentSlot.MAIN_HAND, Optional.empty()), callback);
+            callbackIfNotNull(watchVanillaSlot(EquipmentSlot.OFF_HAND, Optional.empty()), callback);
         }
 
         @Override
-        public ItemUpdate watchSingle(@NotNull EquipmentSlot slot, int ignored, @NotNull Optional<ItemStack> newItem) {
+        public ItemUpdate watchVanillaSlot(@NotNull EquipmentSlot slot, @NotNull Optional<ItemStack> newItem) {
             switch (slot) {
                 case HEAD: {
                     ItemStack stack = newItem.orElse(player.getEquipment().getHelmet());
@@ -104,8 +101,8 @@ public class VanillaInventorySupplier implements InventorySupplier, Listener {
 
         // Items are not swapped yet
         playerData.getMMOPlayerData().getStatMap().bufferUpdates(() -> {
-            playerData.getInventory().watchSingle(EquipmentSlot.MAIN_HAND, optionalOf(equipment.getItemInOffHand()));
-            playerData.getInventory().watchSingle(EquipmentSlot.OFF_HAND, optionalOf(equipment.getItemInMainHand()));
+            playerData.getInventory().watchVanillaSlot(EquipmentSlot.MAIN_HAND, optionalOf(equipment.getItemInOffHand()));
+            playerData.getInventory().watchVanillaSlot(EquipmentSlot.OFF_HAND, optionalOf(equipment.getItemInMainHand()));
         });
     }
 
@@ -113,7 +110,7 @@ public class VanillaInventorySupplier implements InventorySupplier, Listener {
     public void onCursorChange(PlayerItemHeldEvent event) {
         // New item is hotbar item with index `event.getNewSlot()`
         ItemStack itemHeld = event.getPlayer().getInventory().getItem(event.getNewSlot());
-        PlayerData.get(event.getPlayer()).getInventory().watchSingle(EquipmentSlot.MAIN_HAND, optionalOf(itemHeld));
+        PlayerData.get(event.getPlayer()).getInventory().watchVanillaSlot(EquipmentSlot.MAIN_HAND, optionalOf(itemHeld));
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -125,7 +122,7 @@ public class VanillaInventorySupplier implements InventorySupplier, Listener {
          */
         //Bukkit.broadcastMessage("item dropped " + event.getItemDrop().getItemStack().getType());
         // TODO test if this works :(
-        PlayerData.get(event.getPlayer()).getInventory().watchSingle(EquipmentSlot.MAIN_HAND);
+        PlayerData.get(event.getPlayer()).getInventory().watchVanillaSlot(EquipmentSlot.MAIN_HAND, Optional.empty());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -141,7 +138,7 @@ public class VanillaInventorySupplier implements InventorySupplier, Listener {
             try {
                 // Sometimes the event is called after the player logs off?
                 PlayerData playerData = PlayerData.get((Player) event.getPlayer());
-                playerData.getInventory().watchSingle(EquipmentSlot.MAIN_HAND);
+                playerData.getInventory().watchVanillaSlot(EquipmentSlot.MAIN_HAND, Optional.empty());
             } catch (Exception exception) {
                 // Ignore for now
             }

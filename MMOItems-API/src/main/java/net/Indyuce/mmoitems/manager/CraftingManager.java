@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.manager;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -153,7 +154,7 @@ public class CraftingManager implements Reloadable {
             if (existingCommand != null) existingCommand.updateStation(station);
             else {
                 stationCommands.put(station.getCommand().getName(), station.getCommand());
-                Bukkit.getCommandMap().register(MMOItems.plugin.getName(), station.getCommand());
+                UtilityMethods.getCommandMap().register(MMOItems.plugin.getName(), station.getCommand());
             }
         }
     }

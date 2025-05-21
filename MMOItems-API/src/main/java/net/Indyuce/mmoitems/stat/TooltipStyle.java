@@ -12,20 +12,23 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 @VersionDependant(version = {1, 21, 2})
-public class ItemModel extends StringStat implements GemStoneStat {
-    public ItemModel() {
-        super("MODEL", Material.PAINTING, "Item Model",
-                new String[]{"模型将用于渲染该项目。", "仅在 1.21.2+ 版本中可用"}, new String[0]);
+public class TooltipStyle extends StringStat implements GemStoneStat {
+    public TooltipStyle() {
+        super("TOOLTIP_STYLE", Material.ACACIA_SIGN, "原版 Tooltip 样式", new String[]{"您物品的原版 Tooltips 样式，", "仅在 1.21.2 及以上版本可用"}, new String[0]);
     }
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
-        item.getMeta().setItemModel(NamespacedKey.fromString(data.getString()));
+        NamespacedKey resolved = NamespacedKey.fromString(data.getString());
+        item.getMeta().setTooltipStyle(resolved);
     }
 
     @Override
     public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
-        ItemMeta meta = mmoitem.getNBT().getItem().getItemMeta();
-        if (meta.hasItemModel()) mmoitem.setData(this, new StringData(meta.getItemModel().toString()));
+        final ItemMeta meta = mmoitem.getNBT().getItem().getItemMeta();
+        if (!meta.hasTooltipStyle()) return;
+
+        final NamespacedKey namesp = meta.getTooltipStyle();
+        mmoitem.setData(this, new StringData(namesp.toString()));
     }
 }

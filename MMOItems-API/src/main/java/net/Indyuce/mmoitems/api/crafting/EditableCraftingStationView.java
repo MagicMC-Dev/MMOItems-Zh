@@ -149,7 +149,7 @@ public class EditableCraftingStationView extends EditableInventory {
 
         @Override
         public ItemStack getDisplayedItem(@NotNull Generated inv, int i) {
-            int recipeIndex = (inv.page - 1) * inv.recipeSlots + i;
+            int recipeIndex = inv.getPageIndex(i);
             CheckedRecipe recipe = inv.recipes.get(recipeIndex);
             UpgradingRecipe upgradingRecipe = (UpgradingRecipe) recipe.getRecipe();
 
@@ -157,7 +157,7 @@ public class EditableCraftingStationView extends EditableInventory {
 
             ItemStack item = upgradingRecipe.getItem().getPreview();
             ItemMeta meta = item.getItemMeta();
-            AdventureUtils.setDisplayName(meta, this.name.replace("{name}", MMOUtils.getDisplayName(item)));
+            AdventureUtils.setDisplayName(meta, this.name.replace("{name}", MMOUtils.getDisplayName(item, meta)));
             AdventureUtils.setLore(meta, newLore);
             meta.addItemFlags(ItemFlag.values());
             meta.getPersistentDataContainer().set(RECIPE_ID_KEY, PersistentDataType.STRING, upgradingRecipe.getId());
@@ -256,7 +256,7 @@ public class EditableCraftingStationView extends EditableInventory {
 
         @Override
         public ItemStack getDisplayedItem(@NotNull Generated inv, int i) {
-            int recipeIndex = (inv.page - 1) * inv.recipeSlots + i;
+            int recipeIndex = inv.getPageIndex(i);
             CheckedRecipe recipe = inv.recipes.get(recipeIndex);
             CraftingRecipe craftingRecipe = (CraftingRecipe) recipe.getRecipe();
 
@@ -268,10 +268,12 @@ public class EditableCraftingStationView extends EditableInventory {
             int amount = craftingRecipe.getOutputAmount();
             item.setAmount(Math.min(64, amount));
 
+            Bukkit.broadcastMessage("");
+
             ItemMeta meta = item.getItemMeta();
             meta.addItemFlags(ItemFlag.values());
             String rawNameFormat = amount > 1 ? nameMultiple.replace("{amount}", String.valueOf(amount)) : name; // Item name?
-            AdventureUtils.setDisplayName(meta, rawNameFormat.replace("{name}", MMOUtils.getDisplayName(item)));
+            AdventureUtils.setDisplayName(meta, rawNameFormat.replace("{name}", MMOUtils.getDisplayName(item, meta)));
             AdventureUtils.setLore(meta, newLore);
             meta.getPersistentDataContainer().set(RECIPE_ID_KEY, PersistentDataType.STRING, craftingRecipe.getId());
             item.setItemMeta(meta);
@@ -301,7 +303,7 @@ public class EditableCraftingStationView extends EditableInventory {
 
         @Override
         public ItemStack getDisplayedItem(@NotNull Generated inv, int n) {
-            int index = (inv.page - 1) * inv.recipeSlots + n;
+            int index = inv.getPageIndex(n);
 
             // No recipe at given index
             if (index >= inv.recipes.size()) {
@@ -388,7 +390,7 @@ public class EditableCraftingStationView extends EditableInventory {
             ItemStack item = queueItem.getRecipe().getPreviewItemStack();
             item.setAmount(index + 1);
             ItemMeta meta = item.getItemMeta();
-            AdventureUtils.setDisplayName(meta, this.name.replace("{name}", meta.getDisplayName()));
+            AdventureUtils.setDisplayName(meta, this.name.replace("{name}", MMOUtils.getDisplayName(item)));
             AdventureUtils.setLore(meta, newLore);
             meta.addItemFlags(ItemFlag.values());
             meta.getPersistentDataContainer().set(QUEUE_ITEM_ID_KEY, PersistentDataType.STRING, queueItem.getUniqueId().toString());
@@ -490,6 +492,8 @@ public class EditableCraftingStationView extends EditableInventory {
                 InventoryItem found = getByFunction("queued_item");
                 if (found != null) displayItem(open, found);
             }, 20);
+
+            enablePagination(recipeSlots);
         }
 
         @Override

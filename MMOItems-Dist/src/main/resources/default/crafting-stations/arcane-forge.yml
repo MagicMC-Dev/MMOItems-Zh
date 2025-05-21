@@ -1,32 +1,37 @@
 # 禁止倒卖 汉化作者 INSide_734
 # QQ: 3217962725
 
-# 打开的时候显示的名称
-name: '奥术熔炉'
+# Name which will be displayed
+# when opening the station
+name: 'Arcane Forge'
 
-# 制作队列中的最大物品数量，即
-# 玩家可以同时制作的最大物品数量。
-# 必须介于 1 和 64 之间。
+# The maximum amount of items in the crafting queue, ie the
+# max number of items players are able to craft simultaneously.
+# Must be between 1 and 64.
 max-queue-size: 10
 
-# 这是可选的。自定义打开UI的命令
-# 删除这个config的部分以禁用。
+# Optional. Defines a command to open the crafting station UI.
+# Remove this config section to disable.
 #
-# 这些命令有已知的限制。如果您更改命令名称或移除制作站，
-# 则需要重新启动服务器以注销或移除未使用或之前的命令，
-# 因为Bukkit不允许在服务器运行时注销命令。除非这是一个高端特权，
-# 否则我们不建议使用这一功能；从游戏玩法的角度来看，
-# 通常使用来自NPC的`/mi stations open <station> <player>`命令会更有效。
+# These commands have a known limitation. If you change the command
+# name or remove the crafting station, you will need to restart the
+# server to unregister/remove the unused/previous command, as Bukkit
+# does not allow to unregister commands while the server is running.
+#
+# Unless it is some high-end perk, we don't recommend using this,
+# using the `/mi stations open <station> <player>` command from a NPC
+# usually works better from a gameplay perspective.
 command:
-  name: 'arcaneforge'                                   # 命令本身
-  description: 'Open the arcane forge'                  # 命令描述
-  usage: '/arcaneforge'                                 # 使用命令
-  permission: 'mmoitems.arcane_forge'                   # 使用这个命令需要的权限
-  aliases: [ af, mmoitems_af ]                          # 命令别名
+  name: 'arcaneforge'                                   # The command itself
+  description: 'Open the arcane forge'                  # Command description
+  usage: '/arcaneforge'                                 # Command usage
+  permission: 'mmoitems.arcane_forge'                   # Permission needed to use the command
+  aliases: [ af, mmoitems_af ]                          # Command aliases
   message:
-    no-perm: '&c你没有足够的权限.'    # 没有权限发送的信息
-    not-a-player: '&c此命令仅适用于玩家.' # 使用这个指令的主体不是玩家的时候发送的信息
-# 制作台的制作谱
+    no-perm: '&cYou don''t have enough permissions.'    # Message shown when missing permission
+    not-a-player: '&cThis command is for players only.' # Message shown when sender is not a player
+
+# Station recipes
 recipes:
   magic-essence:
     output: 'mmoitems{type=MATERIAL,id=MAGIC_ESSENCE}'
@@ -81,18 +86,20 @@ recipes:
       - 'vanilla{type=LEATHER,amount=4,display="Leather Pieces"}'
 
 gui-layout:
-  # GUI显示的名称
-  name: '奥术熔炉 ({page}/{max_page})'
+  # GUI display name
+  name: 'Arcane Forge ({page}/{max_page})'
 
-  # 你的库存中的槽位数量。必须为
-  # 介于 9 和 54 之间，并且必须是 9 的倍数。
+  # Number of slots in your inventory. Must be
+  # between 9 and 54 and must be a multiple of 9.
   slots: 54
 
-  # 当启用时，玩家可以右键点击配方打开不同的界面（见下文配置此界面），
-  # 显示所有所需的材料以及正在制作/升级的物品。这被称为“预览”界面。
+  # When enabled, players can right click recipes to
+  # open a different UI (see below for configurating this UI)
+  # showing all ingredients required as well as the item
+  # being crafted/upgrading. This is referred as the "preview" GUI.
   enable_right_click_preview: true
 
-  # 特定动作的声音。
+  # Sounds performed on specific actions.
   sound:
     craft: ENTITY_EXPERIENCE_ORB_PICKUP
     upgrade: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -102,15 +109,18 @@ gui-layout:
 
   items:
 
-    # 下一页/上一页
+    # Next/Previous page
     previous_page:
       item: PLAYER_HEAD
-      name: '&6上一页'
+      name: '&6Previous Page'
       texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==
       slots: [ 9 ]
+      # You may edit custom model data here
+      #custom_model_data_string: 'whatever'
+      #custom_model_data: 1234
     next_page:
       item: PLAYER_HEAD
-      name: '&6下一页'
+      name: '&6Next Page'
       texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19
       slots: [ 17 ]
 
@@ -118,31 +128,37 @@ gui-layout:
     previous_queue_item:
       item: PLAYER_HEAD
       function: previous_queue_item
-      name: '&6上一项'
+      name: '&6Previous Item'
       texture: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ=='
     next_queue_item:
       item: PLAYER_HEAD
-      name: '&6下一项'
+      name: '&6Next Item'
       texture: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19'
 
     queued_item:
       slots: [ 38, 39, 40, 41, 42 ]
 
       existing:
-        name: '&6&l队列&f {name}'
+        name: '&6&lQueue&f {name}'
         delay_format: 'smhdMy'
         lore:
-          - '{ready}&7&o此物品已成功制作.'
-          - '{queue}&7&o此物品在制作队列中.'
+          - '{ready}&7&oThis item was successfully crafted.'
+          - '{queue}&7&oThis item is in the crafting queue.'
           - '{queue}'
-          - '{queue}&7剩余时间: &c{time_left}'
+          - '{queue}&7Time Left: &c{time_left}'
           - ''
-          - '{ready}&e► 点击领取!'
-          - '{queue}&e► 点击取消'
+          - '{ready}&e► Click to claim!'
+          - '{queue}&e► Click to cancel'
+        # You may edit custom model data here
+        #custom_model_data_string: 'whatever'
+        #custom_model_data: 1234
 
       none:
         item: GRAY_STAINED_GLASS_PANE
-        name: '&6队列中没有项目'
+        name: '&6No Item In Queue'
+        # You may edit custom model data here
+        #custom_model_data_string: 'whatever'
+        #custom_model_data: 1234
 
     recipe:
       function: recipe
@@ -155,77 +171,87 @@ gui-layout:
       #  translate: 'sec min hours days months years' # Translation of the units
       #  #translate: 'smhdMy' #This format works too
 
-      # 如何展示制作配方
+      # How a crafting recipe is displayed
       craft:
-        name: '&a&l制作&f {name}'
-        name_multiple: '&a&l制作&f {amount}x {name}'
+        name: '&a&lCraft&f {name}'
+        name_multiple: '&a&lCraft&f {amount}x {name}'
+        # You may edit custom model data here
+        #custom_model_data_string: 'whatever'
+        #custom_model_data: 1234
         lore:
           - '{conditions}'
-          - '{conditions}&8条件:'
+          - '{conditions}&8Conditions:'
           - '{crafting_time}'
-          - '{crafting_time}&7制作时间: &c{crafting_time}'
+          - '{crafting_time}&7Crafting Time: &c{crafting_time}'
           - '{ingredients}'
-          - '{ingredients}&8配方:'
+          - '{ingredients}&8Ingredients:'
           - '{lore}'
           - ''
-          - '&e► 左键点击制作！'
-          - '&e► 右键单击预览！'
+          - '&e► Left click to craft!'
+          - '&e► Right click to preview!'
 
-      # 如何显示升级配方
+      # How an upgrading recipe is displayed
       upgrade:
-        name: '&e&l升级&f {name}'
+        name: '&e&lUpgrade&f {name}'
+        # You may edit custom model data here
+        #custom_model_data_string: 'whatever'
+        #custom_model_data: 1234
         lore:
           - '{conditions}'
-          - '{conditions}&8升级:'
+          - '{conditions}&8Conditions:'
           - '{ingredients}'
-          - '{ingredients}&8配方:'
+          - '{ingredients}&8Ingredients:'
           - '{lore}'
           - ''
-          - '&e► 左键点击升级！'
-          - '&e► 右键单击预览！'
+          - '&e► Left click to upgrade!'
+          - '&e► Right click to preview!'
 
-      # 当没有配方时
+      # When no recipe exists
       none:
         item: GRAY_STAINED_GLASS_PANE # Can be set to AIR
-        name: '&6没有配方'
+        name: '&6No Recipe'
+        # You may edit custom model data here
+        #custom_model_data_string: 'whatever'
+        #custom_model_data: 1234
 
-# 如果你在之前的UI布局配置中关闭了`enable_right_click_preview`选项，可以完全删除这个配置部分。
+# You can fully delete this config section if you toggled off the option
+# `enable_right_click_preview` in the previous UI layout configuration.
 preview-gui-layout:
-  name: '预览'
+  name: 'Preview'
   slots: 45
   items:
 
-    # 成分周围有一些边框（纯粹是装饰性的）
+    # Some border surrounding the ingredients (purely cosmetic)
     cosmetic_border:
       item: GRAY_STAINED_GLASS_PANE
       name: '&6'
       slots: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 17, 18, 19, 20, 24, 25, 26, 27, 29, 33, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 ]
 
-    # 确认/返回按钮
+    # Confirm/Back buttons
     confirm:
       item: EMERALD
-      name: '&6确认'
+      name: '&6Confirm'
       slots: [ 34 ]
     back:
       item: PLAYER_HEAD
-      name: '&6返回'
+      name: '&6Back'
       slots: [ 10 ]
       texture: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ=='
 
-    # 预览正在制作/升级的物品
+    # Preview item being crafted/upgraded
     preview_output:
       slots: [ 16 ]
 
-    # 显示配方
+    # Show the recipe
     recipe:
       slots: [ 28 ]
       material: KNOWLEDGE_BOOK # Optional. Item type will not be replaced if this line is commented out.
       remove_lore_lines: 3 # Amount of lines to strip off the item lore
 
-    # 正在处理的项目
+    # Items being processed
     ingredient:
       slots: [ 12, 13, 14, 21, 22, 23, 30, 31, 32 ]
 
-      # 没有任何配料时...
+      # When no ingredient
       none:
         material: AIR

@@ -20,7 +20,9 @@ public class ItemStats {
             MATERIAL = new MaterialStat(),
             SKULL_TEXTURE = new SkullTextureStat(),
             ITEM_DAMAGE = new ItemDamage(),
-            CUSTOM_MODEL_DATA = new CustomModelData(),
+            CUSTOM_MODEL_DATA = new CustomModelDataInt(),
+            CUSTOM_MODEL_DATA_STRINGS = new CustomModelDataStrings(),
+            CUSTOM_MODEL_DATA_FLOATS = new CustomModelDataFloats(),
             MODEL = new ItemModel(),
             EQUIPPABLE_SLOT = new EquippableSlot(),
             EQUIPPABLE_MODEL = new EquippableModel(),
@@ -34,6 +36,7 @@ public class ItemStats {
             CAN_BREAK = new CanBreak(),
             LORE_FORMAT = new LoreFormat(),
             TOOLTIP = new TooltipStat(),
+            TOOLTIP_STYLE = new TooltipStyle(),
 
     // Block Specific Stats
     BLOCK_ID = new BlockID(),
@@ -47,6 +50,7 @@ public class ItemStats {
     DISPLAYED_TYPE = new DisplayedType(),
             ENCHANTS = new Enchants(),
             HIDE_ENCHANTS = new HideEnchants(),
+            HIDE_TOOLTIP = new HideTooltip(),
             PERMISSION = new Permission(),
             ITEM_PARTICLES = new ItemParticles(),
             ARROW_PARTICLES = new ArrowParticles(),
@@ -126,6 +130,7 @@ public class ItemStats {
             REQUIRED_BIOMES = new RequiredBiomes(),
             DROP_ON_DEATH = new DisableDeathDrop(),
             HIDE_DURABILITY_BAR = new HideDurabilityBar(),
+            CAMERA_OVERLAY = new CameraOverlay(),
 
     // Extra Attributes (1.20.2+)
     MAX_ABSORPTION = new MaxAbsorption(),
@@ -169,6 +174,8 @@ public class ItemStats {
     ITEM_COOLDOWN = new DoubleStat("ITEM_COOLDOWN", Material.COOKED_CHICKEN, "物品冷却", new String[]{"此冷却适用于消耗品", "以及物品命令"}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
             COOLDOWN_REFERENCE = new StringStat("COOLDOWN_REFERENCE", Material.CHICKEN, "冷却参考", new String[]{"具有相同冷却参考的两个物品", "将共享它们的冷却时间这对于例如生命或法力药剂非常有用"}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
             VANILLA_EATING_ANIMATION = new VanillaEatingAnimation(),
+            CAN_ALWAYS_EAT = new CanAlwaysEat(),
+            CONSUME_SECONDS = MMOItems.plugin.getServerAdapter().consumableConsumeSeconds(),
             GEM_COLOR = new GemColor(),
             GEM_UPGRADE_SCALING = new GemUpgradeScaling(),
             ITEM_TYPE_RESTRICTION = new ItemTypeRestriction(),

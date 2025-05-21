@@ -1,8 +1,7 @@
 package net.Indyuce.mmoitems.inventory;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.player.PlayerData;
 import io.lumine.mythic.lib.util.lang3.Validate;
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -69,7 +68,7 @@ public class PlayerInventoryManager {
      *         ie all the items that will add their stats to the player.
      */
     @NotNull
-    public InventoryWatcher[] getWatchers(@NotNull PlayerData playerData) {
-        return suppliers.stream().map(supplier -> supplier.supply(playerData)).toArray(InventoryWatcher[]::new);
+    public List<InventoryWatcher> getWatchers(@NotNull InventoryResolver resolver) {
+        return suppliers.stream().map(supplier -> supplier.supply(resolver)).toList();
     }
 }

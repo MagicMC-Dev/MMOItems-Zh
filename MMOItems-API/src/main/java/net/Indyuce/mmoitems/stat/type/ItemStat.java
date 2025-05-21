@@ -72,7 +72,8 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
             if (MythicLib.plugin.getVersion().isUnder(implVersion.version())) disable();
         }
 
-        // Backwards compatibility
+        // [Backwards compatibility]
+        // TODO remove with MI7
         if (getClass().isAnnotationPresent(net.Indyuce.mmoitems.util.VersionDependant.class)) {
             final net.Indyuce.mmoitems.util.VersionDependant implVersion = getClass().getAnnotation(net.Indyuce.mmoitems.util.VersionDependant.class);
             if (MythicLib.plugin.getVersion().isUnder(implVersion.version())) disable();

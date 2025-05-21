@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
 import dev.lone.itemsadder.api.CustomStack;
-import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.ItemsAdderPlayerIngredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemsAdderIngredient extends Ingredient<ItemsAdderPlayerIngredient> {
@@ -53,23 +52,7 @@ public class ItemsAdderIngredient extends Ingredient<ItemsAdderPlayerIngredient>
     }
 
     private String findName() {
-
-        // Try generating the item and getting the display name.
         CustomStack tryGenerate = CustomStack.getInstance(id);
-        if (tryGenerate != null) {
-            ItemStack asStack = tryGenerate.getItemStack();
-
-            // Try to retrieve display name
-            if (asStack.hasItemMeta()) {
-                ItemMeta meta = asStack.getItemMeta();
-                if (meta.hasDisplayName())
-                    return meta.getDisplayName();
-            }
-
-            // Use material to generate name
-            return UtilityMethods.caseOnWords(asStack.getType().name().toLowerCase().replace("_", " "));
-        }
-
-        return "Unknown Item";
+        return MMOUtils.getDisplayName(tryGenerate.getItemStack());
     }
 }

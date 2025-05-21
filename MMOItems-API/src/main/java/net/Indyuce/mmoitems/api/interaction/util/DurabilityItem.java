@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -109,7 +110,7 @@ public abstract class DurabilityItem {
                 // Play sound when item breaks
                 if (player != null) {
                     if (item.getType().getMaxDurability() == 0) player.getWorld().playSound(player.getLocation(), Sounds.ENTITY_ITEM_BREAK, 1, 1);
-                    PlayerData.get(player).getInventory().watchSingle(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
+                    PlayerData.get(player).getInventory().watchVanillaSlot(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot), Optional.empty());
                 }
 
                 return itemOutput = null;

@@ -346,6 +346,7 @@ public class MMOUtils {
         return null;
     }
 
+    @Deprecated
     public static LivingEntity getDamager(EntityDamageByEntityEvent event) {
 
         // Check direct damager
@@ -383,10 +384,25 @@ public class MMOUtils {
 
     @NotNull
     public static String getDisplayName(@Nullable ItemStack item) {
-        if (item == null) {
-            return "null";
+        return getDisplayName(item, null);
+    }
+
+    public static String fancyName(Material material) {
+        return UtilityMethods.caseOnWords(material.name().toLowerCase().replace("_", " "));
+    }
+
+    public static String getDisplayName(@Nullable ItemStack item, @Nullable ItemMeta meta) {
+        if (item == null) return "Air";
+        if (meta != null) {
+            if (meta.hasDisplayName()) return meta.getDisplayName();
+            return fancyName(item.getType());
         }
-        return (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) ? item.getItemMeta().getDisplayName() : caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
+
+        if (!item.hasItemMeta()) return fancyName(item.getType());
+        meta = item.getItemMeta();
+        if (meta.hasDisplayName()) return meta.getDisplayName();
+        return fancyName(item.getType());
+
     }
 
     @Deprecated

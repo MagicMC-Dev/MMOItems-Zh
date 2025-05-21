@@ -7,13 +7,16 @@ import io.lumine.mythic.lib.api.stat.StatInstance;
 import io.lumine.mythic.lib.api.stat.handler.StatHandler;
 import io.lumine.mythic.lib.api.stat.modifier.StatModifier;
 import io.lumine.mythic.lib.player.modifier.ModifierSource;
+import io.lumine.mythic.lib.player.modifier.ModifierSupplier;
 import io.lumine.mythic.lib.player.modifier.ModifierType;
+import io.lumine.mythic.lib.player.modifier.SimpleModifierSupplier;
 import io.lumine.mythic.lib.player.particle.ParticleEffect;
 import io.lumine.mythic.lib.player.permission.PermissionModifier;
 import io.lumine.mythic.lib.player.potion.PermanentPotionEffect;
 import io.lumine.mythic.lib.player.skill.PassiveSkill;
 import io.lumine.mythic.lib.util.Closeable;
 import io.lumine.mythic.lib.util.annotation.BackwardsCompatibility;
+import io.lumine.mythic.lib.util.lang3.Validate;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemSet;
@@ -22,12 +25,9 @@ import net.Indyuce.mmoitems.api.event.inventory.ItemEquipEvent;
 import net.Indyuce.mmoitems.api.event.inventory.ItemUnequipEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.inventory.modifier.ModifierSupplier;
-import net.Indyuce.mmoitems.inventory.modifier.SimpleModifierSupplier;
 import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.WeaponBaseStat;
-import io.lumine.mythic.lib.util.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -36,9 +36,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static net.Indyuce.mmoitems.inventory.InventoryWatcher.callbackIfNotNull;
 
 /**
  * Bukkit-MMOItems interface class.
@@ -54,7 +53,7 @@ import static net.Indyuce.mmoitems.inventory.InventoryWatcher.callbackIfNotNull;
  */
 public class InventoryResolver implements Closeable {
     private final PlayerData playerData;
-    private final InventoryWatcher[] watchers;
+    private final List<InventoryWatcher> watchers;
 
     /**
      * Item registry
@@ -73,7 +72,7 @@ public class InventoryResolver implements Closeable {
 
     public InventoryResolver(PlayerData playerData) {
         this.playerData = playerData;
-        this.watchers = MMOItems.plugin.getInventory().getWatchers(playerData);
+        this.watchers = MMOItems.plugin.getInventory().getWatchers(this);
 
         // TODO reset all item modifiers on join? extra safety
     }
@@ -93,22 +92,23 @@ public class InventoryResolver implements Closeable {
 
     //region Resolving Inventory
 
-    public void watchSingle(@NotNull EquipmentSlot slot) {
-        watchSingle(slot, 0, Optional.empty());
-    }
-
-    public void watchSingle(@NotNull EquipmentSlot slot, Optional<ItemStack> newItem) {
-        watchSingle(slot, 0, newItem);
-    }
-
-    public void watchSingle(@NotNull EquipmentSlot slot, int index, Optional<ItemStack> newItem) {
-
-        // Go through all watchers and record an update
+    public void watchVanillaSlot(@NotNull EquipmentSlot slot, Optional<ItemStack> newItem) {
         for (InventoryWatcher watcher : watchers)
-            callbackIfNotNull(watcher.watchSingle(slot, index, newItem), this::processUpdate);
+            InventoryWatcher.callbackIfNotNull(watcher.watchVanillaSlot(slot, newItem), this::processUpdate);
     }
 
-    private void processUpdate(@NotNull ItemUpdate recorded) {
+    public void watchInventory(int slotIndex, Optional<ItemStack> newItem) {
+        for (InventoryWatcher watcher : watchers)
+            InventoryWatcher.callbackIfNotNull(watcher.watchInventory(slotIndex, newItem), this::processUpdate);
+    }
+
+    public <T extends InventoryWatcher> void watch(Class<T> instanceOf, Function<T, ItemUpdate> action) {
+        for (InventoryWatcher watcher : watchers)
+            if (instanceOf.isInstance(watcher))
+                InventoryWatcher.callbackIfNotNull(action.apply(instanceOf.cast(watcher)), this::processUpdate);
+    }
+
+    public void processUpdate(@NotNull ItemUpdate recorded) {
 
         // Register changes
         if (recorded.getOld() != null) unregisterItem(recorded.getOld());

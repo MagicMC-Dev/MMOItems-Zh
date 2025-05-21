@@ -159,6 +159,9 @@ gui-layout:
       existing:
         name: '&6&lQueue&f {name}'
         delay_format: 'smhdMy'
+        # You may edit custom model data here
+        #custom_model_data_string: 'whatever'
+        #custom_model_data: 1234
         lore:
           - '{ready}&7&oThis item was successfully crafted.'
           - '{queue}&7&oThis item is in the crafting queue.'
@@ -181,6 +184,9 @@ gui-layout:
       craft:
         name: '&a&lCraft&f {name}'
         name_multiple: '&a&lCraft&f {amount}x {name}'
+        # You may edit custom model data here
+        #custom_model_data_string: 'whatever'
+        #custom_model_data: 1234
         lore:
           - '{conditions}'
           - '{conditions}&8Conditions:'
@@ -196,6 +202,9 @@ gui-layout:
       # How an upgrading recipe is displayed
       upgrade:
         name: '&e&lUpgrade&f {name}'
+        # You may edit custom model data here
+        #custom_model_data_string: 'whatever'
+        #custom_model_data: 1234
         lore:
           - '{conditions}'
           - '{conditions}&8Conditions:'
@@ -210,6 +219,9 @@ gui-layout:
       none:
         item: GRAY_STAINED_GLASS_PANE # Can be set to AIR
         name: '&6No Recipe'
+        # You may edit custom model data here
+        #custom_model_data_string: 'whatever'
+        #custom_model_data: 1234
 
 # You can fully delete this config section if you toggled off the option
 # `enable_right_click_preview` in the previous UI layout configuration.

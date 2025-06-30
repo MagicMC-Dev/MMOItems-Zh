@@ -25,6 +25,16 @@ import java.util.function.Consumer;
 import static net.Indyuce.mmoitems.inventory.InventoryWatcher.optionalOf;
 
 public class MMOInventorySupplier implements InventorySupplier, Listener {
+
+    /*
+     * TODO
+     *
+     * There's a known issue with this implementation. When MMOInventory is reloaded
+     * so that it leaves an existing inventory non existent, items are still registered
+     * until a server reload or the player logs out. This is because when previous
+     * inventories are flushed, the MMOItems representations of items are not flushed
+     */
+
     @NotNull
     @Override
     public InventoryWatcher supply(@NotNull InventoryResolver resolver) {
@@ -63,7 +73,6 @@ public class MMOInventorySupplier implements InventorySupplier, Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void click(InventoryUpdateEvent event) {
         ItemStack equipped = event.getNewItem();
-        net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayerData().getPlayer()).getInventory()
-                .watch(Watcher.class, watcher -> watcher.watchAccessory(event.getInventory(), event.getSlot(), optionalOf(equipped)));
+        net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayerData().getPlayer()).getInventory().watch(Watcher.class, watcher -> watcher.watchAccessory(event.getInventory(), event.getSlot(), optionalOf(equipped)));
     }
 }

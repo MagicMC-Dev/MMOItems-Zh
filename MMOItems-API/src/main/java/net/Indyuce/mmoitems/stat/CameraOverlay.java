@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @VersionDependant(version = {1, 21, 4})
 public class CameraOverlay extends StringStat implements GemStoneStat {
     public CameraOverlay() {
-        super("CAMERA_OVERLAY", Material.GLASS, "纹理遮罩", new String[]{"camera_overlay 的命名空间键。", "仅在1.20.4及以上版本可用"}, new String[0]);
+        super("CAMERA_OVERLAY", Material.GLASS, "Camera Overlay", new String[]{"Namespaced key of camera overlay texture.", "Available only on 1.20.4+"}, new String[0]);
     }
 
     @Override

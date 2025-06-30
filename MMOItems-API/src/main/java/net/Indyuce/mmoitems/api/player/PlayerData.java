@@ -128,9 +128,20 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
         return get(player.getUniqueId());
     }
 
+    @Nullable
+    public static PlayerData getOrNull(@NotNull OfflinePlayer player) {
+        try {
+            return get(player.getUniqueId());
+        } catch (Exception exception) {
+            return null;
+        }
+    }
+
     /**
-     * @return If player data is loaded for a player
+     * @see #getOrNull(OfflinePlayer)
+     * @deprecated
      */
+    @Deprecated
     public static boolean has(Player player) {
         return has(player.getUniqueId());
     }
@@ -142,7 +153,10 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
      * to check instead of checking for an entity metadta.
      *
      * @return If player data is loaded for a player UUID
+     * @deprecated
+     * @see #getOrNull(OfflinePlayer)
      */
+    @Deprecated
     public static boolean has(UUID uuid) {
         return MMOItems.plugin.getPlayerDataManager().isLoaded(uuid);
     }

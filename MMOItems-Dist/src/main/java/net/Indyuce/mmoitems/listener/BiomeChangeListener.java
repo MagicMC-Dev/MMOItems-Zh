@@ -17,15 +17,17 @@ public class BiomeChangeListener implements Listener {
 
     /**
      * This listener goal is to update the player inventory when he changes biome.
-     *
-     * @param e
      */
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent e) {
-        if (e.isCancelled() || !PlayerData.has(e.getPlayer()) || (e.getFrom().getBlockX() == e.getTo().getBlockX() && e.getFrom().getBlockZ() == e.getTo().getBlockZ()))
+        if (e.getFrom().getBlockX() == e.getTo().getBlockX() && e.getFrom().getBlockZ() == e.getTo().getBlockZ())
             return;
+
+        final var playerData = PlayerData.getOrNull(e.getPlayer());
+        if (playerData == null) return;
+
         final Biome lastBiome = e.getFrom().getBlock().getBiome();
         final Biome biome = e.getTo().getBlock().getBiome();
-        if (biome != lastBiome) PlayerData.get(e.getPlayer()).resolveModifiersLater();
+        if (biome != lastBiome) playerData.resolveModifiersLater();
     }
 }

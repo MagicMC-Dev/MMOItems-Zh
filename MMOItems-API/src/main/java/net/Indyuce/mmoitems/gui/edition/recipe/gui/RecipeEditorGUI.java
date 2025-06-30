@@ -20,7 +20,6 @@ import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_AmountOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RecipeButtonAction;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -76,11 +75,6 @@ public abstract class RecipeEditorGUI extends EditionInventory {
         // Update old formats
         moveInput();
 
-        // Identify sections
-        craftingSection = getSection(getEditedSection(), "crafting");
-        typeSection = getSection(craftingSection, getRecipeRegistry().getRecipeConfigPath());
-        nameSection = getSection(typeSection, recipeName);
-
         // In general, they all have the amount output button
         //noinspection NestedAssignment
         addButton(amountButton = new RBA_AmountOutput(this, getCachedItem().clone()));
@@ -106,45 +100,30 @@ public abstract class RecipeEditorGUI extends EditionInventory {
     public final ItemStack airSlot = ItemFactory.of(Material.STRUCTURE_VOID).name("\u00a77无物品").build();
 
     /**
-     * [ID].base.crafting
-     */
-    @NotNull
-    final ConfigurationSection craftingSection;
-
-    /**
      * @return [ID].base.crafting
      */
     @NotNull
     public ConfigurationSection getCraftingSection() {
-        return craftingSection;
+        // craftingSection = getSection(getEditedSection(), "crafting");
+        return getSection(getEditedSection(), "crafting");
     }
-
-    /**
-     * [ID].base.crafting.[TYPE]
-     */
-    @NotNull
-    final ConfigurationSection typeSection;
 
     /**
      * @return [ID].base.crafting.[TYPE]
      */
     @NotNull
     public ConfigurationSection getTypeSection() {
-        return typeSection;
+        // typeSection = getSection(craftingSection, getRecipeRegistry().getRecipeConfigPath());
+        return getSection(getEditedSection(), "crafting." + getRecipeRegistry().getRecipeConfigPath());
     }
-
-    /**
-     * [ID].base.crafting.[TYPE].[NAME]
-     */
-    @NotNull
-    final ConfigurationSection nameSection;
 
     /**
      * @return [ID].base.crafting.[TYPE].[NAME]
      */
     @NotNull
     public ConfigurationSection getNameSection() {
-        return nameSection;
+        //nameSection = getSection(typeSection, recipeName);
+        return getSection(getEditedSection(), "crafting." + getRecipeRegistry().getRecipeConfigPath() + "." + recipeName);
     }
 
     @NotNull
@@ -361,7 +340,7 @@ public abstract class RecipeEditorGUI extends EditionInventory {
     public ItemStack getDisplay(boolean input, int slot) {
 
         // Find poof
-        ProvidedUIFilter poof = input ? getInterpreter().getInput(slot) : getInterpreter().getOutput(slot);
+        ProvidedUIFilter poof = input ? getInput(slot) : getOutput(slot);
 
         // Null equals fail
         if (poof == null || poof.isAir()) {
@@ -395,12 +374,6 @@ public abstract class RecipeEditorGUI extends EditionInventory {
             FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "其他: $e[KEY] [ARG] [DAT] [AMOUNT]$b (查看wiki)"),
             FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "\u00a78金额采用范围格式, $e[min]..[max]\u00a78, 如果未指定将为 $r1..\u00a78")};
 
-    /**
-     * @return The protocols to edit the ConfigurationSection based on the user input.
-     */
-    @NotNull
-    public abstract RMG_RecipeInterpreter getInterpreter();
-
     @Override
     public void whenClicked(InventoryClickEvent event) {
 
@@ -425,12 +398,12 @@ public abstract class RecipeEditorGUI extends EditionInventory {
                 if (isShowingInput()) {
 
                     // Query user for input
-                    new StatEdition(this, ItemStats.CRAFTING, INPUT, getInterpreter(), ingredient).enable(recipeLog);
+                    new StatEdition(this, ItemStats.CRAFTING, INPUT, ingredient).enable(recipeLog);
 
                 } else {
 
                     // Query user for output
-                    new StatEdition(this, ItemStats.CRAFTING, OUTPUT, getInterpreter(), ingredient).enable(recipeLog);
+                    new StatEdition(this, ItemStats.CRAFTING, OUTPUT, ingredient).enable(recipeLog);
                 }
 
                 // Maybe its a button
@@ -456,12 +429,12 @@ public abstract class RecipeEditorGUI extends EditionInventory {
                 if (isShowingInput()) {
 
                     // Delete Input
-                    getInterpreter().deleteInput(ingredient);
+                    deleteInput(ingredient);
 
                 } else {
 
                     // Delete Output
-                    getInterpreter().deleteOutput(getInputSlot(event.getRawSlot()));
+                    deleteOutput(getInputSlot(event.getRawSlot()));
                 }
 
                 // Register
@@ -910,5 +883,67 @@ public abstract class RecipeEditorGUI extends EditionInventory {
             throw new IllegalArgumentException("无效材料 $u" + str);
         }
     }
+    //endregion
+
+    //region Recipe interpreter
+
+    /**
+     * Edits the configuration section's INPUT list.
+     *
+     * @param input The user's input, item that will be required
+     * @param slot  Slot that the item is going into
+     */
+    public abstract void editInput(@NotNull ProvidedUIFilter input, int slot);
+
+    /**
+     * Edits the configuration section's OUTPUT list.
+     *
+     * @param input The user's input, item that will be required
+     * @param slot  Slot that the item is going into
+     */
+    public abstract void editOutput(@NotNull ProvidedUIFilter input, int slot);
+
+    /**
+     * Edits the configuration section's INPUT list.
+     *
+     * @param slot Slot that is getting reset
+     */
+    public abstract void deleteInput(int slot);
+
+    /**
+     * Edits the configuration section's OUTPUT list.
+     *
+     * @param slot Slot that is getting reset
+     */
+    public abstract void deleteOutput(int slot);
+
+    protected ConfigurationSection recipeSection() {
+        ConfigurationSection section = RecipeEditorGUI.getSection(getEditedSection(), "crafting");
+        section = RecipeEditorGUI.getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
+        section = RecipeEditorGUI.getSection(section, this.getRecipeName());
+
+        return section;
+    }
+
+    /**
+     * Fetch the Provided UI Filter in the YML configuration
+     * that corresponds to this slot of the input.
+     *
+     * @param slot Slot
+     * @return Identified filter, if found and valid.
+     */
+    @Nullable
+    abstract ProvidedUIFilter getInput(int slot);
+
+    /**
+     * Fetch the Provided UI Filter in the YML configuration
+     * that corresponds to this slot of the output.
+     *
+     * @param slot Slot
+     * @return Identified filter, if found and valid.
+     */
+    @Nullable
+    abstract ProvidedUIFilter getOutput(int slot);
+
     //endregion
 }

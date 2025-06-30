@@ -24,3 +24,6 @@ docs/.vitepress/dist
 node_modules
 .obsidian
 /.vitepress
+
+local_install.bat
+local_install.sh

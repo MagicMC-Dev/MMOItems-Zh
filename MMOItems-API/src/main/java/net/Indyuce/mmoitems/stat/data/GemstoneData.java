@@ -4,8 +4,11 @@ import io.lumine.mythic.lib.gson.JsonElement;
 import io.lumine.mythic.lib.gson.JsonObject;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -165,7 +168,7 @@ public class GemstoneData {
     public GemstoneData(@NotNull LiveMMOItem gemStoneMMOItem, @Nullable String color, @NotNull UUID forcedHistoryUUID) {
 
         // Get Name to Display
-        name = MMOUtils.getDisplayName(gemStoneMMOItem.getNBT().getItem());
+        name = resolveLoreTagName(gemStoneMMOItem);
 
         // Extract abilities from the Gem Stone MMOItem into a more accessible form
         if (gemStoneMMOItem.hasData(ItemStats.ABILITIES)) {
@@ -182,6 +185,19 @@ public class GemstoneData {
         mmoitemID = gemStoneMMOItem.getId();
         mmoitemType = gemStoneMMOItem.getType().getId();
         socketColor = color;
+    }
+
+    // TODO improve on this code
+    private String resolveLoreTagName(ReadMMOItem mmoitem) {
+
+        // This code should always run, hopefully all items have name data
+        var nameData = mmoitem.getData(ItemStats.NAME);
+        if (nameData != null) {
+            return ((NameData) nameData).bake();
+        }
+
+        // This code does not like tooltips
+        return MMOUtils.getDisplayName(mmoitem.getNBT().getItem());
     }
 
     /**

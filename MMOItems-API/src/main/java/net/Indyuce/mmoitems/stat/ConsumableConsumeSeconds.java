@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @VersionDependant(version = {1, 21, 2})
 public class ConsumableConsumeSeconds extends DoubleStat implements GemStoneStat {
     public ConsumableConsumeSeconds() {
-        super("CONSUME_SECONDS", Material.CLOCK, "食用时间", new String[]{"吃这个物品所需的时间（以秒为单位）。", "仅在1.21.4+版本可用。"}, new String[]{"consumable"});
+        super("CONSUME_SECONDS", Material.CLOCK, "Consume Seconds", new String[]{"Time needed (in seconds) to eat the item.", "Available only on 1.21.4+"}, new String[]{"consumable"});
 
         // Paper 1.21.4 does not implement that method!!!
         try {

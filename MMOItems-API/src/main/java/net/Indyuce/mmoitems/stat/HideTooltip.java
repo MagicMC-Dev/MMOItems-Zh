@@ -19,7 +19,7 @@ import java.util.ArrayList;
 @VersionDependant(version = {1, 20, 5})
 public class HideTooltip extends BooleanStat {
     public HideTooltip() {
-        super("HIDE_TOOLTIP", Material.ACACIA_SIGN, "隐藏 Tooltip", new String[]{"完全隐藏物品 Tooltip。", " 仅在 1.20.5+ 可用"}, new String[0]);
+        super("HIDE_TOOLTIP", Material.ACACIA_SIGN, "Hide Tooltip", new String[]{"Completely the hides item tooltip,", "if that's what you wanna do.", "", "Available only on 1.20.5+"}, new String[0]);
     }
 
     @Override

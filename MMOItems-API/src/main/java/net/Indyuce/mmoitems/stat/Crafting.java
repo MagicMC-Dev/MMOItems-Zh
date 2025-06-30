@@ -13,7 +13,6 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeTypeListGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RecipeButtonAction;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -144,15 +143,9 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 				//endregion
 
 				/*
-				 * #2 Recipe Interpreter - Correctly edits the configuration section in the files,
-				 *                         depending on how the recipe is supposed to be saved.
-				 */
-				RMG_RecipeInterpreter interpreter = (RMG_RecipeInterpreter) info[1];
-
-				/*
 				 * #3 Slot - Which slot was pressed?
 				 */
-				int slot = (int) info[2];
+				int slot = (int) info[1];
 
 				// Attempt to get
 				ProvidedUIFilter read = UIFilterManager.getUIFilter(message, inv.getFFP());
@@ -161,18 +154,13 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 				if (read == null) { throw new IllegalArgumentException(""); }
 				if (!read.isValid(inv.getFFP())) { throw new IllegalArgumentException(""); }
 
-				// Find section
-				ConfigurationSection section = RecipeEditorGUI.getSection(inv.getEditedSection(), "crafting");
-				section = RecipeEditorGUI.getSection(section, ((RecipeEditorGUI) inv).getRecipeRegistry().getRecipeConfigPath());
-				section = RecipeEditorGUI.getSection(section, ((RecipeEditorGUI) inv).getRecipeName());
-
 				// Redirect
 				if (type == RecipeEditorGUI.INPUT)  {
-					interpreter.editInput(read, slot);
+					((RecipeEditorGUI) inv).editInput( read, slot);
 
 				// It must be output
 				} else {
-					interpreter.editOutput(read, slot); }
+					((RecipeEditorGUI) inv).editOutput( read, slot); }
 
 				// Save changes
 				inv.registerTemplateEdition();
@@ -203,6 +191,24 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 
 			default: inv.registerTemplateEdition(); break;
 		}
+	}
+
+
+	public static String configToString(ConfigurationSection section, int indentLevel) {
+		StringBuilder sb = new StringBuilder();
+		String indent = "  ".repeat(indentLevel);
+
+		for (String key : section.getKeys(false)) {
+			Object value = section.get(key);
+			if (value instanceof ConfigurationSection) {
+				sb.append(indent).append(key).append(":\n");
+				sb.append(configToString((ConfigurationSection) value, indentLevel + 1));
+			} else {
+				sb.append(indent).append(key).append(": ").append(value).append("\n");
+			}
+		}
+
+		return sb.toString();
 	}
 
 	@Nullable

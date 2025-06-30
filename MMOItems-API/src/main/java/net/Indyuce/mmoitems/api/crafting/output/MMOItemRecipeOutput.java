@@ -31,8 +31,8 @@ public class MMOItemRecipeOutput extends RecipeOutput {
 
     @Override
     public ItemStack getPreview() {
-        ItemStackBuilder builder = template.newBuilder().build().newBuilder();
+        ItemStackBuilder builder = template.newBuilder(null, true).build().newBuilder();
         builder.getContext().setTooltip(null);
-        return builder.build();
+        return builder.build(true);
     }
 }

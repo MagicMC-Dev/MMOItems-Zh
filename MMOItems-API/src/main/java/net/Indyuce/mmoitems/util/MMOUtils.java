@@ -133,10 +133,18 @@ public class MMOUtils {
         return stack;
     }
 
-    @BackwardsCompatibility(version = "1.21")
+    /**
+     *
+     */
     public static double getForce(@NotNull EntityShootBowEvent event) {
-        final double force = event.getForce();
-        return MythicLib.plugin.getVersion().isUnder(1, 21) ? force : force / 3;
+        final var force = event.getForce();
+
+        // [BUGFIX] For some f**king reason, force is 1/63 of what it should be
+        // in between 1.21 and 1.21.4 included. Fixed in most recent Spigot builds
+        final var version = MythicLib.plugin.getVersion();
+        if (version.isAbove(1, 21) && version.isUnder(1, 21, 5)) return force / 3;
+
+        return force;
     }
 
     /**
@@ -311,6 +319,11 @@ public class MMOUtils {
      */
     public static Vector normalize(Vector vector) {
         return vector.getX() == 0 && vector.getY() == 0 ? vector : vector.normalize();
+    }
+
+    @NotNull
+    public static String simpleDebug(ItemStack itemStack) {
+        return itemStack == null ? "null" : itemStack.getType().name();
     }
 
     /**

@@ -268,8 +268,6 @@ public class EditableCraftingStationView extends EditableInventory {
             int amount = craftingRecipe.getOutputAmount();
             item.setAmount(Math.min(64, amount));
 
-            Bukkit.broadcastMessage("");
-
             ItemMeta meta = item.getItemMeta();
             meta.addItemFlags(ItemFlag.values());
             String rawNameFormat = amount > 1 ? nameMultiple.replace("{amount}", String.valueOf(amount)) : name; // Item name?

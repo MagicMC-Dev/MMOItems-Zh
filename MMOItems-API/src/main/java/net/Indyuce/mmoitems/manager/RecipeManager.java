@@ -365,10 +365,12 @@ public class RecipeManager implements Reloadable {
         if (poof.getParent() instanceof MMOItemUIFilter) {
 
             // Get those
-            Type miType = MMOItems.plugin.getTypes().getOrThrow(poof.getArgument());
+            var miTypeFormat = poof.getArgument().toUpperCase().replace("-", "_").replace(" ", "_");
+            Type miType = MMOItems.plugin.getTypes().getOrThrow(miTypeFormat);
 
             // Find template
-            MMOItemTemplate mmo = MMOItems.plugin.getTemplates().getTemplateOrThrow(miType, poof.getData());
+            var miIdFormat = poof.getData().toUpperCase().replace("-", "_").replace(" ", "_");
+            MMOItemTemplate mmo = MMOItems.plugin.getTemplates().getTemplateOrThrow(miType, miIdFormat);
 
             // Treat is as MMOItem :pogyoo:
             return new MMOItemIngredient(miType, mmo.getId(), amount);

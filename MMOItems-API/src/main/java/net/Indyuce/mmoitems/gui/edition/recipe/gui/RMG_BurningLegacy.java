@@ -1,12 +1,11 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.gui;
 
+import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.gui.Navigator;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_CookingTime;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_Experience;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_HideFromBook;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_LegacyBurning;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,8 +43,10 @@ public class RMG_BurningLegacy extends RecipeEditorGUI {
             switchInput();
         }
 
-        // Get section and build interpreter
-        interpreter = new RMGRI_LegacyBurning(getNameSection());
+        // Furnaces support only input
+        //noinspection ConstantConditions
+        input = ProvidedUIFilter.getFromString(RecipeEditorGUI.poofFromLegacy(recipeSection().getString(ITEM)), null);
+        if (input == null) { input = RecipeEditorGUI.AIR.clone(); }
 
         // Bind inputs - Furnace only has which item to smelt
         inputLinks.put(40, 0);
@@ -75,12 +76,49 @@ public class RMG_BurningLegacy extends RecipeEditorGUI {
         return found != null ? found : -1;
     }
 
-    @NotNull
-    final RMGRI_LegacyBurning interpreter;
+    //region interpreter
 
-    @NotNull
+    /**
+     * Interestingly enough, they onl require one input.
+     */
+    @NotNull ProvidedUIFilter input;
+    /**
+     * @return The stuff that must be smelted / cooked
+     */
+    @NotNull public ProvidedUIFilter getInput() { return input; }
+    /**
+     * Setting it to null will make it into AIR tho but ok.
+     * This method does not update it in the Config Files.
+     *
+     * @param input The stuff that must be smelted
+     */
+    public void setInput(@Nullable ProvidedUIFilter input) { this.input = input == null ? RecipeEditorGUI.AIR : input; }
+
     @Override
-    public RMG_RecipeInterpreter getInterpreter() {
-        return interpreter;
+    public void editInput(@NotNull ProvidedUIFilter input, int slot) {
+
+        if (slot != 0) { return; }
+
+        // Just edit bro
+        setInput(input);
+
+        // Save
+        recipeSection().set(ITEM, input.toString());
     }
+
+    @Override public void editOutput(@NotNull ProvidedUIFilter input, int slot) { }
+
+    @Override public void deleteInput(int slot) { editInput(RecipeEditorGUI.AIR.clone(), slot); }
+
+    @Override public void deleteOutput(int slot) { }
+
+    @Nullable @Override public ProvidedUIFilter getInput(int slot) { if (slot == 0) { return input; } return null; }
+
+    @Nullable @Override public ProvidedUIFilter getOutput(int slot) { return null; }
+
+    public static final String ITEM = "item";
+    public static final String TIME = "time";
+    public static final String EXPERIENCE = "experience";
+
+    //endregion
 }

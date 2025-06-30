@@ -13,7 +13,6 @@ import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_Smithing;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.*;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_Smithing;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
@@ -51,7 +50,7 @@ public class RMGRR_Smithing implements RecipeRegistry {
         //region Identify the input
 
         // Find value in files
-        String input = RMGRI_Smithing.updateIngredients(recipeSection.getString(RecipeEditorGUI.INPUT_INGREDIENTS));
+        String input = RMG_Smithing.updateIngredients(recipeSection.getString(RecipeEditorGUI.INPUT_INGREDIENTS));
         String[] inputSplit = input.split("\\|");
 
         // All right lets read them
@@ -70,7 +69,7 @@ public class RMGRR_Smithing implements RecipeRegistry {
 
         //region Identify the output of ingredients
         // Find value in files
-        String output = RMGRI_Smithing.updateIngredients(recipeSection.getString(RecipeEditorGUI.OUTPUT_INGREDIENTS));
+        String output = RMG_Smithing.updateIngredients(recipeSection.getString(RecipeEditorGUI.OUTPUT_INGREDIENTS));
         String[] outputSplit = output.split("\\|");
 
         // All right lets read them

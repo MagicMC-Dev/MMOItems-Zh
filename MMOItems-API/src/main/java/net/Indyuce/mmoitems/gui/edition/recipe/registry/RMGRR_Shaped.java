@@ -14,7 +14,6 @@ import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_Shaped;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_AmountOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_HideFromBook;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_Shaped;
@@ -121,7 +120,7 @@ public class RMGRR_Shaped implements RecipeRegistry {
             //UPT//MMOItems.log("\u00a7e-\u00a77 " + row);
 
             // Update
-            String updatedRow = RMGRI_Shaped.updateRow(row);
+            String updatedRow = RMG_Shaped.updateRow(row);
             //UPT//MMOItems.log("\u00a7eU-\u00a77 " + updatedRow);
 
             /*

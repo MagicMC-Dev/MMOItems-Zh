@@ -34,8 +34,12 @@ public class ItemSkin extends UseItem {
     }
 
     public ApplyResult applyOntoItem(NBTItem target, Type targetType) {
-        if (targetType == Type.SKIN)
-            return new ApplyResult(ResultType.NONE);
+
+        // Cannot skin skins
+        if (targetType.corresponds(Type.SKIN)) return new ApplyResult(ResultType.NONE);
+
+        // Cannot skin stacked items
+        if (target.getItem().getAmount() > 1) return new ApplyResult(ResultType.NONE);
 
         if (MMOItems.plugin.getConfig().getBoolean("locked-skins") && MMOUtils.isNonEmpty(target.getString(ItemSkin.SKIN_ID_TAG))) {
             player.playSound(player.getLocation(), Sounds.ENTITY_VILLAGER_NO, 1, 1);

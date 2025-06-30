@@ -47,12 +47,11 @@ public class PlayerListener implements Listener {
     public void onDeathForUpgradeLoss(@NotNull PlayerDeathEvent event) {
 
         // Supports NPCs
-        if (!PlayerData.has(event.getEntity())) return;
-
-        final PlayerData playerData = PlayerData.get(event.getEntity());
-        final Player player = event.getEntity();
+        final PlayerData playerData = PlayerData.getOrNull(event.getEntity());
+        if (playerData == null) return;
 
         // See description of DelayedDeathDowngrade child class for full explanation
+        final Player player = event.getEntity();
         new DelayedDeathDowngrade(playerData, player).runTaskLater(MMOItems.plugin, 3L);
     }
 

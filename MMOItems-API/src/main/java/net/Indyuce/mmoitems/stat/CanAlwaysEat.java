@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 @VersionDependant(version = {1, 20, 4})
 public class CanAlwaysEat extends BooleanStat implements GemStoneStat {
     public CanAlwaysEat() {
-        super("CAN_ALWAYS_EAT", Material.COOKED_CHICKEN, "无条件食用", new String[]{"如果启用，这个物品可以被吃掉，", "即使玩家不饿。仅在 1.20.4+ 版本可用。"}, new String[]{"consumable"});
+        super("CAN_ALWAYS_EAT", Material.COOKED_CHICKEN, "Can always eat?", new String[]{"If true, this item can be eaten", "even if the player is not hungry.", "Available only on 1.20.4+"}, new String[]{"consumable"});
     }
 
     @Override

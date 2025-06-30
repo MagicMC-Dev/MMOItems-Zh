@@ -16,8 +16,8 @@ import org.jetbrains.annotations.Nullable;
 @VersionDependant(version = {1, 21, 2})
 public class EquippableModel extends StringStat implements GemStoneStat {
     public EquippableModel() {
-        super("EQUIPPABLE_MODEL", Material.LEATHER_CHESTPLATE, "可装备模型",
-                new String[]{"装备时使用的模型名称空间键。", "仅在 1.21.2+上可用。"}, new String[0]);
+        super("EQUIPPABLE_MODEL", Material.LEATHER_CHESTPLATE, "Equippable Model",
+                new String[]{"Name-spaced key of model used when the item is equipped.", "Available only on MC 1.21.2+"}, new String[0]);
     }
 
     @Override

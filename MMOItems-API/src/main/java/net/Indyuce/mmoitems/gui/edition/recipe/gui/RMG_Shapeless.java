@@ -1,17 +1,17 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.gui;
 
+import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.gui.Navigator;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_HideFromBook;
 import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_InputOutput;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_Shapeless;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
-import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Edits shapeless recipes, very nice.
@@ -41,11 +41,10 @@ public class RMG_Shapeless extends RecipeEditorGUI {
         addButton(new RBA_InputOutput(this));
         addButton(new RBA_HideFromBook(this));
 
-        // Get section and build interpreter
-        ConfigurationSection crafting = RecipeEditorGUI.getSection(getEditedSection(), "crafting");
-        ConfigurationSection recipe = RecipeEditorGUI.getSection(crafting, getRecipeRegistry().getRecipeConfigPath());
-        ConfigurationSection name = RecipeEditorGUI.getSection(recipe, getRecipeName());
-        interpreter = new RMGRI_Shapeless(name);
+        // Build Input list
+        var section = recipeSection();
+        inputRecipe = buildIngredientsFromList(section.getStringList(RecipeEditorGUI.INPUT_INGREDIENTS));
+        outputRecipe = buildIngredientsFromList(section.getStringList(RecipeEditorGUI.OUTPUT_INGREDIENTS));
 
         // Bind inputs
         inputLinks.put(30, 0);
@@ -85,13 +84,140 @@ public class RMG_Shapeless extends RecipeEditorGUI {
         return found != null ? found : -1;
     }
 
-    @NotNull
-    final RMGRI_Shapeless interpreter;
+    //region Recipe interpreter
 
-    @NotNull
-    @Override
-    public RMG_RecipeInterpreter getInterpreter() {
-        return interpreter;
+
+    /**
+     * Builds a valid 3x3 matrix of input/output recipe.
+     *
+     * @param config List as it is saved in the config.
+     *
+     * @return Transcribed into array of arrays.
+     */
+    @NotNull ProvidedUIFilter[] buildIngredientsFromList(@NotNull List<String> config) {
+
+        // Start with a base
+        ProvidedUIFilter[] ret = new ProvidedUIFilter[9];
+
+        // Each row ig
+        for (int r = 0; r < 9; r++) {
+
+            // Get current row
+            String row = config.size() > r ? config.get(r) : null;
+
+            // Update it ig
+            String poof = RecipeEditorGUI.poofFromLegacy(row);
+
+            // Parse
+            ProvidedUIFilter parsed = ProvidedUIFilter.getFromString(poof, null);
+            if (parsed == null) { parsed = RecipeEditorGUI.AIR.clone(); }
+
+            // Add
+            ret[r] = parsed;
+        }
+
+        // And that's your result
+        return ret;
     }
+    /**
+     * Turns something like <br> <code>
+     *
+     *     [ A, B, C, D, E, F, G, H, I ]  <br>
+     *
+     * </code> <br>
+     * into <br> <code>
+     *
+     *    - A <br>
+     *    - B <br>
+     *    - C <br>
+     *    - D <br>
+     *    - E <br>
+     *    - F <br>
+     *    - G <br>
+     *    - H <br>
+     *    - I <br>
+     * </code>
+     *
+     * @param ingredients Array of arrays of UIFilters
+     *
+     * @return A list of strings to save in a YML Config
+     */
+    @NotNull ArrayList<String> toYML(@NotNull ProvidedUIFilter[] ingredients) {
+
+        // Well, build it would ye?
+        ArrayList<String> ret = new ArrayList<>();
+
+        for (int r = 0; r < 9; r++) {
+
+            // Get row
+            ProvidedUIFilter poof = ingredients.length > r ? ingredients[r] : RecipeEditorGUI.AIR.clone();
+
+            // Add poof
+            ret.add(poof.toString());
+        }
+
+        // Thats it
+        return ret;
+    }
+
+    @NotNull final ProvidedUIFilter[] inputRecipe;
+    /**
+     * Sets the ingredient in the rows matrix.
+     *
+     * @param slot The slot, which must be between 0 and 8  (or this method will do nothing)
+     * @param poof Ingredient to register
+     */
+    public void setInput(int slot, @NotNull ProvidedUIFilter poof) {
+        if (slot < 0 || slot > 8) { return; }
+        inputRecipe[slot] = poof;
+    }
+    @Nullable
+    @Override public ProvidedUIFilter getInput(int slot) {
+        if (slot < 0 || slot > 8) { return null; }
+        return inputRecipe[slot];
+    }
+
+    @NotNull final ProvidedUIFilter[] outputRecipe;
+    /**
+     * Sets the ingredient in the rows matrix.
+     *
+     * @param slot The slot, which must be between 0 and 8  (or this method will do nothing)
+     * @param poof Ingredient to register
+     */
+    public void setOutput(int slot, @NotNull ProvidedUIFilter poof) {
+        if (slot < 0 || slot > 8) { return; }
+        outputRecipe[slot] = poof;
+    }
+    @Nullable
+    @Override public ProvidedUIFilter getOutput(int slot) {
+        if (slot < 0 || slot > 8) { return null; }
+        return outputRecipe[slot];
+    }
+
+    @Override
+    public void editInput(@NotNull ProvidedUIFilter input, int slot) {
+
+        // Just edit bro
+        setInput(slot, input);
+
+        // Save
+        recipeSection().set(RecipeEditorGUI.INPUT_INGREDIENTS, toYML(inputRecipe));
+    }
+
+    @Override
+    public void editOutput(@NotNull ProvidedUIFilter input, int slot) {
+
+        // Just edit bro
+        setOutput(slot, input);
+
+        // Save
+        recipeSection().set(RecipeEditorGUI.OUTPUT_INGREDIENTS, toYML(outputRecipe));
+    }
+
+    @Override public void deleteInput(int slot) { editInput(RecipeEditorGUI.AIR.clone(), slot); }
+
+    @Override public void deleteOutput(int slot) { editOutput(RecipeEditorGUI.AIR.clone(), slot); }
+
+    //endregion
 
 }

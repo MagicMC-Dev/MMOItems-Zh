@@ -27,6 +27,7 @@ import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
 import net.Indyuce.mmoitems.comp.mmoinventory.MMOInventorySupport;
 import net.Indyuce.mmoitems.comp.mythicmobs.LootsplosionListener;
 import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsCompatibility;
+import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsLoadHook;
 import net.Indyuce.mmoitems.comp.placeholders.MMOItemsPlaceholders;
 import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
 import net.Indyuce.mmoitems.comp.rpg.HeroesHook;
@@ -146,6 +147,7 @@ public class MMOItems extends MMOPlugin {
             statManager.register(HeroesHook.MAX_STAMINA);
             statManager.register(HeroesHook.REQUIRED_SECONDARY_HERO_LEVEL);
         });
+        PluginUtils.hookDependencyIfPresent("MythicMobs", true, unused -> new MythicMobsLoadHook());
     }
 
     @Override

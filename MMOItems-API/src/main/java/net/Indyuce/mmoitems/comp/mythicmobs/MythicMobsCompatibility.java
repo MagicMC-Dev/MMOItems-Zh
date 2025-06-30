@@ -19,13 +19,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.server.ServerLoadEvent;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class MythicMobsCompatibility implements Listener {
 
+    /**
+     * When the plugin enables
+     */
     public MythicMobsCompatibility() {
         Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 
@@ -38,6 +37,8 @@ public class MythicMobsCompatibility implements Listener {
                 MythicPlayerIngredient::new);
         MMOItems.plugin.getCrafting().registerOutputType("mythic", MythicRecipeOutput::new, "mythicmobs", "mythicmob", "crucible", "crucibles", "mm");
 
+        // Register factions stats for later as they are available now
+        MythicMobsLoadHook.saveTrueMobFactions();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -82,30 +83,12 @@ public class MythicMobsCompatibility implements Listener {
         }
     }
 
-    @EventHandler
-    public void b(ServerLoadEvent event) {
-        reloadFactionStats();
-    }
-
     private static void reloadFactionStats() {
 
         // Unregister faction stats
         MMOItems.plugin.getStats().unregisterIf(stat -> stat instanceof FactionDamage);
 
         // Register new faction damage stats
-        for (String faction : getFactions()) MMOItems.plugin.getStats().register(new FactionDamage(faction));
-    }
-
-    // Using a set to kill duplicates
-    private static Set<String> getFactions() {
-        var allFactions = new HashSet<String>();
-
-        // Collects all mythic mobs + edited vanilla mobs in mythic mobs.
-        for (var mob : MythicBukkit.inst().getMobManager().getVanillaTypes())
-            if (mob.hasFaction()) allFactions.add(mob.getFaction().toUpperCase());
-        for (var mob : MythicBukkit.inst().getMobManager().getMobTypes())
-            if (mob.hasFaction()) allFactions.add(mob.getFaction().toUpperCase());
-
-        return allFactions;
+        MythicMobsLoadHook.registerFactionStats(false);
     }
 }

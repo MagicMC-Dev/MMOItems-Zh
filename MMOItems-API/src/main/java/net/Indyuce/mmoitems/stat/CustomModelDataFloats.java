@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 @VersionDependant(version = {1, 21, 4})
 public class CustomModelDataFloats extends StringListStat implements GemStoneStat {
     public CustomModelDataFloats() {
-        super("CUSTOM_MODEL_DATA_FLOATS", Material.PAINTING, "CMD Floats", new String[]{"为您的自定义模型数据使用浮点值。", "考虑在1.21.4+中使用这个，而不是自定义模型 CMD。"}, new String[0]);
+        super("CUSTOM_MODEL_DATA_FLOATS", Material.PAINTING, "Custom Model Data Floats", new String[]{"Floats for your custom model data. Consider using", "this over custom model data in 1.21.4+"}, new String[0]);
     }
 
     @Override

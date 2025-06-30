@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 @VersionDependant(version = {1, 21, 2})
 public class TooltipStyle extends StringStat implements GemStoneStat {
     public TooltipStyle() {
-        super("TOOLTIP_STYLE", Material.ACACIA_SIGN, "原版 Tooltip 样式", new String[]{"您物品的原版 Tooltips 样式，", "仅在 1.21.2 及以上版本可用"}, new String[0]);
+        super("TOOLTIP_STYLE", Material.ACACIA_SIGN, "Vanilla Tooltip Style", new String[]{"Vanilla tooltip style of your item", "Available only on 1.21.2+"}, new String[0]);
     }
 
     @Override

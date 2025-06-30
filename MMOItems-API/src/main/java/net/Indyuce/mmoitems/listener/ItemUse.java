@@ -43,13 +43,20 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemUse implements Listener {
 
     @EventHandler
     public void rightClickEffects(PlayerInteractEvent event) {
 
-        final NBTItem item = NBTItem.get(event.getItem());
+        // NPCs sometimes randomly calling click events
+        final var playerData = PlayerData.getOrNull(event.getPlayer());
+        if (playerData == null) return;
+
+        // [WTF BUKKIT] When hitting entities, `event.getItem()` is set to `null`
+        final var eventItem = resolveEventItem(event);
+        final NBTItem item = NBTItem.get(eventItem);
 
         // PlayerInteracts cancellability are a little bit trickier
         if (event.useItemInHand() == Event.Result.DENY) return;
@@ -65,14 +72,9 @@ public class ItemUse implements Listener {
             event.setUseItemInHand(Event.Result.DENY);
 
         // [WTF BUKKIT] Ignore interacts that are due to pressing Q (dropping items)
-        final PlayerData playerData = PlayerData.get(event.getPlayer());
         if (playerData.getMMOPlayerData().lastDrop + 50 > System.currentTimeMillis()) return;
 
-        // [WTF BUKKIT] When hitting entities, `event.getItem()` is set to `null`
-        ItemStack eventItem;
-        if (event.hasItem()) eventItem = event.getItem();
-        else if (event.getHand() != null) eventItem = event.getPlayer().getInventory().getItem(event.getHand());
-        else return;
+        // No interaction with air
         if (UtilityMethods.isAir(eventItem)) return;
 
         final Type itemType = Type.get(item);
@@ -117,7 +119,7 @@ public class ItemUse implements Listener {
                 if (result == Consumable.ConsumableConsumeResult.CANCEL) return;
 
                 else if (result == Consumable.ConsumableConsumeResult.CONSUME)
-                    event.getItem().setAmount(event.getItem().getAmount() - 1);
+                    eventItem.setAmount(eventItem.getAmount() - 1);
             }
 
             useItem.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(useItem.getMMOItem(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
@@ -127,6 +129,13 @@ public class ItemUse implements Listener {
         // Target-free weapon effects
         if (useItem instanceof Weapon)
             ((Weapon) useItem).handleUntargetedAttack(rightClick, EquipmentSlot.fromBukkit(event.getHand()));
+    }
+
+    @Nullable
+    private static ItemStack resolveEventItem(PlayerInteractEvent event) {
+        if (event.hasItem()) return event.getItem();
+        if (event.getHand() != null) return event.getPlayer().getInventory().getItem(event.getHand());
+        return null;
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

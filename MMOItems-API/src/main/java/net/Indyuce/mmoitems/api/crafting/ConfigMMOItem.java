@@ -61,9 +61,9 @@ public class ConfigMMOItem {
     public ItemStack getPreview() {
 
         if (preview == null) {
-            ItemStackBuilder builder = new MMOItemBuilder(template, 0, null, true).build().newBuilder();
+            ItemStackBuilder builder = template.newBuilder(null, true).build().newBuilder();
 			builder.getContext().setTooltip(null);
-            preview = builder.build();
+            preview = builder.build(true);
         }
 
         return preview.clone();

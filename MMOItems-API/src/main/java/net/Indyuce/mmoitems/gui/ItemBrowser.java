@@ -264,7 +264,7 @@ public class ItemBrowser extends MMOItemsInventory {
             } else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "上一页")) {
                 page--;
                 open();
-            } else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " 返回"))
+            } else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + "返回"))
                 getNavigator().popOpen();
 
             else if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "取消删除")) {

@@ -30,7 +30,7 @@ public abstract class MMOItemsInventory extends PluginInventory {
                 || !item.getItemMeta().getDisplayName().startsWith(ChatColor.GREEN + ""))
             return;
 
-        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.fourEdgedClub + " Get the Item! " + AltChar.fourEdgedClub)) {
+        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.fourEdgedClub + " 获取物品! " + AltChar.fourEdgedClub)) {
 
             // simply give the item if left click
             if (event.getAction() == InventoryAction.PICKUP_ALL) {
@@ -55,7 +55,7 @@ public abstract class MMOItemsInventory extends PluginInventory {
         }
 
         // Back Button
-        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
+        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + "返回"))
             getNavigator().popOpen();
     }
 
